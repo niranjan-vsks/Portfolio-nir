@@ -1,5 +1,6 @@
 import { retrieve } from "@/lib/rag/retrieve";
 import { buildSystemPrompt, FALLBACK } from "@/lib/rag/persona";
+import { logger } from "@/lib/logger";
 
 export const runtime = "nodejs";
 
@@ -31,6 +32,12 @@ export async function POST(req: Request) {
   const system = buildSystemPrompt(context);
 
   const apiKey = process.env.GROQ_API_KEY;
+  logger.debug("api/ask", "query received", {
+    query,
+    chunks: context.length,
+    sources: context.map((c) => c.source),
+    mode: apiKey ? "groq" : "mock",
+  });
 
   // ---- Mock path: no key configured. Stream grounded snippets or fallback. ----
   if (!apiKey) {
@@ -80,6 +87,7 @@ export async function POST(req: Request) {
   });
 
   if (!groqRes.ok || !groqRes.body) {
+    logger.error("api/ask", "groq upstream error", { status: groqRes.status });
     return new Response("upstream error", { status: 502 });
   }
 
