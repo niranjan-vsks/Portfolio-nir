@@ -1,112 +1,34 @@
-# Portfolio — Niranjan VSKS
+# CLAUDE.md — portfolio-nir
 
-Personal portfolio for **Niranjan VSKS**, Agentic AI Architect transitioning to AI PM.
-Positioning: demonstrate systems thinking, AI product decisions, and hands-on AI engineering.
-Domain: niranjanvsks.xyz | Deploy: Vercel
+This is the FDE portfolio of Niranjan VSKS (Senior Agentic AI Engineer).
+You are building a cutting-edge, production-grade portfolio. Read this file fully, then read `bullseye/00_MASTER_BUILD_PROMPT.md` and execute the phased build it defines.
 
----
+## Authoritative spec
+The `bullseye/` folder is the single source of truth. Read all of it before building. On any conflict between a skill, a template, or your own assumption and these files, **the spec wins.**
 
-## Stack
+Order to read:
+1. `bullseye/00_MASTER_BUILD_PROMPT.md` (orchestration, phases, review gates)
+2. `bullseye/01_DESIGN_SYSTEM.md`
+3. `bullseye/02_ARCHITECTURE_STACK.md`
+4. `bullseye/03_HERO_AND_MODES.md`
+5. `bullseye/04_TEMPLATES_INTEGRATION.md`
+6. `bullseye/05_MAP_MODE_MINDMAP.md`
+7. `bullseye/06_PROJECT_AND_SYSTEM_DESIGN.md`
+8. `bullseye/07_CONTENT_MODEL_AND_RAG.md`
+9. `bullseye/08_CHATBOT_ask_niranjan.md`
+10. `bullseye/09_CONTACT_AND_FREELANCE.md`
+11. `bullseye/10_VERIFY_AND_SHIP.md`
 
-| Layer | Tech | Version |
-|---|---|---|
-| Framework | Next.js (App Router) | 16.2.3 |
-| UI | React | 19.2.4 |
-| Language | TypeScript | 5.x |
-| Styling | Tailwind CSS | 4.x |
-| Fonts | Geist Sans + Geist Mono | via next/font/google |
-| Deploy | Vercel | — |
-| AI | Anthropic Claude API | claude-sonnet-4-6 |
-| Package manager | npm | — |
+## Global non-negotiables (apply everywhere, every phase)
+1. **No fabrication.** Every metric, claim, and architecture detail must trace to `portfolio-assets/content/`. Never invent numbers, clients, or capabilities. If content is missing, leave a `TODO(niranjan)` placeholder; do not guess.
+2. **No em-dashes in any user-facing copy.** Use colons, periods, or parentheses. Em-dashes read as an AI tell to this audience.
+3. **Banned phrases (never write):** "transition/transitioning", "at the intersection of", "bypassed ... OAuth" (use "within the customer's tenant trust model"), "fine-tuning" (use "multi-layer compliance architecture"), and hedge phrases ("comfortable owning", "where needed", "when the situation calls for it").
+4. **Dark only.** No light mode, no theme toggle. Strip any light-mode code from reused templates.
+5. **Palette lanes** (see 01): each color has one job. Do not introduce colors outside the system.
+6. **Liability firewall** (see 05 and 06): no surface ever links a named employer directly to system-design internals. Always employer → project → system_design. System-design copy is always "how I would build", reference-pattern framing, generic primitives only, no client/employer/proprietary names.
+7. **Reuse, do not rebuild.** The `template_repos/` folders are the implementation base. Adapt them; do not regenerate from scratch.
+8. **Skills supplement, spec governs.** Use `frontend-design`, `3d-web-experience`, `performance-optimizer`. Do not auto-load unrelated skills from the global skill library. Do NOT use Superdesign in the autonomous build (it needs interactive login).
+9. **Performance budget** (see `.claude/rules/3d-performance.md`): Lighthouse performance >= 90 on the landing route.
 
----
-
-## Folder Structure
-
-```
-src/
-  app/
-    layout.tsx          # Root layout — fonts, metadata
-    page.tsx            # Home page
-    globals.css         # Tailwind + CSS vars
-    (sections)/         # Route groups for each portfolio section
-  components/           # Shared UI components (create as needed)
-  lib/                  # Utilities, API clients, data helpers
-public/                 # Static assets
-.claude/                # Claude Code infrastructure
-```
-
----
-
-## Dev Commands
-
-```bash
-npm run dev       # Start dev server — localhost:3000
-npm run build     # Production build
-npm run start     # Serve production build
-npm run lint      # ESLint (flat config, eslint.config.mjs)
-npx tsc --noEmit  # Type-check without emitting
-```
-
----
-
-## Environment Variables
-
-| Variable | Description | Required |
-|---|---|---|
-| `ANTHROPIC_API_KEY` | Claude API key for chatbot copilot | Yes (when building chatbot) |
-
-Add to `.env.local` (never commit). Document in `.env.example`.
-
----
-
-## Planned Sections
-
-1. **Decisions I Made** — Feed of product/architectural decisions with context and rationale
-2. **Case Study Mind Maps** — Interactive mind maps for deep project breakdowns
-3. **AI Stack Explorer** — Visual explorer of AI tools, models, and architectures
-4. **Chatbot Copilot** — Anthropic API-powered assistant that knows Niranjan's work
-
----
-
-## Design Tokens
-
-```css
-/* Light */
---background: #ffffff;
---foreground: #171717;
-
-/* Dark */
---background: #0a0a0a;
---foreground: #ededed;
-```
-
-**Palette**: zinc scale (zinc-50 through zinc-950)
-**Fonts**: `var(--font-geist-sans)` for body, `var(--font-geist-mono)` for code/labels
-**Radius**: `rounded-full` for CTAs, `rounded-xl` for cards
-**Dark mode**: `prefers-color-scheme` media query + Tailwind `dark:` classes
-
----
-
-## API Contract (when routes are added)
-
-```ts
-// Success
-{ data: T, error: null }
-
-// Error
-{ data: null, error: { message: string, code: string } }
-```
-
----
-
-## Current Build Phase
-
-**Phase 0 — Scaffold** (complete): Next.js + TypeScript + Tailwind initialized
-**Phase 1 — Foundation** (next): Layout, nav, design system, section shells
-**Phase 2 — Content**: Decisions feed, case study mind maps
-**Phase 3 — Interactive**: AI stack explorer, chatbot copilot
-
----
-
-Magic word to begin building: **BULLSEYE**
+## Review gates
+Stop and surface for human review at every step marked `[REVIEW GATE]` in the master prompt. Do not proceed past a gate without approval.

@@ -1,53 +1,29 @@
 ---
-paths:
-  - "src/**/*.tsx"
-  - "src/**/*.jsx"
-  - "src/app/**/*.tsx"
-  - "src/components/**/*.tsx"
+name: frontend
+description: Frontend conventions for portfolio-nir. Applies to all UI work.
 ---
 
-## Component Patterns
+# Frontend rules (portfolio-nir)
 
-- Functional components only — no class components
-- Props typed inline with TypeScript interfaces above the component
-- Default export for pages, named exports for shared components
+## Design system (authoritative: bullseye/01)
+- Dark only. No light mode, no theme toggle. Strip light-mode classes from any reused template.
+- Palette lanes — each color has ONE job, never cross:
+  - `#0A0A0A` base · `#4ADE80` green = identity (terminal/UI/active/CTAs/links)
+  - `#00E5FF` cyan + blue family = 3D/depth scenes only
+  - `#FF006E` magenta = sparing emphasis only (never a fill)
+  - `#A78BFA` violet = Map-mode employer nodes only
+  - blood red `#5C0A0A`–`#7A0F0F` = atmospheric depth only (never UI)
+- Fonts: JetBrains Mono (UI/terminal/labels), Geist (body).
+- shadcn primitives must be restyled to tokens; never ship default shadcn look.
 
-## Styling
+## Reused templates
+- Recolor everything to the tokens. Replace template fonts. Remove watermarks/demo chrome/light-mode.
+- Any rainbow/HSL-cycling effect → constrain to a green↔cyan range.
 
-- Tailwind CSS 4 utility classes — no inline styles, no CSS modules
-- Color palette: zinc scale (zinc-50 through zinc-950)
-- Dark mode: `dark:` prefix classes, driven by `prefers-color-scheme`
-- Spacing: Tailwind scale only (no arbitrary values unless truly necessary)
-- Borders: `rounded-full` for buttons/pills, `rounded-xl` for cards
-- Shadows: Tailwind shadow utilities
+## Copy
+- No em-dashes in user-facing text. No banned phrases (see CLAUDE.md). No fabricated metrics; trace everything to portfolio-assets/content.
 
-## Fonts
-
-- Body: `font-sans` → `var(--font-geist-sans)`
-- Code/labels/mono accents: `font-mono` → `var(--font-geist-mono)`
-
-## State Management
-
-- React `useState` / `useReducer` for local state
-- No global state library until complexity demands it
-
-## Next.js Conventions
-
-- App Router — all pages in `src/app/`
-- Server Components by default; add `"use client"` only when needed
-- API routes in `src/app/api/[route]/route.ts`
-- Use `next/image` for all images
-- Use `next/font/google` for font loading
-
-## Naming
-
-- Components: PascalCase (e.g., `DecisionCard.tsx`)
-- Hooks: camelCase with `use` prefix (e.g., `useDecisions.ts`)
-- Utilities: camelCase (e.g., `formatDate.ts`)
-- Route folders: kebab-case (e.g., `ai-stack-explorer/`)
-
-## No-Nos
-
-- No hardcoded color hex values in JSX — use Tailwind tokens
-- No `console.log` in committed code
-- No `any` TypeScript type without a comment explaining why
+## Components
+- Read page copy from the content loader (bullseye/07), never hardcode.
+- Functions under ~50 lines; clean error handling on async; no console.log in shipped code.
+- Accessibility: keyboard nav, focus states, alt text, honor prefers-reduced-motion.
