@@ -28,9 +28,20 @@ function chunks(): Chunk[] {
   return cache;
 }
 
+// Tokens from a source path (e.g. "projects/loop-copilot.md" -> loop, copilot).
+function sourceTokens(source: string): string[] {
+  return source
+    .replace(/\.md$/, "")
+    .split(/[/\-_]/)
+    .map((t) => t.toLowerCase())
+    .filter((t) => t.length > 2);
+}
+
 export function retrieve(query: string, k = 5): Chunk[] {
   const qTokens = tokenize(query);
   if (qTokens.length === 0) return [];
+  const qSet = new Set(qTokens);
+
   const scored = chunks().map((c) => {
     const text = c.text.toLowerCase();
     let score = 0;
@@ -40,11 +51,19 @@ export function retrieve(query: string, k = 5): Chunk[] {
       // boost the interview corpus: highest-value persona source
       if (c.source.startsWith("interview/") && matches > 0) score += 1.5;
     }
+    // Strong source affinity: if the query names a project/section by its file
+    // slug, prioritize that file. Prevents cross-project contamination (e.g.
+    // "Loop Copilot" pulling Saarthi chunks because both say "copilot").
+    const srcMatches = sourceTokens(c.source).filter((t) => qSet.has(t)).length;
+    if (srcMatches > 0) score += srcMatches * 6;
     return { c, score };
   });
-  return scored
+
+  const ranked = scored
     .filter((s) => s.score > 0)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, k)
-    .map((s) => s.c);
+    .sort((a, b) => b.score - a.score);
+
+  // If any chunk has a clear source-affinity winner, keep the top source's
+  // chunks first so the answer stays grounded in the right project.
+  return ranked.slice(0, k).map((s) => s.c);
 }
