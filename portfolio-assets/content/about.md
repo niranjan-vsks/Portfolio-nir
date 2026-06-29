@@ -28,5 +28,3 @@ Agentic AI on real customer data, with real consequences, is where the next deca
 - PG Diploma in Machine Learning and AI, IIIT Bangalore
 - B.Tech, Computer Science and Engineering
 - Claude Certified Architect, Anthropic (in progress, expected June 2026)
-
-TODO(niranjan): references section (former manager, BITSoM peer, optional Lenovo beta user quote). Audio/voice intro is parked for V2.

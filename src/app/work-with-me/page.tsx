@@ -50,10 +50,6 @@ export default function WorkWithMePage() {
             ↓ résumé
           </ButtonLink>
         </div>
-        <p className="font-mono text-[12px] text-text-dim">
-          TODO(niranjan): confirm freelance availability, rate framing, and any
-          engagement types you want to exclude.
-        </p>
       </div>
     </PageShell>
   );

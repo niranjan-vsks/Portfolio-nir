@@ -13,6 +13,8 @@
   --blue-500: #3b82f6;
   --magenta: #ff006e; /* sparing emphasis only, never a fill */
   --violet: #a78bfa; /* Map-mode employer nodes ONLY */
+  --copper: #4aa8ff; /* renovation: light copper-sulphate blue (Mind Map brain) */
+  --purple: #a855f7; /* renovation: particle sphere (Contact background) */
   --blood-red-lo: #5c0a0a; /* atmospheric depth only, never UI */
   --blood-red-hi: #7a0f0f;
   --text: #e5e7eb;
@@ -29,6 +31,8 @@
   --color-blue-500: var(--blue-500);
   --color-magenta: var(--magenta);
   --color-violet: var(--violet);
+  --color-copper: var(--copper);
+  --color-purple: var(--purple);
   --color-blood-lo: var(--blood-red-lo);
   --color-blood-hi: var(--blood-red-hi);
   --color-text: var(--text);

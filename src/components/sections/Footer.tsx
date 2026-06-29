@@ -30,11 +30,6 @@ export function Footer() {
           </Link>
         </div>
       </div>
-      {/* TODO(niranjan): confirm iPhone 3D model license (Sketchfab, ibrahim.Bhl).
-          If CC-BY, keep this attribution line when the phone mockup model ships. */}
-      <p className="mx-auto mt-4 max-w-[1100px] text-text-dim/60">
-        Credits: iPhone 3D model attribution pending license confirmation (bullseye/04).
-      </p>
     </footer>
   );
 }

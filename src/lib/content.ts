@@ -75,6 +75,24 @@ function listMd(dir: string): string[] {
     .map((f) => path.join(abs, f));
 }
 
+const PROJECTS_ROOT = path.join(CONTENT_ROOT, "projects");
+
+// Single real path (locked): each project is a folder
+// content/projects/<slug>/<slug>.md, alongside its screenshots/assets.
+function projectFile(slug: string): string {
+  return path.join(PROJECTS_ROOT, slug, `${slug}.md`);
+}
+
+// Every project's content file, one per folder.
+function listProjectFiles(): { slug: string; file: string }[] {
+  if (!fs.existsSync(PROJECTS_ROOT)) return [];
+  return fs
+    .readdirSync(PROJECTS_ROOT, { withFileTypes: true })
+    .filter((e) => e.isDirectory())
+    .map((e) => ({ slug: e.name, file: projectFile(e.name) }))
+    .filter((p) => fs.existsSync(p.file));
+}
+
 /** Top-level section: hero, about, skills, contact. */
 export function getSection(name: string): ContentDoc | null {
   const abs = path.join(CONTENT_ROOT, `${name}.md`);
@@ -83,14 +101,14 @@ export function getSection(name: string): ContentDoc | null {
 }
 
 export function getProject(slug: string): ContentDoc<ProjectFrontmatter> | null {
-  const abs = path.join(CONTENT_ROOT, "projects", `${slug}.md`);
+  const abs = projectFile(slug);
   if (!fs.existsSync(abs)) return null;
   return readDoc<ProjectFrontmatter>(abs);
 }
 
 export function getAllProjects(): ContentDoc<ProjectFrontmatter>[] {
-  return listMd("projects")
-    .map((p) => readDoc<ProjectFrontmatter>(p))
+  return listProjectFiles()
+    .map((p) => readDoc<ProjectFrontmatter>(p.file))
     .sort(
       (a, b) => (a.frontmatter.order ?? 99) - (b.frontmatter.order ?? 99),
     );
@@ -144,7 +162,10 @@ export function getAllContentDocs(): { source: string; doc: ContentDoc }[] {
     const d = getSection(t);
     if (d) out.push({ source: `${t}.md`, doc: d });
   }
-  for (const dir of ["projects", "experience", "system-design", "interview"]) {
+  for (const { slug, file } of listProjectFiles()) {
+    out.push({ source: `projects/${slug}/${slug}.md`, doc: readDoc(file) });
+  }
+  for (const dir of ["experience", "system-design", "interview"]) {
     for (const p of listMd(dir)) {
       out.push({ source: `${dir}/${path.basename(p)}`, doc: readDoc(p) });
     }

@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { SoundToggle } from "@/components/ui/SoundToggle";
 
+// Terminal mode removed in v2 (PRD 6.6). Full minimal-utility nav rebuild is R1.
 const LINKS = [
-  { href: "/", label: "cinematic" },
-  { href: "/map", label: "map" },
-  { href: "/terminal", label: "terminal" },
+  { href: "/", label: "home" },
+  { href: "/map", label: "mind_map" },
   { href: "/about", label: "about" },
   { href: "/system-design", label: "system_design" },
   { href: "/contact", label: "contact" },
@@ -38,20 +39,19 @@ export function SiteNav() {
               </Link>
             );
           })}
+          <SoundToggle className="ml-1" />
           <a
             href="/NiranjanVSKS_FDE.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="ml-2 rounded border border-green/50 px-2.5 py-1 text-green transition-colors hover:bg-green hover:text-bg"
+            className="ml-1 rounded border border-green/50 px-2.5 py-1 text-green transition-colors hover:bg-green hover:text-bg"
           >
             résumé.pdf
           </a>
         </div>
-        {/* Mobile: condensed links */}
+        {/* Mobile: condensed links (full mobile nav rebuilt in R1) */}
         <div className="flex items-center gap-3 md:hidden">
-          <Link href="/terminal" className="text-text-dim hover:text-green">
-            menu
-          </Link>
+          <SoundToggle />
           <a
             href="/NiranjanVSKS_FDE.pdf"
             target="_blank"

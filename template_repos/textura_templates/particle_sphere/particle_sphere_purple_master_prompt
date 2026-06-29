@@ -1,0 +1,317 @@
+# Recreate this Three.js scene: Particle Sphere
+
+You are an expert Three.js creative developer. Produce a **single self-contained `index.html`**
+that renders the scene below **exactly** as specified — same geometry, shaders, colors, motion,
+and postprocessing. Load Three.js **r0.143.0** via an ES-module importmap from unpkg; no build
+step, no bundler, pure ES modules in one `<script type="module">`. Hardcode every value given
+here as fixed constants.
+
+## What it looks like
+A dense sphere of glowing points displaced along its normal by two octaves of Simplex noise,
+shaded with a deep-blue-to-magenta vertical gradient and a Fresnel rim. It sits on a dark indigo
+field laced with soft blue-and-pink corner flames and drifting ambient motes. As the page scrolls
+the camera dives toward the churning core, the surface noise swells, the spin accelerates, and the
+filled orb dissolves open at its centre into a glowing shell; the cursor parallaxes the view and
+parts the points around the pointer.
+
+## Page & boilerplate
+- importmap: `three` → `https://unpkg.com/three@0.143.0/build/three.module.js`,
+  `three/addons/` → `https://unpkg.com/three@0.143.0/examples/jsm/`.
+- Imports: `EffectComposer`, `RenderPass`, `UnrealBloomPass`, `ShaderPass` from
+  `three/addons/postprocessing/…`; `GammaCorrectionShader`, `CopyShader` from
+  `three/addons/shaders/…`.
+- Full-window fixed `<canvas id="scene">` (`position:fixed; inset:0; width:100vw; height:100vh`)
+  on a black page (`html,body{ margin:0; padding:0; background:#000 }`). A tall scroll host
+  `<div id="scroll-host" style="height:300vh"></div>` so the page scrolls (drives the camera dive).
+  Optional fixed `scroll ↓` hint pinned bottom-center, 11px uppercase, `rgba(255,255,255,.55)`,
+  `pointer-events:none`.
+- `THREE.WebGL1Renderer({ canvas, antialias:true })`, `setPixelRatio(window.devicePixelRatio)`,
+  `shadowMap.enabled = true`, `shadowMap.type = THREE.VSMShadowMap`.
+- Scene background `0x000000`, fog `new THREE.Fog(0x000000, 0, 15)`.
+- Camera `PerspectiveCamera(45, innerWidth/innerHeight, 0.1, 400)` at `(0, 0, 12)`. Enable camera
+  layers `1`, `2`, `3`; `scene.add(camera)`.
+- Layers map: `{ NONE:0, TORUS_SCENE:1, BLOOM_SCENE:2, ENTIRE_SCENE:3 }`.
+
+## Postprocessing
+Three composers sharing one `RenderPass(scene, camera)` (`renderScene`):
+
+- **torusComposer** — `renderToScreen = false`; passes: `renderScene`,
+  `ShaderPass(GammaCorrectionShader)`, `UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight),
+  0.22, 0.2, 0)` (strength, radius, threshold), `ShaderPass(CopyShader)`.
+- **bloomComposer** — `renderToScreen = false`; passes: `renderScene`,
+  `UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.4, 0.55, 0)`,
+  `ShaderPass(GammaCorrectionShader)`.
+- **finalComposer** — passes: `renderScene`, then the **FinalPass** ShaderPass below.
+  Wire `finalPass.uniforms.bloomTexture.value = bloomComposer.renderTarget1.texture` and
+  `finalPass.uniforms.torusTexture.value = torusComposer.renderTarget1.texture`.
+
+The render loop renders each composer with the camera masked to the matching layer:
+```js
+camera.layers.set(1); torusComposer.render()
+camera.layers.set(2); bloomComposer.render()
+camera.layers.set(3); finalComposer.render()
+```
+
+### FinalPass — composite + dark complementary background + corner flames (atmosphere)
+A full-screen `ShaderPass` whose uniforms are the composite textures plus baked palette constants.
+`hexToVec3(hex)` converts a `#rrggbb` string to a normalized `THREE.Vector3`. Bake these uniforms:
+
+```js
+uniforms: {
+  iTime:       { value: 0 },
+  tDiffuse:    { value: null },
+  torusTexture:{ value: null },
+  bloomTexture:{ value: null },
+  haloTexture: { value: null },
+  uBg:      { value: hexToVec3('#0a0a2a') },
+  uFlameA:  { value: hexToVec3('#3d6bff') },
+  uFlameB:  { value: hexToVec3('#ff3d8a') },
+  uFlameAmt:{ value: 0.2 }
+}
+```
+
+Vertex shader (verbatim):
+
+```glsl
+varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position, 1.0); }
+```
+
+Fragment shader (verbatim):
+
+```glsl
+uniform float iTime; uniform sampler2D tDiffuse; uniform sampler2D bloomTexture; uniform sampler2D torusTexture; uniform sampler2D haloTexture;
+uniform vec3 uBg; uniform vec3 uFlameA; uniform vec3 uFlameB; uniform float uFlameAmt;
+varying vec2 vUv;
+vec3 warp3d(vec3 pos, float t){ float curv=.8,a=1.9,b=0.7; pos*=2.;
+  pos.x+=curv*sin(t+a*pos.y)+t*b; pos.y+=curv*cos(t+a*pos.x);
+  pos.y+=curv*sin(t+a*pos.z)+t*b; pos.z+=curv*cos(t+a*pos.y);
+  pos.z+=curv*sin(t+a*pos.x)+t*b; pos.x+=curv*cos(t+a*pos.z);
+  return 0.5+0.5*cos(pos.xyz+vec3(1,2,4)); }
+void main(){
+  vec2 uv = 2.*vUv - 1.;
+  vec3 w = pow(warp3d(vec3(uv.x, sin(uv.y), uv.y), iTime*1.5), vec3(1.5));
+  vec3 flame = 1.5*uFlameA*w.x; flame*=w.y; flame += uFlameB*w.z;
+  flame *= smoothstep(0.25, 1., abs(uv.y));
+  float md = smoothstep(-0.7, 1., -uv.y*uv.x); flame *= md*md;
+  vec3 bg = uBg * (1.0 - 0.4 * length(uv));
+  vec3 halo = texture2D(haloTexture, vUv).xyz;
+  gl_FragColor = vec4(bg + flame*uFlameAmt + texture2D(bloomTexture, vUv).xyz + texture2D(torusTexture, vUv).xyz + texture2D(tDiffuse, vUv).xyz + halo, 1.);
+}
+```
+
+`finalPass.uniforms.iTime.value` is set each frame to `performance.now()/1000` (see Animation).
+
+## Fixed parameters (bake these in)
+- Background / atmosphere: `bgColor '#0a0a2a'`, `flameColor '#3d6bff'`, `flameColor2 '#ff3d8a'`,
+  `flameAmt 0.2`, `atmoColor '#9fb0ff'`, `atmoCount 300`, `atmoSize 24`, `atmoSpeed 1.0`.
+- Sphere palette / look: `colorLow '#06205e'`, `colorHigh '#ff3d8a'`, `opacity 2`, `pointSize 2.5`,
+  `brightness 0.25`.
+- Sphere motion: `noiseAmt 0.45`, `noiseSpeed 0.25`, `spin 0.09`.
+- Scroll / cursor mapping: `scrollDive 5`, `scrollNoise 1.6`, `scrollSpin 0.8`, `parallax 1.1`,
+  `pointerRadius 2.2`, `pointerStrength 1`.
+
+## Shared GLSL (3D Simplex noise)
+Inject this chunk verbatim into the sphere's vertex shader (referenced as `${SNOISE}`):
+
+```glsl
+vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
+vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
+float snoise(vec3 v){
+  const vec2 C = vec2(1.0/6.0, 1.0/3.0); const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
+  vec3 i = floor(v + dot(v, C.yyy)); vec3 x0 = v - i + dot(i, C.xxx);
+  vec3 g = step(x0.yzx, x0.xyz); vec3 l = 1.0 - g;
+  vec3 i1 = min(g.xyz, l.zxy); vec3 i2 = max(g.xyz, l.zxy);
+  vec3 x1 = x0 - i1 + 1.0 * C.xxx; vec3 x2 = x0 - i2 + 2.0 * C.xxx; vec3 x3 = x0 - 1.0 + 3.0 * C.xxx;
+  i = mod(i, 289.0);
+  vec4 p = permute(permute(permute(i.z + vec4(0.0, i1.z, i2.z, 1.0)) + i.y + vec4(0.0, i1.y, i2.y, 1.0)) + i.x + vec4(0.0, i1.x, i2.x, 1.0));
+  float n_ = 1.0/7.0; vec3 ns = n_ * D.wyz - D.xzx;
+  vec4 j = p - 49.0 * floor(p * ns.z *ns.z);
+  vec4 x_ = floor(j * ns.z); vec4 y_ = floor(j - 7.0 * x_);
+  vec4 x = x_ *ns.x + ns.yyyy; vec4 y = y_ *ns.x + ns.yyyy; vec4 h = 1.0 - abs(x) - abs(y);
+  vec4 b0 = vec4(x.xy, y.xy); vec4 b1 = vec4(x.zw, y.zw);
+  vec4 s0 = floor(b0)*2.0 + 1.0; vec4 s1 = floor(b1)*2.0 + 1.0; vec4 sh = -step(h, vec4(0.0));
+  vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy; vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww;
+  vec3 p0 = vec3(a0.xy,h.x); vec3 p1 = vec3(a0.zw,h.y); vec3 p2 = vec3(a1.xy,h.z); vec3 p3 = vec3(a1.zw,h.w);
+  vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
+  p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
+  vec4 m = max(0.5 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0); m = m * m;
+  return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
+}
+```
+
+## Geometry
+One `THREE.Points`:
+
+- `geometry = new THREE.SphereGeometry(4.2, 200, 600)` — a dense, high-segment sphere; rendered as
+  points it gives the moiré-ring structure. The geometry is the **position source**, not the final
+  shape: the vertex shader recomputes each point's position from `position`/`normal` every frame.
+- Wrap the points in a `THREE.Group` (`scene.add(group)`), set `points.frustumCulled = false`,
+  enable layer `3` (`ENTIRE_SCENE`) on the points.
+
+ShaderMaterial uniforms (bake CONFIG defaults in):
+
+```js
+uniforms: {
+  uTime:       { value: 0 },
+  uReveal:     { value: 0 },
+  uAppear:     { value: 0 },
+  uColLow:     { value: hexToVec3('#06205e') },
+  uColHigh:    { value: hexToVec3('#ff3d8a') },
+  uOpacity:    { value: 2 },
+  uSize:       { value: 2.5 },
+  uBrightness: { value: 0.25 },
+  uNoiseAmt:   { value: 0.45 },
+  uNoiseSpeed: { value: 0.25 },
+  uCursor:        { value: new THREE.Vector3() },
+  uRepelRadius:   { value: 2.2 },
+  uRepelStrength: { value: 1 },
+  uActivity:      { value: 0 }
+}
+```
+
+Material flags: `transparent: true`, `depthWrite: false`, `blending: THREE.AdditiveBlending`.
+
+## Material & shaders
+Vertex shader (verbatim; `${SNOISE}` is the shared chunk above):
+
+```glsl
+uniform float uTime; uniform float uReveal; uniform float uSize;
+uniform vec3 uColLow; uniform vec3 uColHigh; uniform float uNoiseAmt; uniform float uNoiseSpeed;
+uniform vec3 uCursor; uniform float uRepelRadius; uniform float uRepelStrength; uniform float uActivity;
+varying float vFade; varying vec3 vColor;
+${SNOISE}
+void main() {
+  vec3 normalVec = normalize(position);
+  float noiseVal = snoise(position * 0.5 + uTime * uNoiseSpeed);
+  noiseVal += 0.5 * snoise(position * 1.5 - uTime * uNoiseSpeed * 1.5);
+  vec3 spherePos = position + normalVec * (noiseVal * uNoiseAmt);
+
+  vec4 modelPosition = modelMatrix * vec4(spherePos, 1.0);
+  // Cursor void — push points away from the world-space pointer.
+  vec3 toP = modelPosition.xyz - uCursor;
+  float cd = length(toP);
+  float fall = smoothstep(uRepelRadius, 0.0, cd);
+  modelPosition.xyz += normalize(toP + vec3(0.0001)) * fall * uRepelStrength * uActivity;
+
+  vec4 mvPosition = viewMatrix * modelPosition;
+
+  vec3 viewDir = normalize(-mvPosition.xyz);
+  vec3 worldNormal = normalize(normalMatrix * normalVec);
+  float rim = 1.0 - abs(dot(viewDir, worldNormal));
+  float edge = smoothstep(0.4, 0.9, rim);
+  vFade = mix(1.0, edge, uReveal) * 0.85;
+
+  float colMix = smoothstep(-3.0, 3.0, position.y + position.x * 0.5);
+  vColor = mix(uColLow, uColHigh, clamp(colMix, 0.0, 1.0));
+
+  gl_PointSize = uSize * (10.0 / -mvPosition.z);
+  gl_PointSize = max(gl_PointSize, 1.5);
+  gl_Position = projectionMatrix * mvPosition;
+}
+```
+
+Fragment shader (verbatim):
+
+```glsl
+uniform float uOpacity; uniform float uBrightness; uniform float uAppear;
+varying float vFade; varying vec3 vColor;
+void main() {
+  vec2 xy = gl_PointCoord - 0.5;
+  float ll = length(xy);
+  if (ll > 0.5) discard;
+  float a = smoothstep(0.5, 0.1, ll);
+  gl_FragColor = vec4(vColor * uBrightness, vFade * a * uOpacity * uAppear);
+}
+```
+
+## Atmosphere / ambient motes
+A second `THREE.Points` of `Math.round(300)` camera-attached drifting motes. Build buffers in a
+loop: for each of `N = 300` points, `position` components are each `2*Math.random()-1`,
+`size = 24 * (0.4 + Math.random())`, `seed = Math.random()`. Set `position` (itemSize 3), `size`
+(1), `seed` (1) attributes on a `BufferGeometry`.
+
+Material uniforms:
+
+```js
+uniforms: {
+  uTime:  { value: 0 },
+  uColor: { value: hexToVec3('#9fb0ff') },
+  uRes:   { value: new THREE.Vector2(innerWidth * devicePixelRatio, innerHeight * devicePixelRatio) }
+}
+```
+
+Flags: `transparent: true`, `blending: THREE.AdditiveBlending`, `depthWrite: false`,
+`depthTest: false`. Set `points.frustumCulled = false`, enable layer `3`, `scene.add(points)`.
+
+Vertex shader (verbatim):
+
+```glsl
+attribute float size; attribute float seed; uniform float uTime; uniform vec2 uRes;
+varying float vA;
+vec3 warp(vec3 p, float t){ float c=0.9,a=1.9,b=0.02,s=0.05; p*=2.;
+  p.x+=c*sin(s*t+a*p.y)+t*b; p.y+=c*cos(s*t+a*p.x); p.y+=c*sin(s*t+a*p.z)+t*b;
+  p.z+=c*cos(s*t+a*p.y); p.z+=c*sin(s*t+a*p.x)+t*b; p.x+=c*cos(s*t+a*p.z);
+  return cos(p+vec3(1,2,4)); }
+void main(){
+  vec3 v = position*4.0 + warp(position, uTime)*1.2;
+  vec4 mv = modelViewMatrix * vec4(v, 1.0);
+  float r = length(v); float farF = 1.0 - smoothstep(5.0, 6.5, r); float nearF = smoothstep(0.0, 0.5, -mv.z);
+  vA = farF * nearF;
+  gl_PointSize = size * uRes.y / 900.0 / -mv.z; gl_PointSize = max(gl_PointSize, 1.0);
+  gl_Position = projectionMatrix * mv;
+}
+```
+
+Fragment shader (verbatim):
+
+```glsl
+uniform vec3 uColor; varying float vA;
+void main(){ vec2 p = gl_PointCoord - 0.5; float l = length(p); if (l > 0.5) discard;
+  float tex = smoothstep(0.5, 0.0, l); gl_FragColor = vec4(uColor * tex, tex * vA * 0.6); }
+```
+
+Per-frame, in the motes' `onBeforeRender` (with `t = performance.now()/1000`):
+`uTime = t * 1.0 * 8.0` (`atmoSpeed * 8.0`), `points.position.copy(camera.position)` (motes ride
+the camera), and `finalPass.uniforms.iTime.value = t`.
+
+## Animation & interaction
+
+**Scroll** is double-damped. Track `scrollTarget` as `clamp(window.scrollY / max, 0, 1)` where
+`max = document.documentElement.scrollHeight - innerHeight` (0 if `max <= 0`); update on `scroll`
+(passive) and on resize. Each frame:
+`scrollSmooth = lerp(scrollSmooth, scrollTarget, 0.10)`,
+`scrollCurrent = lerp(scrollCurrent, scrollSmooth, 0.06)`.
+
+**Pointer** is smoothed and unprojected to a world void.
+`mouseTarget` = NDC of the cursor (`x = clientX/innerWidth*2-1`, `y = -(clientY/innerHeight*2-1)`);
+on `mousemove` mark `POINTER.active = true` and stamp `POINTER.lastMove = performance.now()`; on
+`mouseout` set `POINTER.active = false`. Each frame
+`mouse.x = lerp(mouse.x, mouseTarget.x, 0.06)`, `mouse.y = lerp(mouse.y, mouseTarget.y, 0.06)`.
+`updatePointerWorld()`: target `(0,0,0)` unless active, in which case unproject `(mouse.x, mouse.y,
+0.5)` through the camera, take the ray from `camera.position`, intersect the `z = 0` plane
+(`tt = -camera.position.z / dir.z` when valid and `> 0`) for the world point; then
+`POINTER.world.lerp(target, 0.12)`. Idle: `idle = (now - lastMove)/1000`;
+`POINTER.activity += (((active && idle < 3) ? 1 : 0) - POINTER.activity) * 0.06`.
+
+**Per-frame sphere update** (called with `scroll = scrollCurrent`, `m = mouse`):
+- `t = performance.now()/1000`; `dt = min(0.05, t - t0)`; `t0 = t`; `uTime = t`.
+- Camera dive + parallax:
+  `camera.position.set(m.x * 1.1, m.y * 1.1, 12 - scroll * 5)`, then `camera.lookAt(0,0,0)`.
+  Then call `updatePointerWorld()`.
+- Surface churn swells with scroll: `uNoiseAmt = 0.45 * (1 + scroll * 1.6)`.
+- Spin accelerates: `spinPhase += dt * (0.09 + scroll * 0.8)`; `group.rotation.y = spinPhase`.
+- `uCursor.copy(POINTER.world)`; `uActivity = POINTER.activity`.
+- Reveal (scroll-driven, smoothstep): `uReveal = scroll*scroll*(3.0 - 2.0*scroll)` — the orb starts
+  filled and its centre dissolves open as you scroll.
+- Appear (load fade-in): `elapsed = (performance.now() - appearStart)/1000`;
+  `uAppear = clamp((elapsed - 0.2) / 1.4, 0, 1)`, where `appearStart` is captured at construction.
+
+**Render loop**: `requestAnimationFrame`, advance the four damped values above, run the sphere
+update, then render the three composers in layer order (torus → bloom → final) as shown in
+Postprocessing.
+
+**Resize**: update renderer pixel ratio + size, camera aspect, and call `setPixelRatio`/`setSize`
+on all three composers; re-run the scroll update.
+
+## Assets
+None — fully procedural.
