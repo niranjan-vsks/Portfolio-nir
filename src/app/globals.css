@@ -99,6 +99,16 @@ body {
   }
 }
 
+/* Infinite Moving Cards marquee (PRD 6.10). Row is duplicated; shift by half. */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
