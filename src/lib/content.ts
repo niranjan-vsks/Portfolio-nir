@@ -114,6 +114,37 @@ export function getAllProjects(): ContentDoc<ProjectFrontmatter>[] {
     );
 }
 
+/**
+ * Screenshot/image files dropped into a project folder (PRD 6.5/6.11). They live
+ * in content/, not public/, so they are served via /api/project-image/<slug>/.
+ * Returns web URLs, or [] if none yet (page shows the clean framed placeholder).
+ */
+export function getProjectImages(slug: string): string[] {
+  const dir = path.join(PROJECTS_ROOT, slug);
+  if (!fs.existsSync(dir)) return [];
+  return fs
+    .readdirSync(dir)
+    .filter((f) => /\.(png|webp|jpe?g)$/i.test(f))
+    .sort()
+    .map((f) => `/api/project-image/${slug}/${encodeURIComponent(f)}`);
+}
+
+export interface ContentSection {
+  title: string;
+  html: string;
+}
+
+/** Split a project/experience body into H2 sections, each rendered to HTML. */
+export function splitSections(body: string): ContentSection[] {
+  const parts = body.split(/^##\s+/m).filter((s) => s.trim());
+  return parts.map((part) => {
+    const nl = part.indexOf("\n");
+    const title = (nl === -1 ? part : part.slice(0, nl)).trim();
+    const rest = nl === -1 ? "" : part.slice(nl + 1);
+    return { title, html: marked.parse(rest) as string };
+  });
+}
+
 export function getExperience(
   slug: string,
 ): ContentDoc<ExperienceFrontmatter> | null {

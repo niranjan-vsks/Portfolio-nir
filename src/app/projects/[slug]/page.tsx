@@ -1,9 +1,14 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getProject, getAllProjects } from "@/lib/content";
-import { Markdown } from "@/components/ui/Markdown";
+import {
+  getProject,
+  getAllProjects,
+  getProjectImages,
+  splitSections,
+} from "@/lib/content";
 import { ButtonLink } from "@/components/ui/Button";
-import { ProjectVisual } from "@/components/sections/ProjectVisual";
+import { PageBackground } from "@/components/backgrounds/PageBackground";
+import { ProjectShowcase } from "@/components/sections/ProjectShowcase";
 import type { Metadata } from "next";
 
 export function generateStaticParams() {
@@ -24,6 +29,11 @@ export async function generateMetadata({
   };
 }
 
+// Section titles that are internal authoring notes, never rendered (PRD 1.1).
+const INTERNAL_SECTION = /nda framing|must hold|^framing\b/i;
+
+const SYSTEM_DESIGN_SLUGS = new Set(["loop-copilot", "qe-platform"]);
+
 export default async function ProjectPage({
   params,
 }: {
@@ -33,67 +43,72 @@ export default async function ProjectPage({
   const project = getProject(slug);
   if (!project) notFound();
   const fm = project.frontmatter;
-
-  // System-design page exists only for the two interactive write-ups.
-  const hasSystemDesign = slug === "loop-copilot" || slug === "qe-platform";
+  const name = fm.public_name ?? fm.title;
+  const images = getProjectImages(slug);
+  const cards = splitSections(project.body)
+    .filter((s) => !INTERNAL_SECTION.test(s.title))
+    .map((s) => ({ title: `${name} · ${s.title}`, html: s.html }));
 
   return (
-    <main className="mx-auto min-h-screen max-w-[1100px] px-4 pb-24 pt-24">
-      <header className="mb-8 border-b border-border pb-6">
-        <Link
-          href="/projects"
-          className="mb-4 inline-block font-mono text-[13px] text-text-dim hover:text-green"
-        >
-          {`> cd ../projects`}
-        </Link>
-        <div className="flex flex-wrap items-center gap-3">
-          <h1 className="font-mono text-3xl font-semibold tracking-tight text-white">
-            {fm.public_name ?? fm.title}
-          </h1>
-          <span className="rounded border border-green/40 px-2 py-0.5 font-mono text-[11px] uppercase text-green">
-            {fm.status?.replace("_", " ")}
-          </span>
-        </div>
-        <p className="mt-2 text-text-dim">{fm.tagline}</p>
-        {fm.metric && (
-          <p className="mt-3 font-mono text-[13px] text-cyan">{fm.metric}</p>
-        )}
-        <div className="mt-5 flex flex-wrap gap-3">
-          {fm.demo && fm.demo.startsWith("http") && (
-            <ButtonLink
-              href={fm.demo}
-              target="_blank"
-              rel="noopener noreferrer"
-              variant="primary"
-              size="sm"
-            >
-              view_live ↗
-            </ButtonLink>
-          )}
-          {hasSystemDesign && (
-            <ButtonLink href="/system-design" variant="outline" size="sm">
-              system_design →
-            </ButtonLink>
-          )}
-        </div>
-      </header>
-
-      <ProjectVisual visual={fm.signature_visual} slug={slug} />
-
-      {fm.stack && fm.stack.length > 0 && (
-        <div className="mb-10 flex flex-wrap gap-2">
-          {fm.stack.map((s) => (
-            <span
-              key={s}
-              className="rounded border border-border bg-surface px-2 py-1 font-mono text-[12px] text-text-dim"
-            >
-              {s}
+    <>
+      <PageBackground variant="flow-wave" />
+      <main className="relative mx-auto min-h-screen max-w-[1100px] px-4 pb-28 pt-24">
+        <header className="mb-4">
+          <Link
+            href="/"
+            className="mb-4 inline-block font-mono text-[13px] text-text-dim hover:text-green"
+          >
+            {"> cd ~"}
+          </Link>
+          <div className="flex flex-wrap items-center gap-3">
+            <h1 className="font-mono text-3xl font-semibold tracking-tight text-white">
+              {name}
+            </h1>
+            <span className="rounded border border-green/40 px-2 py-0.5 font-mono text-[11px] uppercase text-green">
+              {fm.status?.replace("_", " ")}
             </span>
-          ))}
-        </div>
-      )}
+          </div>
+          <p className="mt-2 text-text-dim">{fm.tagline}</p>
+          {fm.metric && (
+            <p className="mt-3 font-mono text-[13px] text-cyan">{fm.metric}</p>
+          )}
+          {fm.stack && fm.stack.length > 0 && (
+            <div className="mt-5 flex flex-wrap gap-2">
+              {fm.stack.map((s) => (
+                <span
+                  key={s}
+                  className="rounded border border-border bg-surface/70 px-2 py-1 font-mono text-[12px] text-text-dim"
+                >
+                  {s}
+                </span>
+              ))}
+            </div>
+          )}
+          <div className="mt-5 flex flex-wrap gap-3">
+            {fm.demo && fm.demo.startsWith("http") && (
+              <ButtonLink href={fm.demo} target="_blank" rel="noopener noreferrer" variant="primary" size="sm">
+                view_live ↗
+              </ButtonLink>
+            )}
+            {SYSTEM_DESIGN_SLUGS.has(slug) && (
+              <ButtonLink href={`/system-design#${slug}`} variant="outline" size="sm">
+                system_design →
+              </ButtonLink>
+            )}
+            <ButtonLink href="/map" variant="ghost" size="sm">
+              see in mind map →
+            </ButtonLink>
+          </div>
+        </header>
 
-      <Markdown html={project.html} className="max-w-3xl" />
-    </main>
+        <ProjectShowcase
+          name={name}
+          tagline={fm.tagline ?? ""}
+          image={images[0]}
+          demo={fm.demo}
+          cards={cards}
+        />
+      </main>
+    </>
   );
 }
