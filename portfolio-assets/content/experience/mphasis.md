@@ -1,6 +1,6 @@
 ---
 employer: Mphasis
-title: Associate Software Engineer — Machine Learning & Data Science
+title: Associate Software Engineer · Machine Learning & Data Science
 tenure: July 2019 - October 2022
 location: Bangalore, India
 slug: mphasis

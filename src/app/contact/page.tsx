@@ -7,7 +7,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Reach Niranjan VSKS — email, LinkedIn, GitHub, résumé. Remote-first, available to work with teams globally.",
+  description: "Reach Niranjan VSKS · email, LinkedIn, GitHub, résumé. Remote-first, available to work with teams globally.",
 };
 
 export default function ContactPage() {

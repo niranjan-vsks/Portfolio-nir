@@ -1,6 +1,6 @@
 ---
 employer: Hewlett Packard Enterprise
-title: Data Scientist — Generative AI, ML & Conversational AI
+title: Data Scientist · Generative AI, ML & Conversational AI
 tenure: November 2022 - December 2023
 location: Bangalore, India
 slug: hpe

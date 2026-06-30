@@ -1,6 +1,6 @@
 ---
 title: Loop Copilot
-public_name: Loop Copilot — AI CRM Copilot
+public_name: Loop Copilot · AI CRM Copilot
 slug: loop-copilot
 status: live
 demo: https://loopcopilot.cc

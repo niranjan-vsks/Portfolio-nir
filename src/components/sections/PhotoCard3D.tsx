@@ -7,7 +7,7 @@ import { useSound } from "@/components/providers/SoundProvider";
 
 /**
  * Landing 3D photo card (PRD 6.1 / 3d_card_photo). CSS-3D flip (perspective +
- * rotateY) — NOT a second WebGL canvas, so Home keeps one heavy effect. Front:
+ * rotateY) · NOT a second WebGL canvas, so Home keeps one heavy effect. Front:
  * photo + name + title + Summary button. Back: terminal card that typewrites
  * the summary (muted typing sound, opt-in). Photo falls back to a monogram if
  * public/niranjan-photo.jpg is absent (logged in STATE.md §2).
@@ -80,13 +80,13 @@ export function PhotoCard3D({
           </div>
         </div>
 
-        {/* BACK — terminal summary */}
+        {/* BACK · terminal summary */}
         <div className="absolute inset-0 overflow-hidden rounded-xl border border-cyan/30 bg-[#06080c]/95 [backface-visibility:hidden] [transform:rotateY(180deg)]">
           <div className="flex items-center gap-1.5 border-b border-white/10 px-3 py-2">
             <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f56]" />
             <span className="h-2.5 w-2.5 rounded-full bg-[#ffbd2e]" />
             <span className="h-2.5 w-2.5 rounded-full bg-[#27c93f]" />
-            <span className="ml-2 font-mono text-[11px] text-text-dim">niranjan — summary</span>
+            <span className="ml-2 font-mono text-[11px] text-text-dim">niranjan · summary</span>
           </div>
           <div className="p-4">
             <pre className="whitespace-pre-wrap font-mono text-[12px] leading-relaxed text-green">

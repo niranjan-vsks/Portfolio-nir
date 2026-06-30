@@ -1,6 +1,6 @@
 ---
 employer: Coforge
-title: Senior Engineer — GenAI & Agentic AI
+title: Senior Engineer · GenAI & Agentic AI
 tenure: March 2024 - Present
 location: Hyderabad, India
 slug: coforge

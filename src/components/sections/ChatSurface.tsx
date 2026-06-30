@@ -20,7 +20,7 @@ const FAQS = [
  * ask_niranjan chat surface (PRD 6.9). Own page + stacking context (no overlap
  * bleed from other modes). FAQ ready-buttons feed the assistant. No session
  * history is persisted (state lives only in this component). Thin until
- * interview/*.md is filled — by design, never fabricated.
+ * interview/*.md is filled · by design, never fabricated.
  */
 export function ChatSurface() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -49,7 +49,7 @@ export function ChatSurface() {
       if (res.status === 429) {
         setMessages((m) => {
           const c = [...m];
-          c[c.length - 1] = { role: "assistant", content: "Give me a moment — too many questions at once." };
+          c[c.length - 1] = { role: "assistant", content: "Give me a moment · too many questions at once." };
           return c;
         });
         return;

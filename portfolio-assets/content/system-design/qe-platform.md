@@ -4,7 +4,7 @@ public_name: AI-Infused Agentic Quality Engineering Platform
 slug: qe-platform
 status: production
 demo: none
-tagline: Agentic QA platform — from user story to deployed test
+tagline: Agentic QA platform · from user story to deployed test
 stack: [GraphRAG, Neo4j, vector store, Agentic RAG, custom Playwright MCP, AWS Bedrock LLM, FastAPI, React, tenant-aware RBAC, LLM observability]
 metric: "Manual QA effort down 85-90%; hallucination ~15% -> under 5%; deployed across 17 enterprise QA teams at peak adoption"
 signature_visual: static-architecture
