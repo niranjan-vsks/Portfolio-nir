@@ -9,14 +9,30 @@ import {
   saarthiMermaid,
   rebalancerMermaid,
 } from "@/components/sections/systemDesignData";
+import { useRouter } from "next/navigation";
 import { Mermaid } from "@/components/sections/Mermaid";
 import { TerminalLoader } from "@/components/ui/TerminalLoader";
+import { MovingBorderButton } from "@/components/ui/MovingBorderButton";
 
 const FlowDiagram = dynamic(
   () =>
     import("@/components/sections/FlowDiagram").then((m) => m.FlowDiagram),
   { ssr: false, loading: () => <TerminalLoader label="loading_diagram" /> },
 );
+
+// Tag chips route to the Mind Map (PRD 6.7). Moving-border + hover lift.
+function TagChips({ tags }: { tags: string[] }) {
+  const router = useRouter();
+  return (
+    <div className="mb-4 flex flex-wrap gap-2">
+      {tags.map((t) => (
+        <MovingBorderButton key={t} onClick={() => router.push("/map")}>
+          {t}
+        </MovingBorderButton>
+      ))}
+    </div>
+  );
+}
 
 function Section({
   id,
@@ -59,6 +75,7 @@ export function SystemDesignClient() {
           integration shell that lives within the customer&apos;s tenant trust
           model. Toggle planes; hover any node for the rationale.
         </p>
+        <TagChips tags={["event sourcing", "tenant trust model", "async API", "multi-CRM shell"]} />
         <FlowDiagram nodes={loopCopilotNodes} edges={loopCopilotEdges} height={500} />
       </Section>
 
@@ -74,6 +91,7 @@ export function SystemDesignClient() {
           one platform beaming into multiple managed clouds (A/B/C). Generic
           primitives only, no proprietary or client names.
         </p>
+        <TagChips tags={["GraphRAG", "agentic RAG", "reranking", "LLM observability", "tenant-aware RBAC"]} />
         <FlowDiagram nodes={qeNodes} edges={qeEdges} height={560} />
       </Section>
 
