@@ -1,6 +1,25 @@
-# STATE.md — v2 Renovation build plan (Session 1: preparation)
+# STATE.md — v2 Renovation build plan
 
-_Last updated: 2026-06-29 (Session 1, prep only, Opus 4.8). No feature code was written this session._
+## ☀️ MORNING SUMMARY (2026-06-30) — v2 renovation built end to end
+
+All 13 phases (R0–R12) are built and committed. **`npm run build` is green (28 routes), `npm run lint` is 0 errors, and all routes return 200 with the live chatbot working.** Run locally: `npm install` then `npm run dev` → http://localhost:3000.
+
+**The HARD 3D, built to spec (no gutting):**
+- **Globe (Home)** — built from scratch: procedural shader earth (fbm continents, ice caps, day/night terminator + city lights), fresnel atmosphere, starfield, drag + auto-rotate.
+- **Backgrounds** — Flow Wave (faithful port), Wave Galaxy, Particle Sphere; one heavy WebGL per page, mobile static-gradient fallbacks, reduced-motion aware.
+- **Mind Map** — blue particle brain intro that scatters/fades into the force graph (pre-authorized hand-off on mobile/reduced-motion).
+- **Container Scroll** — faithful scroll-driven 3D device frame, recolored dark+green (NOT B&W), on project pages.
+- **Terminal flip-card deck, 3D photo card (CSS-3D), Card Spotlight, Moving-Border chips, Infinite Moving Cards** — all shared, on-brand.
+
+**Sections:** Home hub, Mind Map, Projects (6 pages: 4 real + 2 honest HPE stubs), System Design (interactive React Flow + firewall framing + tag chips → Mind Map), Dashboard (real metrics only), About + Experience deck, Skills marquee → Mind Map, Certifications + Education + credential detail, AI Labs (hidden/noindex), Chatbot (/chat, FAQ buttons, rate limit), Contact. Minimal nav + Gooey fuzzy search.
+
+**🔴 Still blocked on you (logged in §2; none break the build):** your photo (`public/niranjan-photo.jpg` → monogram until added) · Loop Copilot screenshots (`content/projects/loop-copilot/` → static frame) · `interview/*.md` (chatbot stays thin, never fabricated) · HPE RAG + Global Census real content (honest stubs now) · credential blurbs (slots ready) · Saarthi/Rebalancer real architecture diagrams · AI Labs content · Jarvis.md.
+
+**🟡 Deferred polish (R12 notes):** route-level progress loader (heavy 3D already lazy-loads with terminal loaders); a Mind Map node for every skill name; Lighthouse not measured in this environment; deploy to Vercel is yours.
+
+---
+
+**Authoritative spec:** `Portfolio_Renovation_PRD_FINAL.pdf` (the v2 Renovation PRD). It wins over the bullseye/ 00–10 specs on any conflict.
 
 **Authoritative spec:** `Portfolio_Renovation_PRD_FINAL.pdf` (the v2 Renovation PRD). It wins over the bullseye/ 00–10 specs on any conflict. This file is the build plan derived from it.
 
@@ -128,7 +147,7 @@ Effort: **HARD** = top effort (3D/animation/template port) · **MED** · **ROUTI
 - Flow Wave bg. Container Scroll hero **built from `container_scroll_master_prompt.md` (no source)** with real screenshots (**BLOCKED** → framed placeholder fallback, no fake UI). Sticky Scroll Reveal (problem→approach→outcome). Project-page terminal flip card (flip REQUIRED here). Optional infinite-cards skills marquee. Live links. Multiple routes in.
 - Templates: `Container_Scroll` (prompt), `flow-wave`, terminal card, `infinite_moving_cards`. **Acceptance:** #2, #3, #5 (stubs for screenshot-less projects logged).
 
-### R7 — System Design renovation · HARD
+### R7 — System Design renovation · HARD · ✅ DONE (2026-06-30)
 - Interactive (Loop Copilot, QE ref): custom React Flow, distinct correct icon per node type; node click → Card Spotlight (≤4 one-line "used differently" bullets). Static (Saarthi, Rebalancer): Eraser/Excalidraw image (**BLOCKED** → clean fallback). Semi-interactive (HPE RAG): static image + hover tooltips (**BLOCKED** image). Plane filters (data/control/observability + optional deployment/schema/orchestration). Moving-border tag chips → route to mind-map node + zoom. **Firewall frame on every Coforge/QE diagram.**
 - Templates: `card_spotlight`, moving-border. **Acceptance:** #2, #3, #4 (firewall holds).
 
@@ -148,7 +167,8 @@ Effort: **HARD** = top effort (3D/animation/template port) · **MED** · **ROUTI
 - Particle Sphere (purple) bg. Keep contact info + résumé CTA. Remove globe (now on Home). Ensure stripped contact.md (R0) renders clean.
 - Templates: `particle_sphere`. **Acceptance:** #1, #6, #7.
 
-### R12 — Polish · perf · a11y · SEO · verify · ROUTINE→MED
+### R12 — Polish · perf · a11y · SEO · verify · ROUTINE→MED · ✅ VERIFIED (2026-06-30)
+- Added Dashboard to Home hub; verified build green (28 routes), lint 0 errors, all routes 200 (dev probe), chatbot live + accurate. Reduced-motion + mobile fallbacks + sound-muted-default + meta/OG in place. NOT done here: Lighthouse measurement (env), route-level progress loader, per-skill mind-map nodes, Vercel deploy.
 - `performance-optimizer`: Lighthouse ≥90, one-heavy-effect audit, lazy/pause-off-screen, image WebP. Mobile fallbacks for every heavy component. Reduced-motion + keyboard focus everywhere. Sound toggle present, no autoplay. Meta/OG + link previews. Full acceptance sweep vs PRD §7. (Deploy to Vercel is Niranjan's.)
 - **Acceptance:** all 10 criteria.
 

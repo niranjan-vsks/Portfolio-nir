@@ -34,6 +34,7 @@ export function HomeClient({
     { key: "work", label: "Work Experience", caption: "Coforge, HPE, Mphasis", cmd: "cd ~/experience", href: "/about#experience" },
     { key: "mindmap", label: "Mind Map", caption: "the whole system, one graph", cmd: "open mind-map", href: "/map" },
     { key: "system", label: "System Design", caption: "how I would build it", cmd: "cat architectures", href: "/system-design" },
+    { key: "dashboard", label: "Dashboard", caption: "the signal at a glance", cmd: "open dashboard", href: "/dashboard" },
     { key: "about", label: "About", caption: "seven years, one arc", cmd: "whoami", href: "/about" },
     { key: "contact", label: "Contact", caption: "start a conversation", cmd: "mail niranjan", href: "/contact" },
     { key: "ask", label: "ask_niranjan", caption: "interview the work directly", cmd: "./ask_niranjan", onClick: () => setAskOpen(true) },

@@ -36,8 +36,7 @@ export function GooeySearch() {
 
   useEffect(() => {
     if (open) inputRef.current?.focus();
-    setCursor(0);
-  }, [open, q]);
+  }, [open]);
 
   useEffect(() => {
     const onDoc = (e: MouseEvent) => {
@@ -82,7 +81,10 @@ export function GooeySearch() {
             <input
               ref={inputRef}
               value={q}
-              onChange={(e) => setQ(e.target.value)}
+              onChange={(e) => {
+                setQ(e.target.value);
+                setCursor(0);
+              }}
               onKeyDown={(e) => {
                 if (e.key === "ArrowDown") { e.preventDefault(); setCursor((c) => Math.min(c + 1, results.length - 1)); }
                 else if (e.key === "ArrowUp") { e.preventDefault(); setCursor((c) => Math.max(c - 1, 0)); }
