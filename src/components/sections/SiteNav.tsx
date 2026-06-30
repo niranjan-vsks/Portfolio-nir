@@ -1,62 +1,44 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
 import { SoundToggle } from "@/components/ui/SoundToggle";
+import { GooeySearch } from "@/components/ui/GooeySearch";
 
-// Terminal mode removed in v2 (PRD 6.6). Full minimal-utility nav rebuild is R1.
-const LINKS = [
-  { href: "/", label: "home" },
-  { href: "/map", label: "mind_map" },
-  { href: "/about", label: "about" },
-  { href: "/system-design", label: "system_design" },
-  { href: "/contact", label: "contact" },
-];
-
+/**
+ * Minimal utility nav (PRD 5.2): Logo · Search · GitHub · Contact · Résumé ·
+ * sound. Section navigation lives in the Home hub cards + search, not here.
+ * Persistent on every page incl. mobile.
+ */
 export function SiteNav() {
-  const pathname = usePathname();
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/60 bg-bg/80 backdrop-blur-md font-mono">
-      <nav className="mx-auto flex h-12 max-w-[1100px] items-center justify-between px-4 text-[13px]">
-        <Link href="/" className="text-green font-medium tracking-tight">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-border/60 bg-bg/80 font-mono backdrop-blur-md">
+      <nav className="mx-auto flex h-12 max-w-[1200px] items-center justify-between px-4 text-[13px]">
+        <Link href="/" className="font-medium tracking-tight text-green">
           niranjan.vsks<span className="text-text-dim">:~$</span>
         </Link>
-        <div className="hidden items-center gap-1 md:flex">
-          {LINKS.map((l) => {
-            const active =
-              l.href === "/" ? pathname === "/" : pathname.startsWith(l.href);
-            return (
-              <Link
-                key={l.href}
-                href={l.href}
-                className={cn(
-                  "rounded px-2.5 py-1 text-text-dim transition-colors hover:text-green",
-                  active && "text-green bg-green/10",
-                )}
-              >
-                {l.label}
-              </Link>
-            );
-          })}
-          <SoundToggle className="ml-1" />
+
+        <div className="flex items-center gap-2 sm:gap-3">
+          <GooeySearch />
           <a
-            href="/NiranjanVSKS_FDE.pdf"
+            href="https://github.com/niranjanvsks"
             target="_blank"
             rel="noopener noreferrer"
-            className="ml-1 rounded border border-green/50 px-2.5 py-1 text-green transition-colors hover:bg-green hover:text-bg"
+            className="hidden text-text-dim transition-colors hover:text-green sm:block"
           >
-            résumé.pdf
+            github
           </a>
-        </div>
-        {/* Mobile: condensed links (full mobile nav rebuilt in R1) */}
-        <div className="flex items-center gap-3 md:hidden">
+          <Link
+            href="/contact"
+            className="hidden text-text-dim transition-colors hover:text-green sm:block"
+          >
+            contact
+          </Link>
           <SoundToggle />
           <a
             href="/NiranjanVSKS_FDE.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded border border-green/50 px-2 py-0.5 text-green"
+            className="rounded border border-green/50 px-2.5 py-1 text-green transition-colors hover:bg-green hover:text-bg"
           >
             résumé
           </a>

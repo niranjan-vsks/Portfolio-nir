@@ -101,7 +101,7 @@ Effort: **HARD** = top effort (3D/animation/template port) · **MED** · **ROUTI
 - Strip every internal-note leak from rendered copy (incl. `contact.md` body, Footer, ProjectVisual, work-with-me). Update content loader for `content/projects/<name>/<name>.md`. Remove terminal mode (route + nav). Confirm palette tokens incl. expansions (copper-blue, purple, flow-green, violet). Add global sound-toggle (muted default) + reduced-motion utilities. Meta/OG audit.
 - Templates: none. **Acceptance:** #1 (no leaks), #9 (meta/OG), partial #10 (terminal gone).
 
-### R1 — Nav + Gooey Search + Loader system · HARD
+### R1 — Nav + Gooey Search + Loader system · HARD · ✅ NAV+SEARCH DONE (2026-06-30); route-level progress loader DEFERRED to R12 (heavy 3D already lazy-loads with terminal loaders)
 - Minimal top nav (Logo | Resume | GitHub | Search | Contact) + mobile collapse. Gooey search from `gooey_search.md` (Fuse.js fuzzy over sections/projects/keywords, suggestive phrases, route on match, no LLM). Route-level loader (0→100 in ~10% steps, blurred page behind, first-visit-only + cache, 8s hard-timeout reveal, reduced-motion static state, per-page terminal copy).
 - Templates: `gooey_search` (prompt). **Acceptance:** #6 (loader/cache/timeout), #10 (gooey fuzzy). Foundational for all heavy pages.
 
