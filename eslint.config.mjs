@@ -20,18 +20,16 @@ const eslintConfig = defineConfig([
   {
     // R3F scene setup generates geometry with Math.* inside useMemo (idiomatic).
     // The React Compiler purity rule flags this; it is intentional and stable.
-    files: ["src/components/3d/**/*.{ts,tsx}"],
+    files: [
+      "src/components/3d/**/*.{ts,tsx}",
+      "src/components/backgrounds/**/*.{ts,tsx}",
+    ],
     rules: {
       "react-hooks/purity": "off",
       "react-hooks/set-state-in-effect": "warn",
       // The provided react-force-graph-3d component is untyped at its boundary.
       "@typescript-eslint/no-explicit-any": "warn",
     },
-  },
-  {
-    // Subscriptions to matchMedia / URL search params are effect-driven by design.
-    files: ["src/components/sections/HeroClient.tsx"],
-    rules: { "react-hooks/set-state-in-effect": "warn" },
   },
 ]);
 

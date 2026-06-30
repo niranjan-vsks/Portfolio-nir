@@ -1,35 +1,22 @@
-import { Suspense } from "react";
-import { getSection, getAllProjects } from "@/lib/content";
-import { HeroClient } from "@/components/sections/HeroClient";
-import type { HeroProject } from "@/components/3d/hero/HeroScene";
+import { getSection } from "@/lib/content";
+import { HomeClient } from "@/components/sections/HomeClient";
 
 export default function Home() {
   const hero = getSection("hero");
   const fm = (hero?.frontmatter ?? {}) as Record<string, string>;
 
-  // Pull the typewriter intro lines from the fenced code block in hero.md.
-  const introLines =
+  // Pull the one-line positioning paragraph from hero.md (no hardcoded copy).
+  const positioning =
     hero?.body
-      .match(/```([\s\S]*?)```/)?.[1]
-      .split("\n")
-      .map((l) => l.trim())
-      .filter((l) => l.startsWith(">") && l !== "> _") ?? [];
-
-  const projects: HeroProject[] = getAllProjects().map((p) => ({
-    slug: p.frontmatter.slug,
-    name: p.frontmatter.public_name ?? p.frontmatter.title,
-    tagline: p.frontmatter.tagline ?? "",
-    metric: p.frontmatter.metric,
-    stack: p.frontmatter.stack,
-  }));
+      .match(/##\s*One-line positioning\s*\n+([^\n]+)/i)?.[1]
+      ?.trim() ?? fm.tagline ?? "";
 
   return (
-    <Suspense>
-      <HeroClient
-        projects={projects}
-        introLines={introLines}
-        tagline={fm.tagline ?? ""}
-      />
-    </Suspense>
+    <HomeClient
+      name="Niranjan VSKS"
+      title="Senior Agentic AI Engineer · Forward Deployed"
+      summary={positioning}
+      caption={fm.tagline ?? positioning}
+    />
   );
 }
