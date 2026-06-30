@@ -16,8 +16,27 @@ function sse(text: string): Uint8Array {
   return new TextEncoder().encode(text);
 }
 
+// Basic in-memory rate limiter (PRD 6.9 / decision #5): 15 requests / minute / IP.
+const WINDOW_MS = 60_000;
+const MAX_REQ = 15;
+const hits = new Map<string, number[]>();
+function rateLimited(ip: string): boolean {
+  const now = Date.now();
+  const recent = (hits.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
+  recent.push(now);
+  hits.set(ip, recent);
+  return recent.length > MAX_REQ;
+}
+
 /** Stream plain text chunks. Works with or without GROQ_API_KEY (bullseye/08). */
 export async function POST(req: Request) {
+  const ip =
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "local";
+  if (rateLimited(ip)) {
+    logger.warn("api/ask", "rate limited", { ip });
+    return new Response("Too many requests. Give me a moment.", { status: 429 });
+  }
+
   let body: { messages?: Msg[] };
   try {
     body = await req.json();

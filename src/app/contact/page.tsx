@@ -2,10 +2,13 @@ import { getSection } from "@/lib/content";
 import { Markdown } from "@/components/ui/Markdown";
 import { PageShell } from "@/components/sections/PageShell";
 import { ButtonLink } from "@/components/ui/Button";
-import { Globe } from "@/components/3d/Globe";
+import { PageBackground } from "@/components/backgrounds/PageBackground";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = { title: "Contact" };
+export const metadata: Metadata = {
+  title: "Contact",
+  description: "Reach Niranjan VSKS — email, LinkedIn, GitHub, résumé. Remote-first, available to work with teams globally.",
+};
 
 export default function ContactPage() {
   const contact = getSection("contact");
@@ -18,10 +21,12 @@ export default function ContactPage() {
   ].filter((l) => l.href);
 
   return (
-    <PageShell eyebrow="contact" title="Get in touch">
-      <div className="grid gap-12 md:grid-cols-2">
-        <div>
+    <>
+      <PageBackground variant="particle-sphere" />
+      <PageShell eyebrow="contact" title="Get in touch">
+        <div className="max-w-2xl">
           {contact && <Markdown html={contact.html} />}
+
           <div className="mt-8 space-y-3 font-mono text-[13px]">
             {links.map((l) => (
               <a
@@ -36,6 +41,7 @@ export default function ContactPage() {
               </a>
             ))}
           </div>
+
           <div className="mt-8 flex flex-wrap gap-3">
             <ButtonLink
               href="/NiranjanVSKS_FDE.pdf"
@@ -46,20 +52,16 @@ export default function ContactPage() {
             >
               ↓ Download Résumé (PDF)
             </ButtonLink>
-            <ButtonLink href="/?ask=1" variant="outline" size="md">
+            <ButtonLink href="/chat" variant="outline" size="md">
               ask_niranjan
             </ButtonLink>
           </div>
-          {fm.availability && (
-            <p className="mt-6 font-mono text-[13px] text-cyan">
-              {`> ${fm.availability}`}
-            </p>
-          )}
+
+          <p className="mt-8 font-mono text-[13px] text-purple">
+            {`> ${fm.availability ?? "Remote-first. Available to work with teams globally."}`}
+          </p>
         </div>
-        <div className="relative min-h-[360px]">
-          <Globe />
-        </div>
-      </div>
-    </PageShell>
+      </PageShell>
+    </>
   );
 }
