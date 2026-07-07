@@ -102,7 +102,7 @@ Original questions (kept for record):
 ### R0 — Intake + hygiene · ROUTINE
 Verify all template + content paths (done, Section C). Install + wire Playwright scripted suite at `tests/verify/` (crawl every route for 0 errors, console-error assert, firewall string-check on /system-design, copy audit for em-dashes/banned phrases, full-page screenshots per phase). Reconcile this STATE plan (done). Strip any remaining rendered internal notes. Fix known issues. Record DG statuses. **Acceptance:** suite runs green on the current build; STATE reconciled.
 
-### R1 — Global foundation · HARD
+### R1 — Global foundation · HARD · ✅ DONE (2026-07-07)
 Typography overhaul (legibility floor). Hover Border Gradient button system (one, site-wide). Top nav (Navbar Dark Shadow). Visible footer + full sitemap. Flow Wave default-bg plumbing. **The one true terminal flip card** (port `terminal_card_code.js` essence-preserving: caption front, hover-flip, click-route). Interlink primitives: tag-chip → mind-map deep-link (`?node=<id>`), and the wiki-style inline hyperlink component (distinct color + hover caption dialog). **Acceptance:** buttons/nav/footer/cards match the reference look side-by-side; every card routes; zero dead links.
 
 ### R2 — Landing · HARD · `[REVIEW GATE]`
@@ -141,4 +141,5 @@ Full §20 crawl (zero reachable errors), copy audit, firewall check, status labe
 ---
 
 ## H. Session log
+- **2026-07-07 (R1 — DONE):** Foundation. `HoverBorderGradient` (the one button: travelling green border, text glow, lift, press-in). `TerminalFlipCard` (the one true card — ported `terminal_card` macOS chrome + syntax-highlighted YAML body + typewriter caption, flips on hover, routes on click; keeps template's multi-color syntax, not flattened). Typography overhaul (Geist for body/headings at 16px legibility floor + generous line-height; mono only on terminal surfaces; prose headings de-mono'd). Nav rebuilt "Navbar Dark Shadow" (elevated, soft shadow, centered search, Résumé = the one button). Footer rebuilt visible with full sitemap. Interlink primitives: `WikiLink` (inline hyperlink + hover caption) and `TagChip` (→ `/map?node=<id>`, consumed in R3). Build green (28 routes), lint 0 errors. **Adoption note:** old `Button`/`ButtonLink` still used on pages that R2–R10 rebuild; swap to HoverBorderGradient per-phase. **Next: R2 landing (globe + orbiting terminal cards + real 3d_card_photo) [GATE].**
 - **2026-07-07 (Round-2 Session 1, prep):** Read RENOVATION_PRD_FINAL + New Portfolio Fixes in full. Verified template paths on disk (Section C) and that Playwright MCP is live but the scripted suite is not set up (Section B). Wrote this plan (replaces round-1 plan). Updated memory. No feature code. **Next: on "go", start R0** (Playwright suite + hygiene). Awaiting answers to Q1–Q5 (Section F).

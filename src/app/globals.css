@@ -52,10 +52,21 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-sans);
+  font-size: 16px; /* legibility floor (PRD 6.1): body 15-16px, never smaller */
+  line-height: 1.6;
+  letter-spacing: -0.006em;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-/* Terminal/UI chrome defaults to mono */
+/* Display headings use the premium sans (Geist), not mono (PRD 6.1). */
+h1, h2, h3, h4 {
+  font-family: var(--font-sans);
+  letter-spacing: -0.02em;
+}
+
+/* Terminal aesthetic is opt-in, only on terminal surfaces (cards, chatbot,
+   code labels) — never the default body font. */
 .font-terminal {
   font-family: var(--font-mono);
 }
@@ -140,7 +151,8 @@ body {
 .prose-nir h1,
 .prose-nir h2,
 .prose-nir h3 {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
+  letter-spacing: -0.02em;
   color: #fff;
   margin-top: 1.6em;
   margin-bottom: 0.6em;
