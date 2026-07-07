@@ -34,6 +34,11 @@ const INTERNAL_SECTION = /nda framing|must hold|^framing\b/i;
 
 const SYSTEM_DESIGN_SLUGS = new Set(["loop-copilot", "qe-platform"]);
 
+// Confidentiality gate (PRD rule 3): screenshots only render for slugs whose
+// images are confirmed scrubbed of client data. Empty until Niranjan confirms;
+// Loop Copilot's dropped shots stay hidden (not scrubbed) until then.
+const SCREENSHOTS_CLEARED = new Set<string>([]);
+
 export default async function ProjectPage({
   params,
 }: {
@@ -44,7 +49,7 @@ export default async function ProjectPage({
   if (!project) notFound();
   const fm = project.frontmatter;
   const name = fm.public_name ?? fm.title;
-  const images = getProjectImages(slug);
+  const images = SCREENSHOTS_CLEARED.has(slug) ? getProjectImages(slug) : [];
   const cards = splitSections(project.body)
     .filter((s) => !INTERNAL_SECTION.test(s.title))
     .map((s) => ({ title: `${name} · ${s.title}`, html: s.html }));
@@ -104,7 +109,7 @@ export default async function ProjectPage({
         <ProjectShowcase
           name={name}
           tagline={fm.tagline ?? ""}
-          image={images[0]}
+          images={images}
           demo={fm.demo}
           cards={cards}
         />

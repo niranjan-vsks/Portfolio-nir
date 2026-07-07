@@ -12,16 +12,18 @@ import { TerminalCard, type TerminalCardItem } from "@/components/ui/TerminalCar
 export function ProjectShowcase({
   name,
   tagline,
-  image,
+  images = [],
   demo,
   cards,
 }: {
   name: string;
   tagline: string;
-  image?: string;
+  images?: string[];
   demo?: string;
   cards: TerminalCardItem[];
 }) {
+  const image = images[0];
+  const gallery = images.slice(1);
   const screen = image ? (
     // eslint-disable-next-line @next/next/no-img-element -- served from a dynamic content route, not /public
     <img
@@ -66,6 +68,31 @@ export function ProjectShowcase({
       <section className="mx-auto -mt-24 max-w-3xl px-4 sm:-mt-40">
         <TerminalCard cards={cards} />
       </section>
+
+      {gallery.length > 0 && (
+        <section className="mx-auto mt-16 max-w-4xl px-4">
+          <h3 className="mb-4 font-mono text-sm text-green">{"> screens"}</h3>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {gallery.map((src, i) => (
+              <a
+                key={src}
+                href={src}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group overflow-hidden rounded-lg border border-green/20 bg-surface/40 transition-colors hover:border-green/50"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element -- served from a dynamic content route, not /public */}
+                <img
+                  src={src}
+                  alt={`${name} screen ${i + 2}`}
+                  loading="lazy"
+                  className="w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
+                />
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
     </>
   );
 }

@@ -1,188 +1,144 @@
-# STATE.md — v2 Renovation build plan
+# STATE.md — v2 Renovation ROUND 2 (RENOVATION_PRD_FINAL)
 
-## ☀️ MORNING SUMMARY (2026-06-30) — v2 renovation built end to end
+_Session 1 (prep only, 2026-07-07, Opus). No feature code written this session._
 
-All 13 phases (R0–R12) are built and committed. **`npm run build` is green (28 routes), `npm run lint` is 0 errors, and all routes return 200 with the live chatbot working.** Run locally: `npm install` then `npm run dev` → http://localhost:3000.
+**Authoritative spec (authority order):** (1) Niranjan's live answers to the Decision Gates below → (2) `RENOVATION_PRD_FINAL.md` → (3) `New Portfolio Fixes` doc (screenshots = the VISUAL source of truth; on any visual conflict the Fixes doc WINS) → (4) prior specs (this file's old plan, bullseye/00–10). This PRD's R0–R12 plan REPLACES the previous round's plan (also R0–R12 but different scope).
 
-**The HARD 3D, built to spec (no gutting):**
-- **Globe (Home)** — built from scratch: procedural shader earth (fbm continents, ice caps, day/night terminator + city lights), fresnel atmosphere, starfield, drag + auto-rotate.
-- **Backgrounds** — Flow Wave (faithful port), Wave Galaxy, Particle Sphere; one heavy WebGL per page, mobile static-gradient fallbacks, reduced-motion aware.
-- **Mind Map** — blue particle brain intro that scatters/fades into the force graph (pre-authorized hand-off on mobile/reduced-motion).
-- **Container Scroll** — faithful scroll-driven 3D device frame, recolored dark+green (NOT B&W), on project pages.
-- **Terminal flip-card deck, 3D photo card (CSS-3D), Card Spotlight, Moving-Border chips, Infinite Moving Cards** — all shared, on-brand.
-
-**Sections:** Home hub, Mind Map, Projects (6 pages: 4 real + 2 honest HPE stubs), System Design (interactive React Flow + firewall framing + tag chips → Mind Map), Dashboard (real metrics only), About + Experience deck, Skills marquee → Mind Map, Certifications + Education + credential detail, AI Labs (hidden/noindex), Chatbot (/chat, FAQ buttons, rate limit), Contact. Minimal nav + Gooey fuzzy search.
-
-**🔴 Still blocked on you (logged in §2; none break the build):** your photo (`public/niranjan-photo.jpg` → monogram until added) · Loop Copilot screenshots (`content/projects/loop-copilot/` → static frame) · `interview/*.md` (chatbot stays thin, never fabricated) · HPE RAG + Global Census real content (honest stubs now) · credential blurbs (slots ready) · Saarthi/Rebalancer real architecture diagrams · AI Labs content · Jarvis.md.
-
-**🟡 Deferred polish (R12 notes):** route-level progress loader (heavy 3D already lazy-loads with terminal loaders); a Mind Map node for every skill name; Lighthouse not measured in this environment; deploy to Vercel is yours.
+**The #1 standing order (behavioral):** _"MAINTAIN ALL THE EFFECTS, ALL THE COMPONENTS CODE AS IS AND ONLY AND ONLY MAKE MINOR SURGICAL CHANGES."_ Port every template essence-preserving from its real source/master prompt. Surgical content swaps only. A gutted/flattened port is a FAILED phase, not a shipped one. When a port is hard, STOP and flag at the gate — never downgrade silently. See [[feedback-essence-preservation]].
 
 ---
 
-**Authoritative spec:** `Portfolio_Renovation_PRD_FINAL.pdf` (the v2 Renovation PRD). It wins over the bullseye/ 00–10 specs on any conflict.
+## A. Round-1 → Round-2 DELTA (what the last build got wrong; do NOT rebuild the wrong things)
 
-**Authoritative spec:** `Portfolio_Renovation_PRD_FINAL.pdf` (the v2 Renovation PRD). It wins over the bullseye/ 00–10 specs on any conflict. This file is the build plan derived from it.
+Round 1 (previous STATE, now superseded) shipped a working site but the visual layer was rejected. This round largely reworks the visual layer; content + plumbing (content loader, RAG/chat API, image route, credentials, search index) mostly stays.
+
+REPLACE / REBUILD:
+- **Landing** — current: globe bg + hub cards + CSS photo card. Target: globe FIXED at centre rotating on its own axis (no blue ring, not fullscreen) + **3D-rotating terminal-card carousel orbiting it** (jordan.dev reference) + the REAL Aceternity `3d_card_photo` (not a flat rectangle) with an ask_niranjan button on it. Remove bar-graph/stardust. (PRD §9, DG-1, DG-2)
+- **Cards everywhere** — current: `TerminalCard` deck (rejected as cheap) + Container Scroll on project pages. Target: **terminal flip cards** from `terminal_card` (Aceternity) — short caption front, FLIP on hover, CLICK routes to page. This is THE card, site-wide (projects, experience, certs, landing orbit). (PRD §12.1)
+- **Container Scroll** — REMOVE everywhere except Saarthi's mobile-vs-web View. (PRD §13.4)
+- **Project pages** — target: Slider Spectra hero in a "View" tab + tabbed sub-sections (Overview / System Design / Product Design / View / GitHub). Macbook Scroll on Loop Copilot Overview (DG-5). (PRD §13)
+- **Mind Map brain** — current: procedural "white table lamp" (rejected). Target: reference-quality glossy neuron brain (`brain` + `neuron_landing_page`), zoom-in dissolve → blue neuron-starfield → dissolve into graph. (PRD §10.1)
+- **Mind Map graph** — add emissive/bloom nodes, hover zoom + node motion (keep the praised connected-highlight), translucent description card CENTER-LEFT for every node, full on-click routing contract (zero 404s), dynamic data, a node per skill, tag-chip deep-links. (PRD §10.2–10.4)
+- **Experience** — split into its OWN page `/experience` (currently just `/about#experience`) with an explicit FDE section + Wikipedia-style inline hyperlinks. (PRD §11.1)
+- **About** — Infinite Moving Cards (terminal-style) for the experience strip + the MISSING skills marquee; Wave Galaxy bg. (PRD §11.2)
+- **Contact** — Solaris background (`solaris/solaris.html`), replaces Particle Sphere. (PRD §9/DG-3)
+- **Typography** — full overhaul; current mono-heavy landing is the "third class font" defect. Premium legible display/body; mono ONLY inside terminal surfaces; larger Encrypted Text. (PRD §6.1)
+- **Buttons** — one system: Aceternity **Hover Border Gradient** (glow border + text glow + 3D rest + press-in). Replaces the current small bland buttons. (PRD §6.2)
+- **Top nav** — rebuild "Navbar Dark Shadow" premium style. (PRD §8.1)
+- **Footer** — rebuild visible, full sitemap (current one is invisible). (PRD §8.3)
+- **Search** — centered, prominent, gooey, smart. (PRD §8.2)
+- **Dashboard** — make metric cards clickable + fill the dead space under the numbers. (PRD §15.1)
+- **Chatbot** — full premium UI rebuild; entry also from the landing photo card. (PRD §15.2)
+
+KEEP: Flow Wave Green background (the one thing done right — reuse that exact port as the default bg for every dedicated page except About/Contact). Content loader + folder structure, `/api/ask` + RAG + rate limit, `/api/project-image`, credentials module, search index, content-as-source-of-truth, liability firewall, no-fabrication, status labels, dark-only.
+
+STACK NOTE: PRD §3 says "Next.js 14." Repo is on **Next 16 / React 19 / Tailwind 4** (kept from round 1; not downgrading — flag as a knowingly-accepted deviation).
 
 ---
 
-## 0. Resume protocol (read first every build session)
-- Build runs **one phase per session**. At the end of each phase: commit, then update this file (mark phase done, note what's next). If a session runs out of tokens, only that one phase is lost.
-- **Effort follows difficulty, not order.** Top effort on HARD phases. Never silently downgrade a HARD effect to a cheap fallback to save tokens; split and checkpoint instead. Any pre-authorized fallback (e.g. mind-map fade/zoom) must be logged here.
-- **Hard rules every phase** (see memory: essence-preservation, liability-firewall, surgical-fixes): no internal-note leaks in rendered copy; no gutted effects; no fabrication (thin → honest "In development" stub); one heavy WebGL effect per page; sound muted by default; mobile fallback + reduced-motion + keyboard focus on every heavy component; real HTML text + meta/OG.
-- Skills: `frontend-design` (all UI), `3d-web-experience` (R2/R4/R5/R6 — backgrounds, globe, brain, container scroll), `performance-optimizer` (R12 + measure after each HARD phase). Spec overrides skill conventions.
+## B. Playwright verification status (PRD §20)
+- **Playwright MCP (interactive/visual):** integrated and LIVE this session (`mcp__playwright__browser_*` tools available). Use for the §20.2 visual side-by-side and §20.3 motion checks.
+- **Scripted suite (`tests/verify/`, run in `/goal`):** NOT set up. No `@playwright/test`, no `playwright.config`, no `tests/`. **R0 must install `@playwright/test`, add config, and write the crawl/console/firewall/copy-audit/screenshot suite.**
 
 ---
 
-## 1. Asset & source inventory (verified 2026-06-29, facts not assumptions)
-
-### Template source present (`template_repos/textura_templates/`)
-| Folder | What's there | Build effort |
+## C. Template manifest — verified on disk (2026-07-07)
+| Template | Type on disk | Phase |
 |---|---|---|
-| `3d_card_photo/` | `3d_card_photo.js` (source) | port |
-| `Layout_flipping_text/` | `.js` source | port (easy) |
-| `Hover_button/` | html+css source (unassigned, keep for later) | n/a |
-| `ascend/ascend/` | `index.html` source (Home hub LAYOUT reference) | reference |
-| `helios_landing_page/` | master prompt only (hub layout reference) | reference |
-| `brain/` | `brain.html` source | port |
-| `neuron_landing_page/neural-monitor/` | FULL Next.js source (brain intro). Also contains `src/components/story/terminal.tsx` = the terminal-card look the PRD calls `terminal/`. | port (HARD) |
-| `card_spotlight/` | `card_spotlight.js` + master prompt | port |
-| `flow-wave/` | `flow-wave.html` source + master prompt | port |
-| `infinite_moving_cards/` | `infinite_moving_cards.js` source | port (easy) |
-| `encrypted_text.md` | spec/prompt | build from spec |
-
-### Prompt-only (NO source code — must build from the master prompt; higher effort, treat HARD)
-- `Container_Scroll/` → `container_scroll_master_prompt.md` only. **No source.** (PRD 6.5 is the Macbook-Scroll replacement; this is the one Niranjan cares most about — top effort.)
-- `gooey_search/` → `gooey_search.md` only.
-- `particle_sphere/` → `particle_sphere_purple_master_prompt` only. **(PRD §2 claimed "prompt + source" — incorrect; prompt only.)**
-- `wave_galaxy_blue/` → `wave_galaxy_blue_m,aster_prompt.md` only. **(PRD §2 claimed "prompt + source" — incorrect; prompt only.)**
-
-### Not in repo
-- **Moving-border (Aceternity):** no folder. The component code is given inline in PRD 6.7, so buildable (port the Aceternity `ui/moving-border` + the demo). Not a blocker.
-- **`fey_cards/`:** folder is EMPTY (PRD lists it as styling reference only — fine).
-- **Realistic globe template:** not present anywhere. PRD 6.3 says Niranjan "will give a better 3D template with source code." **NOT YET PROVIDED → blocks Home globe.**
-- `RENOVATION_DIRECTION_v2.md`: referenced by the PRD but not in the repo. Non-blocking (PRD absorbs it).
-
-### Content present vs missing (`portfolio-assets/content/`)
-- Projects are now per-folder: `content/projects/<name>/<name>.md`. Present: `loop-copilot`, `qe-platform`, `rebalancer`, `saarthi`. **Note:** PRD 6.11 writes the path as `portfolio-assets/projects/<name>/` but reality is `portfolio-assets/content/<...>`. See Question Q1.
-- `experience/`: `coforge.md`, `hpe.md`, `mphasis.md`. `skills.md`, `about.md`, `contact.md`, `hero.md` present.
-- `system-design/`: `loop-copilot.md`, `qe-platform.md`.
-- `interview/*` (persona, faq, war-stories, decisions-and-tradeoffs): **ALL 0 bytes (empty).**
-- `public/`: has `NiranjanVSKS_FDE.pdf`. **No photo, no project screenshots, no `sounds/sound.ogg`, no globe asset.**
+| `terminal_card` | SOURCE (`terminal_card_code.js`) + prompt | R1 (the one true card) |
+| `slider_spectra` | PROMPT (`slider_spectra.md`) | R5 (project View) |
+| `solaris` | SOURCE (`solaris.html`) | R9 (Contact bg) |
+| `3d_card_photo` | SOURCE (`.js`) | R2 (landing photo card) |
+| `brain` + `neuron_landing_page` | SOURCE | R3 (brain intro) |
+| `infinite_moving_cards` | SOURCE (`.js`) | R4 (About strips) |
+| `card_spotlight` | SOURCE + prompt | R6/R7 |
+| `ascend` | SOURCE (`index.html`) | R2 (globe) |
+| `helios_landing_page` | PROMPT | R2 (layout ref) |
+| `gooey_search` | PROMPT | R10 (search) |
+| `Container_Scroll` | PROMPT | R5 (Saarthi only) |
+| `Layout_flipping_text` | SOURCE | R2 (headings) |
+| `encrypted_text.md` | PROMPT | R1/R2 |
+| `Hover_button` | SOURCE (superseded by Hover Border Gradient) | maybe chips |
+| `remix-3d-mockup-animator` | SOURCE (`main.js`, repo root) | R5 (Saarthi mobile) |
+| Macbook Scroll (Aceternity) | build from Aceternity | R5 (Loop Copilot Overview) |
+| Hover Border Gradient (Aceternity) | build from Aceternity | R1 (buttons) |
+| `wave_galaxy_blue`, `flow-wave` | prompt / source | reuse round-1 ports |
 
 ---
 
-## BUILD-START LOCKS (2026-06-29, on "go" — these override earlier notes)
-1. **Path:** the single real path is `content/projects/<name>/<name>.md`. Update the loader + any PRD references to match; do NOT migrate files.
-2. **Globe (R4):** build a realistic 3D globe FROM SCRATCH (textured earth sphere + atmosphere + starfield in black space). Do NOT wait for an external template; do NOT ship a wireframe or placeholder globe. Home centerpiece, top effort.
-3. **AI Labs + Jarvis:** build the routes but keep them hidden from the top nav AND the Home hub cards until their content exists. No publicly reachable empty pages.
-4. **Certifications + Education:** real clickable pages with full layout + reference cards, but clearly-marked empty content slots for Niranjan's blurbs. Do not invent descriptions.
-- **New assets provided:** Saarthi wireframes at `content/projects/saarthi/Wireframes_Saarthi.pdf`. Photo (`public/`) + Loop Copilot screenshots (`content/projects/loop-copilot/`) incoming — use when present, else clean fallback + log, never a fake.
-- **Accepted placeholders this run:** Saarthi/Rebalancer/HPE-RAG diagram images → clean built-in fallback diagram; Dashboard → clearly-marked placeholder numbers; chatbot → thin until `interview/*` filled. Everything visual must be real, not pixelated, not gutted.
+## D. DECISION GATES — ✅ ALL 5 DEFAULTS CONFIRMED (Niranjan, 2026-07-07)
+- **DG-1 Landing nav.** DEFAULT: the orbiting terminal cards ARE the section-nav (each card = one section, click routes). Top nav minimal; footer carries full sitemap.
+- **DG-2 Globe.** DEFAULT: reversal wins — globe fixed centre, auto-rotating on own axis; port Ascend globe render quality; drop hover/scroll camera; no blue ring; not fullscreen.
+- **DG-3 Contact bg.** DEFAULT: Solaris fully replaces Particle Sphere (keep the template folder, stop using Particle Sphere).
+- **DG-4 Perf override.** DEFAULT: accepted — multi-WebGL allowed on Landing + Mind Map WITH the full mandatory mitigation contract (§5). Anti-gutting floor: fallbacks may only defer/tier-down/simplify, never replace a heavy effect with a flat/cheap one on a capable device.
+- **DG-5 Loop Copilot signature.** DEFAULT: keep Macbook Scroll on the Overview tab AND Slider Spectra in the View tab.
 
-## 2. BLOCKED ON NIRANJAN (cannot fill without you — never fabricated; assets above unblock their phase)
-1. **Realistic globe:** NOT blocked — building from scratch in R4 per lock #2 (no template needed).
-2. **Project screenshots** for the Container Scroll hero, into `content/projects/<name>/` (PRD 6.5/6.11). Until provided: framed static placeholder, no Container Scroll, no fabricated UI.
-3. **`interview/*.md` content** (your first-person voice). Chatbot stays thin until filled (PRD 6.9 blocker). Do not fabricate persona.
-4. **HPE Conversational RAG Chatbot** and **Global Census Chatbot (HPE)** project content (canonical table needs 2 new Work-Experience project pages). No content files exist → honest "In development" stubs until you supply them.
-5. **Jarvis** content: do NOT create the page until `Jarvis.md` exists.
-6. **Your photo** (`public/`) for the Home 3D photo card front face.
-7. **Typing sound** `public/sounds/sound.ogg` for terminal-card / 3D-photo-card typewriter (PRD 6.4/6.1). Muted by default regardless.
-8. **Static diagram images** for Saarthi, Rebalancer (Eraser/Excalidraw) and HPE RAG (semi-interactive) System Design (PRD 6.7). Until provided: clean built-in fallback diagram + logged.
-9. **Per-node "used differently" bullets** (4–5 per diagram) for System Design tool nodes (PRD 6.7) where they aren't already in content — accuracy needs your input.
-10. **Certifications / Education** dedicated-page content (brief description per cert + which projects map to each) (PRD 6.10).
-11. **AI Labs** content (PRD 6.10 — scaffold shell now, content later).
-12. **Dashboard** FDE-positioning metrics that aren't in the resume (PRD 6.8) — placeholders clearly marked until you give real numbers.
+## E. BLOCKED ON NIRANJAN (honest stubs; never fabricated — PRD §16)
+1. `interview/*.md` persona (chatbot stays honest-but-thin; verified still empty).
+2. **SCRUBBED Loop Copilot screenshots** — 5 PNGs are dropped, but PRD Rule 3 requires Lenovo account data + email removed BEFORE they render. **Until confirmed scrubbed, treat as stub (do NOT ship them).** See Q below.
+3. HPE Conversational RAG + Global Census content (honest stubs exist).
+4. Photo — PROVIDED (`public/niranjan-photo.jpg`); confirm it's final.
+5. Typing sound asset (sound stays muted regardless).
+6. Saarthi / Rebalancer / HPE static diagram images.
+7. Per-node bullets for interactive-diagram Card Spotlights beyond content.
+8. Certification / education blurbs.
+9. AI Labs content (route hidden).
+10. Real dashboard numbers beyond content files.
 
----
+## F. CONTRADICTIONS / QUESTIONS — RESOLVED 2026-07-07
+**Answers:** Q1 → screenshots NOT scrubbed; hold as stub (Loop Copilot View shows placeholder until scrubbed set arrives; never render unscrubbed). Q2 → keep Geist for display/body + JetBrains Mono in terminal surfaces only, at the legibility floor; Encrypted Text bigger. Q3 → all 5 DG defaults approved. Q4 → keep `/ai-labs` hidden noindex scaffold. Q5 → Jarvis stays fully hidden until `Jarvis.md` exists.
 
-## 3. Questions / contradictions (RESOLVED 2026-06-29 unless noted)
-- **Q1 — project content path. RESOLVED:** keep `content/projects/<name>/<name>.md` (Niranjan chose "keep"). Screenshots live in that same folder; R0 updates the loader for the folder structure. Do NOT migrate to `portfolio-assets/projects/`.
-- **Q2 — globe. RESOLVED:** build Home now (R4) with a clean placeholder slot; wire the real globe as a small follow-up once Niranjan drops the template + source into the repo. R4 is NOT blocked.
-- **Q3 — PRD §2 source error (informational).** `particle_sphere` and `wave_galaxy_blue` are prompt-only; build from master prompts (treated HARD). No veto needed.
-- **Q4 — decisions ledger D1–D6. RESOLVED:** Niranjan approved all six defaults (semi-interactive = static+hover; AI Labs scaffold-now; no LLD; encrypted-text headings/captions only; chatbot Groq+Llama; thin→stub).
-- **Q5 — HPE split (still pending asset).** Canonical table splits HPE into two Work-Experience project pages (Conversational RAG Chatbot + Global Census Chatbot), separate from the `experience/hpe.md` card. Niranjan to provide both content files; until then they ship as honest "In development" stubs.
+Original questions (kept for record):
+- **Q1 (blocking R5):** Are the 5 dropped Loop Copilot screenshots already scrubbed of Lenovo data + email? If not, I hold them as a stub and ship the View tab with wireframes/placeholder until scrubbed ones arrive.
+- **Q2 (R1/R2):** Font direction — keep Geist (body) + JetBrains Mono (terminal only), or swap the display face to the Aceternity-reference grotesque? Default: keep Geist for display/body, mono only in terminal surfaces, sizes bumped to the legibility floor (body 15–16px, labels 13–14px).
+- **Q3:** Confirm DG-1..DG-5 defaults (Section D) or override any.
+- **Q4:** `/ai-labs` — keep the hidden scaffold, or drop the route this round? (Not in the new PRD section specs; Section 16 lists its content as blocked.)
+- **Q5:** Jarvis stays fully hidden (no page, no nav/graph/search) until a `Jarvis.md` exists — confirm.
 
 ---
 
-## 4. v1 → v2 disposition (what existing code does in the renovation)
-- **REMOVE:** `src/app/terminal/` + `TerminalNav` (PRD 6.6 kills terminal mode); the Home stardust-burst + 4 flip cards (PRD 6.1); v1 wireframe `GlobeScene` (PRD 6.3 replace).
-- **REPLACE:** Home → Ascend hub; Contact globe → moves to Home, Contact gets Particle Sphere; nav → minimal utility + landing hub cards.
-- **FIX/KEEP:** `MindMap3D` engine (keep, add brain intro + quality raise); System Design React-Flow approach (keep, restyle + Card Spotlight + moving-border chips + plane filters); chatbot Groq+pgvector plumbing (keep, fix layering + FAQ + rate limit + guardrails); project pages (keep, add Flow Wave + Container Scroll + Sticky Scroll + terminal cards); content loader (update for project folders).
-- **CLEANUP (R0, critical):** strip all leaked internal notes from rendered copy. Known v1 leaks: `Footer.tsx` ("attribution pending"), `ProjectVisual` placeholder labels, `work-with-me` TODO line, and **`contact.md` body** which renders "Globe note:" + "TODO(niranjan)" lines straight to the page.
+## G. PHASED PLAN (R0–R12, per PRD §18). One phase per session. Commit + update this file at every boundary. Halt at each `[REVIEW GATE]`. Every phase runs the §20 verification (scripted suite + visual side-by-side) before it is "done"; screenshot evidence goes TO the gate, does not close it.
+
+### R0 — Intake + hygiene · ROUTINE
+Verify all template + content paths (done, Section C). Install + wire Playwright scripted suite at `tests/verify/` (crawl every route for 0 errors, console-error assert, firewall string-check on /system-design, copy audit for em-dashes/banned phrases, full-page screenshots per phase). Reconcile this STATE plan (done). Strip any remaining rendered internal notes. Fix known issues. Record DG statuses. **Acceptance:** suite runs green on the current build; STATE reconciled.
+
+### R1 — Global foundation · HARD
+Typography overhaul (legibility floor). Hover Border Gradient button system (one, site-wide). Top nav (Navbar Dark Shadow). Visible footer + full sitemap. Flow Wave default-bg plumbing. **The one true terminal flip card** (port `terminal_card_code.js` essence-preserving: caption front, hover-flip, click-route). Interlink primitives: tag-chip → mind-map deep-link (`?node=<id>`), and the wiki-style inline hyperlink component (distinct color + hover caption dialog). **Acceptance:** buttons/nav/footer/cards match the reference look side-by-side; every card routes; zero dead links.
+
+### R2 — Landing · HARD · `[REVIEW GATE]`
+Black space; globe fixed-centre own-axis (Ascend render quality, no ring, not fullscreen); orbiting 3D terminal-card carousel (typewriter, hover-focus, click-route, keyboard/tap); real `3d_card_photo` with balanced photo/text + Summary + ask_niranjan buttons; Layout Text Flip + Encrypted Text at legible sizes; step-loader + mitigation contract; NO bar-graph/stardust/ring. **Acceptance §9.5** + visual side-by-side vs Ascend + 55fps sample.
+
+### R3 — Mind Map · HARD · `[REVIEW GATE]`
+Reference brain intro (glossy neurons, zoom-in dissolve → blue neuron-starfield → dissolve to graph). Graph: emissive+bloom nodes, hover zoom/motion, keep connected-highlight, translucent description card CENTER-LEFT for EVERY node, full on-click contract (dedicated page → route; parent w/ subnodes → zoom+focus subnode; skill → `/about#skills`; else real target or disabled; zero 404), dynamic data from content, a node per skill, `?node=` deep-link + zoom. **Acceptance §10.5** + firewall re-check in data.
+
+### R4 — Experience + About · HARD
+`/experience` own page (Flow Wave; explicit FDE section w/ tags+bullets+proof from content; wiki-style inline hyperlinks routing to projects/sections/nodes). `/about` (Wave Galaxy; Infinite Moving terminal cards for experience strip [hover-pause, click→/experience]; skills marquee → mind-map nodes; certification terminal cards). Cert/education dedicated pages (honest stubs). **Acceptance:** experience ≠ about; FDE proofs trace to content; every inline link + card routes.
+
+### R5 — Projects hub + project pages · HARD · `[REVIEW GATE]`
+Hub: terminal flip cards grouped Work/Independent. Per project: tabs Overview / System Design / Product Design / View / GitHub. View = Slider Spectra (focused card larger + zoom, others blurred; per-screenshot caption+description). Loop Copilot Overview = Macbook Scroll (DG-5); Saarthi View = Mobile/Web toggle (mockup animator + Container Scroll, allowed here only). Remove Container Scroll elsewhere. Screenshots are stubs until scrubbed (Q1). **Acceptance §13** + zero dead tabs.
+
+### R6 — System Design · MED
+Flow Wave bg. Distinct icons per node type; node click → Card Spotlight (≤4 one-line bullets). Plane filters. Tag chips → mind-map deep-link+zoom. Static diagrams as clean images (stubs). Firewall string-check in rendered output. **Acceptance §14.**
+
+### R7 — Dashboard · MED
+Flow Wave bg. Card Spotlight metric cards, CLICKABLE (route). Fill dead space with 2–3 interactive elements (filterable skills/stack, projects-by-status). Real numbers only; "Sample data" badge otherwise. **Acceptance §15.1.**
+
+### R8 — Chatbot · MED · `[REVIEW GATE]`
+Full premium symmetrical UI rebuild; fixed isolation/z-index/focus-trap; Wave Galaxy bg; entry from nav + landing photo card; Groq+pgvector, model-agnostic; guardrails; FAQ cached; rate limiter; no persisted history. Thin until interview content. **Acceptance §15.2**; tone gate re-runs after content.
+
+### R9 — Contact · MED
+Solaris background (port `solaris.html` essence-preserving, no depixelation); contact info; résumé CTA; premium buttons; no globe. **Acceptance:** Solaris matches source side-by-side.
+
+### R10 — Smart search · MED
+Centered prominent gooey input; fuzzy over sections/projects/experience/skills/certs/terms; suggestive phrases; `/` + `Cmd+K`; routes to page/anchor/mind-map node. **Acceptance §8.2.**
+
+### R11 — Performance + accessibility · HARD
+Full §5 contract end-to-end: device quality tiers, pause-off-screen, first-visit-only step-loader + cache + hard-timeout reveal, mobile fallbacks (alive, not dead), reduced-motion, image optimization, bundle audit, leak cleanup. **Acceptance:** Lighthouse ≥90 non-landing; 60fps mid-tier after load on landing/mind-map.
+
+### R12 — Verify + ship · ROUTINE · `[REVIEW GATE]`
+Full §20 crawl (zero reachable errors), copy audit, firewall check, status labels, SEO/OG, deploy to Vercel, prod smoke, final STATE with remaining stubs.
 
 ---
 
-## 5. Phased build plan (one phase per session)
-
-Effort: **HARD** = top effort (3D/animation/template port) · **MED** · **ROUTINE** = mechanical. Each phase is sized to finish in one session; HARD phases note a split point.
-
-### R0 — Foundations & leak cleanup · ROUTINE · ✅ DONE (2026-06-29)
-- Strip every internal-note leak from rendered copy (incl. `contact.md` body, Footer, ProjectVisual, work-with-me). Update content loader for `content/projects/<name>/<name>.md`. Remove terminal mode (route + nav). Confirm palette tokens incl. expansions (copper-blue, purple, flow-green, violet). Add global sound-toggle (muted default) + reduced-motion utilities. Meta/OG audit.
-- Templates: none. **Acceptance:** #1 (no leaks), #9 (meta/OG), partial #10 (terminal gone).
-
-### R1 — Nav + Gooey Search + Loader system · HARD · ✅ NAV+SEARCH DONE (2026-06-30); route-level progress loader DEFERRED to R12 (heavy 3D already lazy-loads with terminal loaders)
-- Minimal top nav (Logo | Resume | GitHub | Search | Contact) + mobile collapse. Gooey search from `gooey_search.md` (Fuse.js fuzzy over sections/projects/keywords, suggestive phrases, route on match, no LLM). Route-level loader (0→100 in ~10% steps, blurred page behind, first-visit-only + cache, 8s hard-timeout reveal, reduced-motion static state, per-page terminal copy).
-- Templates: `gooey_search` (prompt). **Acceptance:** #6 (loader/cache/timeout), #10 (gooey fuzzy). Foundational for all heavy pages.
-
-### R2 — Background effects library · HARD · ✅ DONE (2026-06-30)
-- Reusable lazy WebGL backgrounds with one-per-page wrapper, pause-off-screen, quality tiers, mobile fallback, reduced-motion: **R2a** Flow Wave Green (has source). **R2b** Wave Galaxy blue + Particle Sphere purple (prompt-only → build from prompts).
-- Templates: `flow-wave` (src), `wave_galaxy_blue` (prompt), `particle_sphere` (prompt). **Acceptance:** #2 (essence), #6 (one-effect), #7 (mobile/reduced-motion).
-
-### R3 — Shared card systems · HARD · ✅ DONE (2026-06-30)
-- **R3a (HARD):** Terminal flip card (macOS chrome; functional close/min/max; flip via drag/arrows + swipe; card index e.g. HPE 1/3; encrypted-text heading; green resume keywords; separate normal vs maximized markdown). Used by Experience + Projects.
-- **R3b (HARD):** 3d_card_photo (CSS-3D flip only — NOT a 2nd WebGL canvas; back = terminal face with typewriter + muted sound).
-- **R3c (MED):** Card Spotlight (shine/expand), Moving-border button (PRD inline code + hover state), Infinite Moving Cards (src), Layout Text Flip (src), Encrypted Text.
-- **Acceptance:** #2, #7, #8 (sound muted). These are shared building blocks for R4/R6/R7/R8/R9.
-
-### R4 — Home rebuild (Ascend hub) · HARD · ✅ DONE (2026-06-30)
-- Black space + starfield + **realistic globe built FROM SCRATCH** (textured earth sphere + atmosphere + starfield; top effort, no wireframe/placeholder); left 3d_card_photo (R3b); Layout Text Flip heading; Encrypted Text caption; portal cards (Projects → split Work-Experience / Independent, Experience, Mind Map, System Design, About, Contact — **AI Labs hidden until content**) with terminal-command hover + routing; static dashboard-preview chart. Remove stardust + old cards. Globe is the ONLY WebGL on Home.
-- Templates: `ascend` (layout ref), globe (scratch build), 3d_card_photo, Layout_flipping_text, encrypted_text. **Acceptance:** #1, #2, #3 (cards route), #6 (one WebGL).
-
-### R5 — Mind Map renovation · HARD · ✅ DONE (2026-06-30, pre-authorized fade/zoom hand-off used)
-- Rename Map→Mind Map. Brain intro from `neuron_landing_page` (blue particle brain + catchy one-liner; auto-expand 5s OR click within 4s; scatter→fade/zoom hand-off into the force graph on the blue bg). Cut all neuroscience text/labels. Raise graph quality (distinct icons, category colors, every node clickable + routes). **Ensure a node exists for EVERY skill name** (skills→mindmap routing, PRD 6.10). Copper-sulphate-blue bg.
-- **Pre-authorized fallback:** true particle→node morph is hard; clean fade/zoom hand-off is allowed on desktop+mobile (NOT counted as gutting) — log the chosen path here when built.
-- Templates: `neuron_landing_page`, `brain`. **Acceptance:** #2, #3, #7.
-
-### R6 — Project pages renovation · HARD · ✅ DONE (2026-06-30)
-- Flow Wave bg. Container Scroll hero **built from `container_scroll_master_prompt.md` (no source)** with real screenshots (**BLOCKED** → framed placeholder fallback, no fake UI). Sticky Scroll Reveal (problem→approach→outcome). Project-page terminal flip card (flip REQUIRED here). Optional infinite-cards skills marquee. Live links. Multiple routes in.
-- Templates: `Container_Scroll` (prompt), `flow-wave`, terminal card, `infinite_moving_cards`. **Acceptance:** #2, #3, #5 (stubs for screenshot-less projects logged).
-
-### R7 — System Design renovation · HARD · ✅ DONE (2026-06-30)
-- Interactive (Loop Copilot, QE ref): custom React Flow, distinct correct icon per node type; node click → Card Spotlight (≤4 one-line "used differently" bullets). Static (Saarthi, Rebalancer): Eraser/Excalidraw image (**BLOCKED** → clean fallback). Semi-interactive (HPE RAG): static image + hover tooltips (**BLOCKED** image). Plane filters (data/control/observability + optional deployment/schema/orchestration). Moving-border tag chips → route to mind-map node + zoom. **Firewall frame on every Coforge/QE diagram.**
-- Templates: `card_spotlight`, moving-border. **Acceptance:** #2, #3, #4 (firewall holds).
-
-### R8 — Dashboard (new) · MED · ✅ DONE (2026-06-30)
-- Card Spotlight metric cards on Flow Wave bg. Real resume numbers where they exist (projects, clouds=AWS/Azure/GCP, QE 85–90% / hallucination 15%→<5% / 17 teams, RAG metrics); clearly-marked placeholders elsewhere (BLOCKED). Firewall (no client-tied identifying figures).
-- Templates: `card_spotlight`, `flow-wave`. **Acceptance:** #4, #5.
-
-### R9 — About + Skills + Certifications + Education + AI Labs · MED · ✅ DONE (2026-06-30)
-- About: Wave Galaxy + starfield bg; Experience via terminal flip cards (interactive). Skills: Infinite Moving Cards, each skill card → its mind-map node (depends on R5 skill nodes). Certifications/Education: real clickable dedicated pages with full layout + reference cards to projects, **clearly-marked empty content slots** for Niranjan's blurbs (do not invent descriptions). AI Labs + Jarvis: build routes but **hidden from top nav AND Home hub** until content exists (no publicly reachable empty pages).
-- Templates: `wave_galaxy_blue`, `infinite_moving_cards`, terminal card. **Acceptance:** #1, #3 (multi-route), #5.
-
-### R10 — Chatbot renovation · MED · ✅ DONE (2026-06-30)
-- Fix layering/z-index isolation (own stacking context, no mode overlap). Wave Galaxy bg. FAQ ready-buttons feed the assistant + cache FAQ answers (same/similar each time). Rate limiter. Strict guardrails (on-topic, Niranjan voice, refuse unknown, no fabrication). No session history. Keep Groq+pgvector, model-agnostic config.
-- **BLOCKED:** thin until `interview/*` filled (logged). **Acceptance:** #2, #4 (no fabrication), #7.
-
-### R11 — Contact renovation · MED · ✅ DONE (2026-06-30)
-- Particle Sphere (purple) bg. Keep contact info + résumé CTA. Remove globe (now on Home). Ensure stripped contact.md (R0) renders clean.
-- Templates: `particle_sphere`. **Acceptance:** #1, #6, #7.
-
-### R12 — Polish · perf · a11y · SEO · verify · ROUTINE→MED · ✅ VERIFIED (2026-06-30)
-- Added Dashboard to Home hub; verified build green (28 routes), lint 0 errors, all routes 200 (dev probe), chatbot live + accurate. Reduced-motion + mobile fallbacks + sound-muted-default + meta/OG in place. NOT done here: Lighthouse measurement (env), route-level progress loader, per-skill mind-map nodes, Vercel deploy.
-- `performance-optimizer`: Lighthouse ≥90, one-heavy-effect audit, lazy/pause-off-screen, image WebP. Mobile fallbacks for every heavy component. Reduced-motion + keyboard focus everywhere. Sound toggle present, no autoplay. Meta/OG + link previews. Full acceptance sweep vs PRD §7. (Deploy to Vercel is Niranjan's.)
-- **Acceptance:** all 10 criteria.
-
----
-
-## 6. Per-phase acceptance source
-All acceptance numbers above map to PRD §7 (Definition of Done): 1 no note leaks · 2 essence/resolution preserved · 3 everything routes (multi-route) · 4 firewall holds · 5 no fabrication, stubs logged · 6 one WebGL/page + loader + cache + timeout · 7 mobile + reduced-motion + keyboard · 8 sound muted + toggle, no autoplay · 9 real HTML text + meta/OG · 10 terminal removed + gooey fuzzy search.
-
-## 7. Session log
-- **2026-06-30 (R9 — DONE):** About: Wave Galaxy bg, bio sections, Experience as a `TerminalCard` flip-deck (Coforge/HPE/Mphasis, #experience anchor), credentials links. `/skills`: Infinite Moving Cards per category (parsed from skills.md), each skill routes to the Mind Map. `/certifications` + `/education` list pages → shared `/credential/[slug]` detail (title, org, status, related-project links; description is a content slot omitted until filled — no invented blurbs). `/ai-labs`: scaffold with Optimization cards, **noindex + hidden from nav/hub** (lock #3). Removed old `/skills/[slug]`. **Em-dash sweep:** replaced banned em-dashes with `·` across content frontmatter (experience titles, project/system-design names/taglines) and rendered src strings (acceptance #1). Build green (28 routes), lint 0 errors. **Blocked:** credential descriptions (slots ready); AI Labs full content. **Next: R7 (system design polish) → R1 (nav/search/loader) → R12.**
-- **2026-06-30 (R8 + R10 + R11 — DONE):** R11 Contact: Particle Sphere bg, removed the rejected wireframe globe (`Globe`/`GlobeScene` deleted; real globe is on Home), contact info + résumé CTA + availability. R10 Chatbot: dedicated `/chat` page (own isolated stacking context, Wave Galaxy bg), `ChatSurface` with FAQ ready-buttons that feed the assistant, 429 handling, no session history; added an in-memory IP rate limiter (15/min) to `/api/ask`. Still thin until `interview/*` filled (logged, not fabricated). R8 Dashboard: `/dashboard` with Card Spotlight metric cards — every number traces to real content (loop-copilot/qe-platform/about/hero), no client-tied or invented figures; placeholder-needing metrics omitted, not faked. Build green (20 routes), lint 0 errors. **Next: R9 (about/skills/certs/education/AI Labs) → R7 (system design polish) → R1 (nav/search/loader) → R12.**
-- **2026-06-30 (R6 — DONE):** Project pages rebuilt. `ContainerScroll` (faithful Aceternity scroll-driven 3D device frame, recolored dark+green — NOT B&W, reduced-motion static). `ProjectShowcase`: Container Scroll hero with the real screenshot or a clean static device frame (never fake UI), then a `TerminalCard` flip-deck of the project narrative (project-page flip ✓). `page.tsx`: Flow Wave bg, SEO header (status/tagline/metric/stack/live/system-design/mind-map links), internal-note section filter (drops qe-platform "NDA framing (must hold)"). Content loader: `getProjectImages` + `splitSections`; new `/api/project-image/[slug]/[file]` route serves screenshots from content/ (path-validated). Scaffolded honest in-development stubs for `hpe-rag-chatbot` + `global-census-chatbot` (canonical 7-table; no fabricated detail) — Jarvis still absent. Removed v1 `ProjectVisual`. Build green (18 routes, 6 projects), lint 0 errors. **Blocked:** Loop Copilot screenshots (→ static frame until dropped in content/projects/loop-copilot/); HPE/Census real content.
-- **2026-06-30 (R3 + R5 — DONE):** R3 shared cards: `TerminalCard` (macOS flip-deck, close/min/max controls, index badge, arrow nav, green resume-keywords via `.terminal-body strong`), `CardSpotlight` (cursor glow + optional expand), `MovingBorderButton` (travelling border + hover lift), `InfiniteMovingCards` (skills marquee). (3d photo card landed in R4.) R5 Mind Map: `BrainIntro` (procedural blue particle brain, breathing pulse, click/5s auto → scatter+fade), `MindMapClient` orchestrates brain→force-graph hand-off on a copper-blue backdrop with a one-liner; mobile + reduced-motion skip the morph (PRE-AUTHORIZED fade/zoom path per PRD 6.2). Kept the react-force-graph engine. Added shared `useIsMobile` hook + `fadeIn`/`marquee` keyframes. Build green, lint 0 errors. **Deferred to R9/R12:** a mind-map node per skill (reconcile skills.md ↔ mindmap-data.json) + label-sprite sharpness. **Next: R6 project pages (Container Scroll).**
-- **2026-06-30 (R4 — DONE):** Home rebuilt as the Ascend-style hub. **Globe from scratch** (`src/components/3d/globe/GlobeCanvas.tsx`): procedural shader earth (fbm continents, ice caps, day/night terminator with city lights), fresnel atmosphere shell, drei `Stars`, drag-to-rotate + slow auto-spin, reduced-motion aware. (No external earth texture: network fetch was sandboxed, so it's fully procedural — looks like a lit earth, not a wireframe.) Built `PhotoCard3D` (CSS-3D flip, photo→monogram fallback, back terminal summary typewriter w/ opt-in sound), `HubCards` (terminal-command hover portals), `EncryptedText` + `LayoutTextFlip` (reduced-motion aware, real text in DOM), `DashboardPreview` (static green bar chart). `HomeClient` composes globe + photo card + heading + cards + preview; `page.tsx` feeds from hero.md. **Removed the rejected v1 cinematic** (`HeroClient`, `HeroScene` — stardust burst, PRD 6.1). ESLint: extended R3F purity relaxation to `backgrounds/**`. Build green, lint 0 errors. **Blocked:** real photo (`public/niranjan-photo.jpg`) → monogram until provided. **Next: R3 card systems → R5 brain → R6 projects.**
-- **2026-06-30 (R2 — DONE):** Built the background library under `src/components/backgrounds/`: `FlowWaveScene` (faithful R3F port of the flow-wave simplex-noise green point sheet, cursor void-repel, additive), `WaveGalaxyScene` (blue spiral galaxy), `ParticleSphereScene` (purple fibonacci shell, noise-breathing, vertical violet→blue gradient), `BackgroundCanvas` host (DPR cap), and `PageBackground` lazy dispatcher with on-brand static gradient fallbacks on mobile + reduced-motion handling. Build green. Wired into pages during R6/R8/R9/R10/R11. **Next: R4 globe-from-scratch (Home centerpiece) + R3 card systems + R5 brain.**
-- **2026-06-29 (Session 1, prep):** Read PRD in full. Surveyed repo (inventory in §1). Tuned `code-reviewer` agent for v2 rules. Updated memory (project context, renovation reference, essence-preservation, liability-firewall). Wrote this plan. Resolved Q1/Q2/Q4 (see §3). No feature code written.
-- **2026-06-29 (Session 2, R0 — DONE):** Locked the 4 build-start decisions (see top block). Updated content loader for `content/projects/<name>/<name>.md` folders (`getProject`/`getAllProjects`/`getAllContentDocs`). Stripped all rendered internal-note leaks: `about.md` TODO, `contact.md` (Globe note + TODO), `work-with-me` TODO `<p>`, `Footer` attribution-pending credits. Removed terminal mode (deleted `src/app/terminal/` + `TerminalNav.tsx`; cleaned `SiteNav` links). Added palette tokens `--copper`, `--purple`. Built sound foundation: `SoundProvider` (muted default) + `SoundToggle` (lucide, in nav) + shared `useReducedMotion` (useSyncExternalStore). Meta/OG audit: fixed em-dash in title/OG (banned char), added Twitter card + keywords. **Fixed a build blocker: root `tsconfig.json` was type-checking the full template apps under `template_repos/` — added `template_repos` to `exclude` (reference-only, mirrors the eslint ignore).** Verify: `npm run build` green (16 routes, projects resolve from folders), `npm run lint` 0 errors, leak sweeps clean. **Next: R1 — Nav + Gooey Search + Loader system (HARD). Awaiting assets in §2 (photo, Loop Copilot screenshots, interview/*, HPE content, diagram images); none block R1.**
+## H. Session log
+- **2026-07-07 (Round-2 Session 1, prep):** Read RENOVATION_PRD_FINAL + New Portfolio Fixes in full. Verified template paths on disk (Section C) and that Playwright MCP is live but the scripted suite is not set up (Section B). Wrote this plan (replaces round-1 plan). Updated memory. No feature code. **Next: on "go", start R0** (Playwright suite + hygiene). Awaiting answers to Q1–Q5 (Section F).

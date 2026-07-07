@@ -42,3 +42,9 @@ next-env.d.ts
 
 # Local debug logs (logger.ts -> instance/logs_dd_mm_yyyy.log)
 /instance/
+
+# Playwright verification artifacts (PRD 20)
+/verification/
+/test-results/
+/playwright-report/
+/blob-report/
