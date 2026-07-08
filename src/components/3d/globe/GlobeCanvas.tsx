@@ -28,7 +28,7 @@ function Planet({ reduced }: { reduced: boolean }) {
   return (
     <group ref={group}>
       <Center>
-        <primitive object={cloned} scale={2.6} />
+        <primitive object={cloned} scale={2.05} />
       </Center>
     </group>
   );
@@ -76,13 +76,13 @@ export default function GlobeCanvas() {
   return (
     <Canvas
       camera={{ position: [0, 0, 8], fov: 42 }}
-      dpr={[1, 2]}
-      gl={{ antialias: true, alpha: true }}
+      dpr={[1, 1.6]}
+      gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
     >
       <Suspense fallback={null}>
         <ambientLight intensity={1.8} />
         <directionalLight position={[0, 10, 2]} intensity={0.9} />
-        <Stars radius={90} depth={50} count={4000} factor={3.2} saturation={0} fade speed={reduced ? 0 : 0.5} />
+        <Stars radius={90} depth={50} count={2600} factor={3.2} saturation={0} fade speed={reduced ? 0 : 0.5} />
         <group rotation={[0.2, 0, 0.08]}>
           <Planet reduced={reduced} />
           <Atmosphere />
