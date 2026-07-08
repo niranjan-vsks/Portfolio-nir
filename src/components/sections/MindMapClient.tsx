@@ -6,7 +6,7 @@ import { useReducedMotion } from "@/lib/hooks/useReducedMotion";
 import { useIsMobile } from "@/lib/hooks/useIsMobile";
 import { TerminalLoader } from "@/components/ui/TerminalLoader";
 
-const BrainIntro = dynamic(() => import("@/components/3d/brain/BrainIntro"), {
+const BrainScene = dynamic(() => import("@/components/3d/brain/BrainScene"), {
   ssr: false,
   loading: () => <TerminalLoader label="waking_the_network" />,
 });
@@ -37,13 +37,13 @@ export function MindMapClient() {
     <main className="relative h-screen w-screen overflow-hidden bg-[radial-gradient(ellipse_at_50%_45%,#0a1a3a_0%,#060a18_55%,#04060f_100%)] pt-12">
       {phase === "brain" && !isMobile && (
         <>
-          <BrainIntro onComplete={() => setPhase("graph")} />
+          <BrainScene onComplete={() => setPhase("graph")} />
           <div className="pointer-events-none absolute inset-x-0 bottom-16 flex flex-col items-center gap-2 px-6 text-center">
-            <p className="font-mono text-sm text-copper sm:text-base">
-              {"> seven years of building, drawn as one mind"}
+            <p className="text-base font-medium text-[#9fc4ff] sm:text-lg [text-shadow:0_2px_20px_rgba(0,0,0,0.8)]">
+              Seven years of building, drawn as one mind.
             </p>
-            <p className="font-mono text-[11px] text-text-dim">
-              click the brain to enter · or wait
+            <p className="font-mono text-[12px] text-text-dim">
+              click to enter, or wait
             </p>
           </div>
         </>
