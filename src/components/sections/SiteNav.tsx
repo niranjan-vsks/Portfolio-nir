@@ -13,10 +13,10 @@ import { HoverBorderGradient } from "@/components/ui/HoverBorderGradient";
 export function SiteNav() {
   return (
     <header className="fixed inset-x-0 top-0 z-50">
-      <div className="mx-auto mt-3 flex h-14 max-w-[1200px] items-center justify-between gap-4 rounded-2xl border border-white/10 bg-[#0c0f0d]/85 px-4 shadow-[0_8px_30px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-xl sm:px-5">
+      <div className="mx-auto mt-3 flex h-16 max-w-[1200px] items-center justify-between gap-4 rounded-2xl border border-white/10 bg-[#0c0f0d]/85 px-4 shadow-[0_8px_30px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-xl sm:px-5">
         {/* logo */}
-        <Link href="/" className="flex shrink-0 items-center gap-2 font-mono text-[13px] font-medium tracking-tight text-green">
-          <span className="grid h-7 w-7 place-items-center rounded-lg border border-green/40 bg-green/10 text-green">N</span>
+        <Link href="/" className="flex shrink-0 items-center gap-2 font-mono text-[15px] font-medium tracking-tight text-green">
+          <span className="grid h-8 w-8 place-items-center rounded-lg border border-green/40 bg-green/10 text-[15px] text-green">N</span>
           <span className="hidden sm:inline">niranjan.vsks<span className="text-text-dim">:~$</span></span>
         </Link>
 
@@ -26,7 +26,7 @@ export function SiteNav() {
         </div>
 
         {/* actions */}
-        <nav className="flex shrink-0 items-center gap-3 text-[14px]">
+        <nav className="flex shrink-0 items-center gap-4 text-[16px]">
           <a
             href="https://github.com/niranjanvsks"
             target="_blank"
@@ -39,7 +39,7 @@ export function SiteNav() {
             Contact
           </Link>
           <SoundToggle />
-          <HoverBorderGradient href="/NiranjanVSKS_FDE.pdf" target="_blank" className="text-[13px]">
+          <HoverBorderGradient href="/NiranjanVSKS_FDE.pdf" target="_blank" className="text-[15px]">
             Résumé
           </HoverBorderGradient>
         </nav>

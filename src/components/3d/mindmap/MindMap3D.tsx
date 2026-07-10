@@ -8,8 +8,25 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ForceGraph3D, { ForceGraphMethods } from 'react-force-graph-3d'
 import * as THREE from 'three'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import mindmapData from '@data/mindmap-data.json'
+
+// one shared radial-glow texture behind every node (premium halo, not a flat dot)
+let GLOW_TEXTURE: THREE.Texture | null = null
+function glowTexture() {
+  if (GLOW_TEXTURE) return GLOW_TEXTURE
+  const c = document.createElement('canvas')
+  c.width = c.height = 128
+  const g = c.getContext('2d')!
+  const grad = g.createRadialGradient(64, 64, 0, 64, 64, 64)
+  grad.addColorStop(0, 'rgba(255,255,255,0.9)')
+  grad.addColorStop(0.25, 'rgba(255,255,255,0.35)')
+  grad.addColorStop(1, 'rgba(255,255,255,0)')
+  g.fillStyle = grad
+  g.fillRect(0, 0, 128, 128)
+  GLOW_TEXTURE = new THREE.CanvasTexture(c)
+  return GLOW_TEXTURE
+}
 
 type NodeType = 'root' | 'employer' | 'domain' | 'project' | 'system_design' | 'skill'
 
@@ -70,14 +87,21 @@ export default function MindMap3D({
   mobileBreakpoint = 768,
 }: Props) {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const deepLinkId = searchParams.get('node')
   const fgRef = useRef<ForceGraphMethods | undefined>(undefined)
   const containerRef = useRef<HTMLDivElement>(null)
 
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
   const [paused, setPaused] = useState(initiallyPaused)
   const [hoverNodeId, setHoverNodeId] = useState<string | null>(null)
+  const [pinnedNodeId, setPinnedNodeId] = useState<string | null>(null)
   const [collapsedDomains, setCollapsedDomains] = useState<Set<string>>(new Set())
   const [isBelowBreakpoint, setIsBelowBreakpoint] = useState(false)
+
+  // the node whose neighbourhood is lit: hover wins, else the pinned/deep-linked one
+  const activeId = hoverNodeId ?? pinnedNodeId
+  const activeIdRef = useRef<string | null>(null)
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -109,13 +133,37 @@ export default function MindMap3D({
     else fg.resumeAnimation()
   }, [paused])
 
-  const { nodesById, childMap, rawNodes, rawLinks } = useMemo(() => {
+  const { nodesById, childMap, rawNodes, rawLinks, adjacency } = useMemo(() => {
     const rawNodes = (mindmapData as any).nodes as MindMapNode[]
     const rawLinks = (mindmapData as any).links as MindMapLink[]
     const nodesById = new Map(rawNodes.map((n) => [n.id, n]))
     const childMap = buildChildMap(rawLinks)
-    return { nodesById, childMap, rawNodes, rawLinks }
+    const adjacency = new Map<string, Set<string>>()
+    for (const l of rawLinks) {
+      const s = typeof l.source === 'string' ? l.source : l.source.id
+      const t = typeof l.target === 'string' ? l.target : l.target.id
+      if (!adjacency.has(s)) adjacency.set(s, new Set())
+      if (!adjacency.has(t)) adjacency.set(t, new Set())
+      adjacency.get(s)!.add(t)
+      adjacency.get(t)!.add(s)
+    }
+    return { nodesById, childMap, rawNodes, rawLinks, adjacency }
   }, [])
+
+  const isLit = useCallback(
+    (id: string) => {
+      const a = activeIdRef.current
+      if (!a) return true // nothing focused: everything at full strength
+      return id === a || (adjacency.get(a)?.has(id) ?? false)
+    },
+    [adjacency]
+  )
+
+  // re-render node objects when the focus changes so glow/dim states update
+  useEffect(() => {
+    activeIdRef.current = activeId
+    fgRef.current?.refresh()
+  }, [activeId])
 
   const { graphData } = useMemo(() => {
     const hidden = new Set<string>()
@@ -143,6 +191,35 @@ export default function MindMap3D({
     })
     return { graphData: { nodes: visibleNodes, links: visibleLinks } }
   }, [collapsedDomains, rawNodes, rawLinks, childMap, nodesById])
+
+  // fly the camera to a node and light its neighbourhood (deep-link + tag chips)
+  const focusNode = useCallback(
+    (id: string) => {
+      const fg = fgRef.current
+      const node = (graphData.nodes as MindMapNode[]).find((n) => n.id === id)
+      if (!fg || !node || node.x === undefined) return
+      setPinnedNodeId(id)
+      const dist = 90
+      const hyp = Math.hypot(node.x, node.y ?? 0, node.z ?? 0) || 1
+      const r = 1 + dist / hyp
+      fg.cameraPosition(
+        { x: (node.x ?? 0) * r, y: (node.y ?? 0) * r, z: (node.z ?? 0) * r },
+        node as any,
+        1400
+      )
+    },
+    [graphData]
+  )
+
+  // consume ?node=<id> once the force layout has produced coordinates
+  const deepLinkDoneRef = useRef(false)
+  const handleEngineStop = useCallback(() => {
+    if (deepLinkDoneRef.current || !deepLinkId) return
+    if (nodesById.has(deepLinkId)) {
+      deepLinkDoneRef.current = true
+      focusNode(deepLinkId)
+    }
+  }, [deepLinkId, focusNode, nodesById])
 
   const onNodeClick = useCallback(
     (node: MindMapNode) => {
@@ -181,16 +258,37 @@ export default function MindMap3D({
 
   const nodeThreeObject = useCallback((node: MindMapNode) => {
     const group = new THREE.Group()
-    const radius = node.val ? Math.max(2, node.val / 3) : 3
+    const lit = isLit(node.id)
+    const focused = activeIdRef.current === node.id
+    const radius = (node.val ? Math.max(2, node.val / 3) : 3) * (focused ? 1.35 : 1)
+    const color = new THREE.Color(node.color || '#FFFFFF')
+
     const material = new THREE.MeshLambertMaterial({
-      color: new THREE.Color(node.color || '#FFFFFF'),
+      color,
       transparent: true,
-      opacity: 0.92,
-      emissive: new THREE.Color(node.color || '#FFFFFF'),
-      emissiveIntensity: node.type === 'root' ? 0.6 : node.type === 'system_design' ? 0.45 : 0.25,
+      opacity: lit ? 0.96 : 0.22,
+      emissive: color,
+      emissiveIntensity:
+        (node.type === 'root' ? 0.6 : node.type === 'system_design' ? 0.5 : 0.32) *
+        (focused ? 1.8 : lit ? 1 : 0.3),
     })
-    const sphere = new THREE.Mesh(new THREE.SphereGeometry(radius, 16, 16), material)
+    const sphere = new THREE.Mesh(new THREE.SphereGeometry(radius, 20, 20), material)
     group.add(sphere)
+
+    // soft radial glow halo so nodes read as lights, not flat dots
+    const glow = new THREE.Sprite(
+      new THREE.SpriteMaterial({
+        map: glowTexture(),
+        color,
+        transparent: true,
+        opacity: lit ? (focused ? 0.85 : 0.5) : 0.12,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      })
+    )
+    const glowScale = radius * (focused ? 6 : 4.5)
+    glow.scale.set(glowScale, glowScale, 1)
+    group.add(glow)
 
     // Label sprite
     const canvas = document.createElement('canvas')
@@ -212,7 +310,7 @@ export default function MindMap3D({
     lines.forEach((line, i) => ctx.fillText(line, 8, 4 + i * fontSize * 1.4))
     const texture = new THREE.CanvasTexture(canvas)
     texture.minFilter = THREE.LinearFilter
-    const spriteMaterial = new THREE.SpriteMaterial({ map: texture, transparent: true })
+    const spriteMaterial = new THREE.SpriteMaterial({ map: texture, transparent: true, opacity: lit ? 1 : 0.28 })
     const sprite = new THREE.Sprite(spriteMaterial)
     const aspect = canvas.width / canvas.height
     const spriteHeight =
@@ -224,7 +322,7 @@ export default function MindMap3D({
     group.add(sprite)
 
     return group
-  }, [])
+  }, [isLit])
 
   if (isBelowBreakpoint) {
     return (
@@ -249,7 +347,7 @@ export default function MindMap3D({
     <div
       ref={containerRef}
       className="relative w-full h-full"
-      style={{ background: '#0A0A0A', minHeight: 600 }}
+      style={{ background: 'transparent', minHeight: 600 }}
     >
       <div className="absolute top-4 right-4 z-10 flex gap-2">
         <button
@@ -278,69 +376,77 @@ export default function MindMap3D({
         )}
       </div>
 
-      {hoverNodeId && (
-        <div
-          className="absolute bottom-4 left-4 z-10 max-w-md p-3 font-mono text-xs border rounded"
-          style={{
-            background: 'rgba(10,10,10,0.92)',
-            borderColor: 'rgba(74,222,128,0.4)',
-            color: '#E5E7EB',
-          }}
-        >
-          {(() => {
-            const node = nodesById.get(hoverNodeId)
-            if (!node) return null
-            const clickHint =
-              node.type === 'project' ? '> click_to_enter_project' :
-              node.type === 'domain' ? `> click_to_${collapsedDomains.has(node.id) ? 'expand' : 'collapse'}` :
-              node.type === 'employer' ? '> click_to_view_experience' :
-              node.type === 'system_design' ? '> click_to_view_reference_architectures' :
-              node.type === 'skill' ? '> click_to_filter_by_skill' :
-              ''
-            return (
-              <>
-                <div style={{ color: node.color }} className="font-bold mb-1">
-                  {node.label.replace('\n', ' · ')}
-                </div>
-                {node.tenure && (
-                  <div className="text-[10px] mb-1" style={{ color: '#A78BFA' }}>
-                    {node.tenure}
-                  </div>
-                )}
-                {node.description && (
-                  <div className="text-[11px] leading-relaxed" style={{ color: '#9CA3AF' }}>
-                    {node.description}
-                  </div>
-                )}
-                {clickHint && (
-                  <div className="mt-1.5 text-[10px]" style={{ color: '#4ADE80' }}>
-                    {clickHint}
-                  </div>
-                )}
-              </>
-            )
-          })()}
-        </div>
-      )}
+      {activeId && (() => {
+        const node = nodesById.get(activeId)
+        if (!node) return null
+        const clickHint =
+          node.type === 'project' ? 'click → open project' :
+          node.type === 'domain' ? `click → ${collapsedDomains.has(node.id) ? 'expand' : 'collapse'} branch` :
+          node.type === 'employer' ? 'click → view experience' :
+          node.type === 'system_design' ? 'click → reference architectures' :
+          node.type === 'skill' ? 'click → where this shows up' :
+          ''
+        return (
+          <div
+            key={activeId}
+            className="pointer-events-none absolute left-6 top-1/2 z-10 w-[340px] max-w-[38vw] -translate-y-1/2 animate-[fadeIn_0.25s_ease] rounded-2xl border p-5 backdrop-blur-md"
+            style={{
+              background: 'rgba(6,10,20,0.82)',
+              borderColor: 'rgba(74,222,128,0.35)',
+              boxShadow: '0 20px 60px -20px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.05)',
+            }}
+          >
+            <div className="mb-1 font-mono text-[11px] uppercase tracking-wide" style={{ color: '#6b7280' }}>
+              {node.type.replace('_', ' ')}
+            </div>
+            <div className="mb-2 text-[19px] font-semibold leading-tight text-white">
+              {node.label.replace('\n', ' · ')}
+            </div>
+            {node.tenure && (
+              <div className="mb-2 font-mono text-[12px]" style={{ color: '#A78BFA' }}>{node.tenure}</div>
+            )}
+            {node.description && (
+              <p className="text-[14px] leading-relaxed text-neutral-300">{node.description}</p>
+            )}
+            {clickHint && (
+              <div className="mt-3 font-mono text-[12px]" style={{ color: '#4ADE80' }}>{clickHint}</div>
+            )}
+          </div>
+        )
+      })()}
 
       <ForceGraph3D
         ref={fgRef}
         graphData={graphData as any}
         width={dimensions.width}
         height={dimensions.height || 600}
-        backgroundColor="#0A0A0A"
+        backgroundColor="rgba(0,0,0,0)"
         showNavInfo={false}
         nodeThreeObject={nodeThreeObject as any}
         nodeLabel={() => ''}
-        linkColor={() => 'rgba(74,222,128,0.25)'}
+        linkColor={(l: any) => {
+          const sId = typeof l.source === 'string' ? l.source : l.source.id
+          const tId = typeof l.target === 'string' ? l.target : l.target.id
+          const on = activeId && (sId === activeId || tId === activeId)
+          if (on) return 'rgba(74,222,128,0.9)'
+          return activeId ? 'rgba(74,222,128,0.08)' : 'rgba(74,222,128,0.28)'
+        }}
         linkWidth={(l: any) => {
           const sId = typeof l.source === 'string' ? l.source : l.source.id
           const tId = typeof l.target === 'string' ? l.target : l.target.id
-          return sId === hoverNodeId || tId === hoverNodeId ? 1.8 : 0.4
+          return activeId && (sId === activeId || tId === activeId) ? 2.2 : 0.4
         }}
-        linkOpacity={0.55}
+        linkDirectionalParticles={(l: any) => {
+          const sId = typeof l.source === 'string' ? l.source : l.source.id
+          const tId = typeof l.target === 'string' ? l.target : l.target.id
+          return activeId && (sId === activeId || tId === activeId) ? 3 : 0
+        }}
+        linkDirectionalParticleWidth={2}
+        linkDirectionalParticleColor={() => '#4ADE80'}
+        linkOpacity={0.7}
         onNodeClick={onNodeClick as any}
         onNodeHover={(n: any) => setHoverNodeId(n?.id ?? null)}
+        onEngineStop={handleEngineStop}
         cooldownTicks={paused ? 0 : 200}
         warmupTicks={20}
         d3VelocityDecay={0.4}

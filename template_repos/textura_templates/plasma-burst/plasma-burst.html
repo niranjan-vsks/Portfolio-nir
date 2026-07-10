@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Scene · Plasma Burst</title>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; background: #000; overflow: hidden; }
+  canvas { display: block; width: 100%; height: 100%; }
+
+  /* UI PANEL — remove this block to drop the controls */
+  #ui-panel { position: fixed; top: 12px; right: 12px; background: rgba(10,10,12,.75); color: #fff;
+    font: 11px/1.4 -apple-system, system-ui, sans-serif; padding: 8px 10px; border: 1px solid rgba(255,255,255,.12);
+    border-radius: 6px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    max-width: 240px; max-height: 80vh; overflow: auto; z-index: 1000; user-select: none; }
+  #ui-toggle { background: none; border: none; color: #fff; cursor: pointer; font-size: 14px; padding: 0; }
+  #ui-body { display: none; margin-top: 6px; }
+  #ui-panel.-open #ui-body { display: block; }
+  #ui-body label { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 4px 0; }
+  #ui-body input[type=color] { width: 28px; height: 20px; border: 1px solid rgba(255,255,255,.2); border-radius: 3px; padding: 0; background: none; cursor: pointer; }
+  #ui-body input[type=range] { width: 110px; }
+  #ui-buttons { display: flex; gap: 6px; margin-top: 8px; }
+  #ui-buttons button { flex: 1; cursor: pointer; background: rgba(255,255,255,.08); color: #fff;
+    border: 1px solid rgba(255,255,255,.18); border-radius: 4px; padding: 5px 6px; font: 11px/1 sans-serif; }
+  #ui-buttons button:hover { background: rgba(255,255,255,.16); }
+  #ui-snapshot { margin: 8px 0 0; padding: 6px 8px; background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.12); border-radius: 4px;
+    font: 10px/1.45 ui-monospace, 'SF Mono', Menlo, monospace;
+    white-space: pre-wrap; word-break: break-word; color: rgba(255,255,255,.88);
+    max-height: 240px; overflow: auto; user-select: text; cursor: text; }
+  /* END UI PANEL */
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.143.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.143.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<canvas id="scene"></canvas>
+
+<!-- UI PANEL — remove this block to drop the controls -->
+<div id="ui-panel">
+  <button id="ui-toggle" type="button" aria-label="Toggle controls">⚙ controls</button>
+  <div id="ui-body"></div>
+  <pre id="ui-snapshot" title="Click to select, then copy. These are the current CONFIG values."></pre>
+</div>
+<!-- END UI PANEL -->
+
+<script type="module">
+import * as THREE from 'three'
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js'
+import { GammaCorrectionShader } from 'three/addons/shaders/GammaCorrectionShader.js'
+
+/* ============================================================
+   CONFIG  — every tweakable value lives here. Colors are '#rrggbb'
+   strings (electric violet plasma palette); everything else is a number.
+   The UI panel + localStorage persistence are generated from these keys.
+============================================================ */
+const CONFIG = {
+  colCore: '#ffffff',
+  colInner: '#d7c3ff',
+  colMid: '#8a5cff',
+  colOuter: '#43249f',
+  colSpark: '#f1e3ff',
+  colPink: '#ff8fcf',
+  filaments: 240,
+  segments: 64,
+  sparks: 520,
+  spread: 2,
+  curl: 0.62,
+  bend: 0.55,
+  coreSize: 0.7,
+  coreGlow: 0.85,
+  lineBright: 1.1,
+  tipFade: 0.14,
+  sway: 0.16,
+  swaySpeed: 1.1,
+  shimmer: 0.55,
+  shimmerSpeed: 3,
+  sparkSize: 0.15,
+  twinkle: 2,
+  rotateSpeed: 0.06,
+  bloomStr: 0.66,
+  bloomRadius: 0.39,
+  bloomThresh: 0,
+  brightness: 1,
+  mainAlpha: 1,
+}
+
+/* ---------- DEFAULTS + localStorage (load BEFORE building the scene) ---------- */
+const DEFAULTS = JSON.parse(JSON.stringify(CONFIG))
+const STORAGE_KEY = 'getlayers:plasma-burst'             // <- unique per scene
+try { const s = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); if (s) for (const k in s) if (k in CONFIG) CONFIG[k] = s[k] } catch (e) {}
+function saveConfig() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(CONFIG)) } catch (e) {} }
+
+function hexToVec3(hex) {
+  const n = parseInt(hex.slice(1), 16)
+  return new THREE.Vector3(((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255)
+}
+// seeded PRNG so rebuilds are stable across reloads
+function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296 } }
+
+/* ---------- RENDERER / SCENE / CAMERA ---------- */
+const canvas = document.getElementById('scene')
+const renderer = new THREE.WebGL1Renderer({ canvas, antialias: true })
+renderer.setPixelRatio(window.devicePixelRatio)
+renderer.setClearColor(0x000000, 1)
+const scene = new THREE.Scene()
+scene.background = new THREE.Color(0x000000)
+const camera = new THREE.PerspectiveCamera(48, window.innerWidth / window.innerHeight, 0.1, 80)
+camera.position.set(0, 0, 6.2)
+scene.add(camera)
+
+/* ---------- COMPOSER (single chain, additive scene + bloom to screen) ---------- */
+const composer = new EffectComposer(renderer)
+composer.addPass(new RenderPass(scene, camera))
+const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), CONFIG.bloomStr, CONFIG.bloomRadius, CONFIG.bloomThresh)
+composer.addPass(bloomPass)
+composer.addPass(new ShaderPass(GammaCorrectionShader))
+
+/* ============================================================
+   SCENE: PLASMA BURST — a white-hot violet core erupting into
+   hundreds of curling electric filaments and a haze of glowing
+   sparks. Filaments are one LineSegments buffer whose vertices
+   carry per-filament seeds; a vertex shader sways them and a
+   fragment shader runs a shimmer down their length. A billboarded
+   radial sprite is the hot core. Pointer motion feeds the burst
+   energy; a click fires an expanding shock down every filament.
+============================================================ */
+class PlasmaBurstScene {
+  constructor(scene) {
+    this.scene = scene
+    this.group = new THREE.Group()
+    scene.add(this.group)
+
+    this.lineUniforms = {
+      uTime:        { value: 0 },
+      uAlpha:       { value: 0 },
+      uSway:        { value: CONFIG.sway },
+      uSwaySpeed:   { value: CONFIG.swaySpeed },
+      uShimmer:     { value: CONFIG.shimmer },
+      uShimmerSpeed:{ value: CONFIG.shimmerSpeed },
+      uBright:      { value: CONFIG.lineBright },
+      uBrightness:  { value: CONFIG.brightness },
+      uEnergy:      { value: 0 },
+      uShock:       { value: 0 },     // 0..1 expanding front along filament, -1 = idle
+      uShockAmp:    { value: 0 },
+    }
+    this.sparkUniforms = {
+      uTime:       { value: 0 },
+      uAlpha:      { value: 0 },
+      uSparkSize:  { value: CONFIG.sparkSize },
+      uTwinkle:    { value: CONFIG.twinkle },
+      uBrightness: { value: CONFIG.brightness },
+      uEnergy:     { value: 0 },
+      uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
+    }
+    this.coreUniforms = {
+      uTime:       { value: 0 },
+      uAlpha:      { value: 0 },
+      uColCore:    { value: hexToVec3(CONFIG.colCore) },
+      uColMid:     { value: hexToVec3(CONFIG.colMid) },
+      uGlow:       { value: CONFIG.coreGlow },
+      uBrightness: { value: CONFIG.brightness },
+      uEnergy:     { value: 0 },
+    }
+
+    this.lineMat = new THREE.ShaderMaterial({
+      uniforms: this.lineUniforms,
+      blending: THREE.AdditiveBlending, transparent: true, depthTest: false, depthWrite: false,
+      vertexShader: `
+        attribute vec3  aColor;
+        attribute vec3  aSway;
+        attribute vec3  aSway2;
+        attribute float aAlong;
+        attribute float aSeed;
+        uniform float uTime, uSway, uSwaySpeed, uEnergy;
+        varying vec3  vColor;
+        varying float vAlong, vSeed;
+        void main(){
+          vColor = aColor; vAlong = aAlong; vSeed = aSeed;
+          vec3 p = position;
+          // amplitude grows toward the tip; pointer energy boosts it
+          float amp = uSway * aAlong * (1.0 + uEnergy * 1.6);
+          float ph  = aSeed * 6.2831;
+          float t   = uTime * uSwaySpeed;
+          // a wave travelling tip-ward (the aAlong term shifts phase down the length)
+          // plus a faster secondary ripple, displaced along TWO perpendicular axes
+          // so each filament snakes through 3D instead of swinging in one plane
+          float w1 = sin(t + ph + aAlong * 5.0);
+          float w2 = cos(t * 1.27 + ph * 1.7 + aAlong * 9.0);
+          float w3 = 0.5 * sin(t * 0.6 + ph);           // slow overall breathing swing
+          p += aSway  * (w1 + w3) * amp;
+          p += aSway2 * w2 * amp * 0.8;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+        }`,
+      fragmentShader: `
+        precision highp float;
+        uniform float uTime, uShimmer, uShimmerSpeed, uBright, uBrightness, uEnergy, uShock, uShockAmp;
+        varying vec3  vColor;
+        varying float vAlong, vSeed;
+        void main(){
+          float sh = 0.6 + uShimmer * 0.55 * sin(vAlong * 16.0 - uTime * uShimmerSpeed + vSeed * 28.0);
+          sh = max(sh, 0.0);
+          // expanding shock front travelling tip-ward after a click
+          float shock = 0.0;
+          if (uShock >= 0.0) shock = uShockAmp * exp(-pow((vAlong - uShock) * 7.0, 2.0)) * 2.0;
+          vec3 c = vColor * (sh * (1.0 + uEnergy * 0.8) + shock) * uBright * uBrightness;
+          gl_FragColor = vec4(c, 1.0);
+        }`,
+    })
+
+    this.sparkMat = new THREE.ShaderMaterial({
+      uniforms: this.sparkUniforms,
+      blending: THREE.AdditiveBlending, transparent: true, depthTest: false, depthWrite: false,
+      vertexShader: `
+        attribute vec3  aColor;
+        attribute float aSize;
+        attribute float aPhase;
+        uniform float uTime, uSparkSize, uTwinkle, uPixelRatio, uEnergy;
+        varying vec3  vColor;
+        varying float vTw;
+        void main(){
+          vColor = aColor;
+          float tw = 0.45 + 0.55 * sin(uTime * uTwinkle + aPhase * 6.2831);
+          vTw = tw;
+          vec4 mv = modelViewMatrix * vec4(position, 1.0);
+          float s = uSparkSize * aSize * uPixelRatio * (200.0 / max(0.001, -mv.z));
+          gl_PointSize = s * (0.6 + 0.5 * tw) * (1.0 + uEnergy * 0.4);
+          gl_Position = projectionMatrix * mv;
+        }`,
+      fragmentShader: `
+        precision highp float;
+        uniform float uBrightness, uEnergy;
+        varying vec3  vColor;
+        varying float vTw;
+        void main(){
+          vec2 d = gl_PointCoord - 0.5;
+          float r = length(d);
+          float a = smoothstep(0.5, 0.0, r);
+          a *= a;
+          vec3 c = vColor * (0.4 + vTw) * (1.0 + uEnergy * 0.6) * uBrightness;
+          gl_FragColor = vec4(c, a);
+        }`,
+    })
+
+    // ---- hot core: billboarded radial sprite ----
+    this.coreMat = new THREE.ShaderMaterial({
+      uniforms: this.coreUniforms,
+      blending: THREE.AdditiveBlending, transparent: true, depthTest: false, depthWrite: false,
+      vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+      fragmentShader: `
+        precision highp float;
+        uniform vec3 uColCore, uColMid; uniform float uTime, uGlow, uBrightness, uAlpha, uEnergy;
+        varying vec2 vUv;
+        void main(){
+          vec2 p = vUv - 0.5;
+          float r = length(p) * 2.0;
+          float core = exp(-r * r * 16.0);
+          float halo = exp(-r * 4.2) * 0.22;
+          float flick = 0.88 + 0.12 * sin(uTime * 2.3) + 0.06 * sin(uTime * 7.0);
+          float boost = 1.0 + uEnergy * 1.2;
+          vec3 c = (uColCore * core + uColMid * halo) * uGlow * flick * boost * uBrightness;
+          float a = clamp(core + halo, 0.0, 1.0) * uAlpha;
+          gl_FragColor = vec4(c, a);
+        }`,
+    })
+    this.core = new THREE.Mesh(new THREE.PlaneGeometry(3, 3), this.coreMat)
+    scene.add(this.core)
+
+    this.build()
+    this.appearStart = performance.now()
+    this.lastT = performance.now() / 1000
+    this.spin = 0
+    this.energy = 0; this.energyTarget = 0
+    this.mouse = new THREE.Vector2(0, 0); this.mouseTarget = new THREE.Vector2(0, 0)
+    this.shockStart = -10
+
+    window.addEventListener('pointermove', e => {
+      const nx = (e.clientX / window.innerWidth) * 2 - 1
+      const ny = -((e.clientY / window.innerHeight) * 2 - 1)
+      this.energyTarget = Math.min(1, this.energyTarget + Math.hypot(nx - this.mouseTarget.x, ny - this.mouseTarget.y) * 3)
+      this.mouseTarget.set(nx, ny)
+    }, { passive: true })
+    window.addEventListener('pointerdown', () => { this.shockStart = performance.now() / 1000; this.energyTarget = 1 }, { passive: true })
+  }
+
+  // build / rebuild all geometry from CONFIG (structural params)
+  build() {
+    if (this.lines) { this.group.remove(this.lines); this.lines.geometry.dispose() }
+    if (this.sparkPts) { this.group.remove(this.sparkPts); this.sparkPts.geometry.dispose() }
+    this._struct = { filaments: CONFIG.filaments, segments: CONFIG.segments, sparks: CONFIG.sparks, spread: CONFIG.spread, curl: CONFIG.curl, bend: CONFIG.bend, tipFade: CONFIG.tipFade }
+
+    const rng = mulberry32(0x9E3779B9)
+    const col = {
+      core:  hexToVec3(CONFIG.colCore),
+      inner: hexToVec3(CONFIG.colInner),
+      mid:   hexToVec3(CONFIG.colMid),
+      outer: hexToVec3(CONFIG.colOuter),
+      spark: hexToVec3(CONFIG.colSpark),
+      pink:  hexToVec3(CONFIG.colPink),
+    }
+
+    // ---------- FILAMENTS ----------
+    const F = Math.max(1, CONFIG.filaments | 0)
+    const P = Math.max(2, CONFIG.segments | 0)
+    const segs = P - 1
+    const N = F * segs * 2
+    const pos = new Float32Array(N * 3)
+    const colA = new Float32Array(N * 3)
+    const swayA = new Float32Array(N * 3)
+    const sway2A = new Float32Array(N * 3)
+    const alongA = new Float32Array(N)
+    const seedA = new Float32Array(N)
+    const tipFlare = []   // remember filament tips to seed some sparks
+
+    const coreStart = 0.06
+    const tmp = new THREE.Vector3()
+    let w = 0
+    for (let f = 0; f < F; f++) {
+      const seed = rng()
+      // uniform direction on the sphere
+      const z = rng() * 2 - 1, th = rng() * 6.2831, rr = Math.sqrt(1 - z * z)
+      const dir = new THREE.Vector3(rr * Math.cos(th), rr * Math.sin(th), z)
+      const up = Math.abs(dir.y) > 0.99 ? new THREE.Vector3(1, 0, 0) : new THREE.Vector3(0, 1, 0)
+      const u = new THREE.Vector3().crossVectors(dir, up).normalize()
+      const v = new THREE.Vector3().crossVectors(dir, u).normalize()
+
+      let len = CONFIG.spread * (0.28 + rng() * rng() * 1.15)
+      if (rng() > 0.86) len *= 1.7                          // a few long, wandering tendrils
+      const f1 = 2 + rng() * 5, f2 = 2 + rng() * 5
+      const p1 = rng() * 6.2831, p2 = rng() * 6.2831
+      const curl = CONFIG.curl * (0.45 + rng())
+      const bend = new THREE.Vector3()
+        .addScaledVector(u, rng() - 0.5)
+        .addScaledVector(v, rng() - 0.5)
+        .normalize().multiplyScalar(CONFIG.bend * (0.4 + rng()))
+
+      const pts = new Array(P)
+      const cols = new Array(P)
+      for (let i = 0; i < P; i++) {
+        const t = i / (P - 1)
+        const radius = coreStart + len * t
+        tmp.copy(dir).multiplyScalar(radius)
+        tmp.addScaledVector(u, Math.sin(t * f1 * Math.PI + p1) * curl * t)
+        tmp.addScaledVector(v, Math.cos(t * f2 * Math.PI + p2) * curl * t)
+        tmp.addScaledVector(bend, t * t)
+        pts[i] = tmp.clone()
+
+        // colour: white core -> violet -> deep indigo, dimming toward the tip
+        const c1 = col.inner.clone().lerp(col.mid, THREE.MathUtils.smoothstep(t, 0.0, 0.5))
+        const c = c1.lerp(col.outer, THREE.MathUtils.smoothstep(t, 0.5, 1.0))
+        c.lerp(col.core, (1 - THREE.MathUtils.smoothstep(t, 0.0, 0.12)) * 0.9)
+        const bright = THREE.MathUtils.lerp(1.15, CONFIG.tipFade, THREE.MathUtils.smoothstep(t, 0.0, 1.0))
+        cols[i] = c.multiplyScalar(bright)
+      }
+      tipFlare.push(pts[P - 1])
+
+      for (let i = 0; i < segs; i++) {
+        for (let e = 0; e < 2; e++) {
+          const idx = i + e
+          const t = idx / (P - 1)
+          const p = pts[idx], c = cols[idx]
+          pos[w * 3] = p.x; pos[w * 3 + 1] = p.y; pos[w * 3 + 2] = p.z
+          colA[w * 3] = c.x; colA[w * 3 + 1] = c.y; colA[w * 3 + 2] = c.z
+          swayA[w * 3] = u.x; swayA[w * 3 + 1] = u.y; swayA[w * 3 + 2] = u.z
+          sway2A[w * 3] = v.x; sway2A[w * 3 + 1] = v.y; sway2A[w * 3 + 2] = v.z
+          alongA[w] = t; seedA[w] = seed
+          w++
+        }
+      }
+    }
+    const lg = new THREE.BufferGeometry()
+    lg.setAttribute('position', new THREE.BufferAttribute(pos, 3))
+    lg.setAttribute('aColor', new THREE.BufferAttribute(colA, 3))
+    lg.setAttribute('aSway', new THREE.BufferAttribute(swayA, 3))
+    lg.setAttribute('aSway2', new THREE.BufferAttribute(sway2A, 3))
+    lg.setAttribute('aAlong', new THREE.BufferAttribute(alongA, 1))
+    lg.setAttribute('aSeed', new THREE.BufferAttribute(seedA, 1))
+    this.lines = new THREE.LineSegments(lg, this.lineMat)
+    this.lines.frustumCulled = false
+    this.group.add(this.lines)
+
+    // ---------- SPARKS ----------
+    const S = Math.max(1, CONFIG.sparks | 0)
+    const sp = new Float32Array(S * 3)
+    const sc = new Float32Array(S * 3)
+    const ss = new Float32Array(S)
+    const sph = new Float32Array(S)
+    for (let i = 0; i < S; i++) {
+      const roll = rng()
+      let p, isBokeh = false
+      if (roll < 0.42 && tipFlare.length) {
+        // cluster a fine spark near a filament tip
+        const base = tipFlare[(rng() * tipFlare.length) | 0]
+        p = base.clone().add(new THREE.Vector3((rng() - 0.5) * 0.18, (rng() - 0.5) * 0.18, (rng() - 0.5) * 0.18))
+      } else if (roll < 0.88) {
+        // diffuse halo throughout the burst volume
+        const z = rng() * 2 - 1, th = rng() * 6.2831, rr = Math.sqrt(1 - z * z)
+        const rad = CONFIG.spread * (0.12 + Math.pow(rng(), 1.4) * 1.05)
+        p = new THREE.Vector3(rr * Math.cos(th) * rad, rr * Math.sin(th) * rad, z * rad)
+      } else {
+        // a sparse field of soft, slightly larger bokeh motes
+        isBokeh = true
+        const z = rng() * 2 - 1, th = rng() * 6.2831, rr = Math.sqrt(1 - z * z)
+        const rad = CONFIG.spread * (1.0 + rng() * 1.2)
+        p = new THREE.Vector3(rr * Math.cos(th) * rad, rr * Math.sin(th) * rad, z * rad * 0.7)
+      }
+      sp[i * 3] = p.x; sp[i * 3 + 1] = p.y; sp[i * 3 + 2] = p.z
+
+      // mostly white-violet, some pink accents, dimming with distance
+      const distN = Math.min(1, p.length() / (CONFIG.spread * 1.4))
+      const c = (rng() > 0.82 ? col.pink.clone() : col.spark.clone()).lerp(col.mid, distN * 0.5)
+      c.multiplyScalar(THREE.MathUtils.lerp(1.0, 0.35, distN) * (isBokeh ? 0.55 : 1.0))
+      sc[i * 3] = c.x; sc[i * 3 + 1] = c.y; sc[i * 3 + 2] = c.z
+
+      ss[i] = isBokeh ? (1.1 + rng() * 1.3) : (0.3 + rng() * rng() * 0.85)   // little dots; a few soft motes
+      sph[i] = rng()
+    }
+    const sg = new THREE.BufferGeometry()
+    sg.setAttribute('position', new THREE.BufferAttribute(sp, 3))
+    sg.setAttribute('aColor', new THREE.BufferAttribute(sc, 3))
+    sg.setAttribute('aSize', new THREE.BufferAttribute(ss, 1))
+    sg.setAttribute('aPhase', new THREE.BufferAttribute(sph, 1))
+    this.sparkPts = new THREE.Points(sg, this.sparkMat)
+    this.sparkPts.frustumCulled = false
+    this.group.add(this.sparkPts)
+  }
+
+  structChanged() {
+    const s = this._struct
+    return s.filaments !== CONFIG.filaments || s.segments !== CONFIG.segments || s.sparks !== CONFIG.sparks ||
+           s.spread !== CONFIG.spread || s.curl !== CONFIG.curl || s.bend !== CONFIG.bend || s.tipFade !== CONFIG.tipFade
+  }
+
+  resize() {
+    this.sparkUniforms.uPixelRatio.value = Math.min(window.devicePixelRatio, 2)
+  }
+
+  render() {
+    const now = performance.now() / 1000
+    const dt = Math.min(0.05, now - this.lastT); this.lastT = now
+    const elapsed = performance.now() - this.appearStart
+    const alpha = Math.max(0, Math.min(1, (elapsed - 300) / 1400)) * CONFIG.mainAlpha
+
+    // smooth pointer + decay energy
+    this.energyTarget *= 0.93
+    this.energy += (this.energyTarget - this.energy) * 0.12
+    this.mouse.lerp(this.mouseTarget, 0.07)
+
+    // spin + parallax tilt
+    this.spin += CONFIG.rotateSpeed * dt
+    this.group.rotation.y = this.spin + this.mouse.x * 0.5
+    this.group.rotation.x = this.mouse.y * 0.4
+
+    // billboard the core toward camera
+    this.core.quaternion.copy(camera.quaternion)
+    this.core.scale.setScalar(CONFIG.coreSize)
+
+    // click shock travels from core (0) out to the tips (1) over ~0.9s
+    const shockT = now - this.shockStart
+    const shockFront = shockT < 1.1 ? shockT / 0.9 : -1
+    const shockAmp = shockT < 1.1 ? (1 - shockT / 1.1) : 0
+
+    const lu = this.lineUniforms
+    lu.uTime.value = now; lu.uAlpha.value = alpha
+    lu.uSway.value = CONFIG.sway; lu.uSwaySpeed.value = CONFIG.swaySpeed
+    lu.uShimmer.value = CONFIG.shimmer; lu.uShimmerSpeed.value = CONFIG.shimmerSpeed
+    lu.uBright.value = CONFIG.lineBright; lu.uBrightness.value = CONFIG.brightness
+    lu.uEnergy.value = this.energy; lu.uShock.value = shockFront; lu.uShockAmp.value = shockAmp
+
+    const su = this.sparkUniforms
+    su.uTime.value = now; su.uAlpha.value = alpha
+    su.uSparkSize.value = CONFIG.sparkSize; su.uTwinkle.value = CONFIG.twinkle
+    su.uBrightness.value = CONFIG.brightness; su.uEnergy.value = this.energy
+
+    const cu = this.coreUniforms
+    cu.uTime.value = now; cu.uAlpha.value = alpha
+    cu.uGlow.value = CONFIG.coreGlow; cu.uBrightness.value = CONFIG.brightness; cu.uEnergy.value = this.energy
+  }
+}
+
+const sceneObj = new PlasmaBurstScene(scene)
+
+/* ---------- CONFIG → uniforms ---------- */
+function applyConfig() {
+  if (sceneObj.structChanged()) sceneObj.build()
+  sceneObj.coreUniforms.uColCore.value.copy(hexToVec3(CONFIG.colCore))
+  sceneObj.coreUniforms.uColMid.value.copy(hexToVec3(CONFIG.colMid))
+  bloomPass.strength = CONFIG.bloomStr
+  bloomPass.radius = CONFIG.bloomRadius
+  bloomPass.threshold = CONFIG.bloomThresh
+  // remaining live uniforms are pushed every frame in render()
+}
+
+/* ---------- RESIZE ---------- */
+function resize() {
+  const w = window.innerWidth, h = window.innerHeight, dpr = window.devicePixelRatio
+  renderer.setPixelRatio(dpr); renderer.setSize(w, h, false)
+  camera.aspect = w / h; camera.updateProjectionMatrix()
+  composer.setPixelRatio(dpr); composer.setSize(w, h)   // also resizes bloomPass to w*dpr — don't override it
+  sceneObj.resize()
+}
+window.addEventListener('resize', resize); resize()
+
+/* ---------- RENDER LOOP ---------- */
+function render() {
+  requestAnimationFrame(render)
+  sceneObj.render()
+  composer.render()
+}
+render()
+
+/* ===== UI (remove this block to drop the panel) ===== */
+function setupColorUI(config, apply) {
+  const panel = document.getElementById('ui-panel')
+  const toggle = document.getElementById('ui-toggle')
+  const body = document.getElementById('ui-body')
+  if (!panel) return
+  toggle.addEventListener('click', () => panel.classList.toggle('-open'))
+  const _apply = apply
+  apply = () => { _apply(); saveConfig(); renderSnapshot(config) }
+  const numericRanges = {
+    filaments:    { min: 40,   max: 600,  step: 10 },
+    segments:     { min: 8,    max: 120,  step: 1 },
+    sparks:       { min: 0,    max: 2000, step: 20 },
+    spread:       { min: 1,    max: 5,    step: 0.05 },
+    curl:         { min: 0,    max: 1.5,  step: 0.01 },
+    bend:         { min: 0,    max: 1.5,  step: 0.01 },
+    coreSize:     { min: 0.3,  max: 3,    step: 0.05 },
+    coreGlow:     { min: 0,    max: 4,    step: 0.05 },
+    lineBright:   { min: 0,    max: 3,    step: 0.02 },
+    tipFade:      { min: 0,    max: 0.6,  step: 0.01 },
+    sway:         { min: 0,    max: 0.6,  step: 0.005 },
+    swaySpeed:    { min: 0,    max: 4,    step: 0.05 },
+    shimmer:      { min: 0,    max: 1.5,  step: 0.01 },
+    shimmerSpeed: { min: 0,    max: 8,    step: 0.05 },
+    sparkSize:    { min: 0,    max: 6,    step: 0.05 },
+    twinkle:      { min: 0,    max: 6,    step: 0.05 },
+    rotateSpeed:  { min: 0,    max: 0.5,  step: 0.005 },
+    bloomStr:     { min: 0,    max: 3,    step: 0.02 },
+    bloomRadius:  { min: 0,    max: 1.5,  step: 0.01 },
+    bloomThresh:  { min: 0,    max: 1,    step: 0.01 },
+    brightness:   { min: 0,    max: 2,    step: 0.01 },
+    mainAlpha:    { min: 0,    max: 2,    step: 0.01 },
+  }
+  for (const key of Object.keys(config)) {
+    const v = config[key]
+    const row = document.createElement('label')
+    row.appendChild(Object.assign(document.createElement('span'), { textContent: key }))
+    if (typeof v === 'string' && v[0] === '#') {
+      const inp = document.createElement('input')
+      inp.type = 'color'; inp.value = v
+      inp.addEventListener('input', e => { config[key] = e.target.value; apply() })
+      row.appendChild(inp)
+    } else if (typeof v === 'number') {
+      const r = numericRanges[key] || { min: 0, max: Math.max(1, v * 2), step: 0.01 }
+      const inp = document.createElement('input')
+      inp.type = 'range'; inp.min = String(r.min); inp.max = String(r.max); inp.step = String(r.step); inp.value = String(v)
+      inp.addEventListener('input', e => {
+        let val = parseFloat(e.target.value)
+        if (Number.isInteger(r.step)) val = Math.round(val / r.step) * r.step
+        config[key] = val
+        apply()
+      })
+      row.appendChild(inp)
+    }
+    body.appendChild(row)
+  }
+  const btns = document.createElement('div'); btns.id = 'ui-buttons'
+  const reloadBtn = document.createElement('button'); reloadBtn.type = 'button'; reloadBtn.textContent = '⟳ reload'
+  const resetBtn  = document.createElement('button'); resetBtn.type = 'button'; resetBtn.textContent = '↺ reset'
+  reloadBtn.title = 'Reload the page — re-initialise the scene with the saved settings'
+  resetBtn.title = 'Clear saved settings and reload with defaults'
+  reloadBtn.addEventListener('click', () => location.reload())
+  resetBtn.addEventListener('click', () => { try { localStorage.removeItem(STORAGE_KEY) } catch (e) {} ; location.reload() })
+  btns.appendChild(reloadBtn); btns.appendChild(resetBtn)
+  body.appendChild(btns)
+  panel.classList.add('-open')
+  renderSnapshot(config)
+}
+function renderSnapshot(config) {
+  const snap = document.getElementById('ui-snapshot')
+  if (!snap) return
+  const lines = ['const CONFIG = {']
+  for (const key of Object.keys(config)) {
+    const v = config[key]
+    let formatted
+    if (typeof v === 'string') formatted = "'" + v + "'"
+    else if (Number.isInteger(v)) formatted = String(v)
+    else formatted = String(parseFloat(v.toFixed(4)))
+    lines.push('  ' + key + ': ' + formatted + ',')
+  }
+  lines.push('}')
+  snap.textContent = lines.join('\n')
+}
+applyConfig()
+setupColorUI(CONFIG, applyConfig)
+/* ===== END UI ===== */
+</script>
+</body>
+</html>
