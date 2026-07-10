@@ -29,7 +29,7 @@ const COLUMNS: { title: string; links: { label: string; href: string; external?:
     title: "Profile",
     links: [
       { label: "About", href: "/about" },
-      { label: "Experience", href: "/about#experience" },
+      { label: "Experience", href: "/experience" },
       { label: "Skills", href: "/skills" },
       { label: "Certifications", href: "/certifications" },
       { label: "Education", href: "/education" },

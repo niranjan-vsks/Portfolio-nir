@@ -15,7 +15,7 @@ const GlobeStage = dynamic(() => import("@/components/3d/globe/GlobeStage"), { s
 
 const ITEMS: OrbitItem[] = [
   { label: "Independent Projects", caption: "Loop Copilot, Saarthi, Rebalancer", path: "projects.sh", href: "/projects" },
-  { label: "Work Experience", caption: "Coforge, HPE, Mphasis", path: "experience.sh", href: "/about#experience" },
+  { label: "Work Experience", caption: "Coforge, HPE, Mphasis", path: "experience.sh", href: "/experience" },
   { label: "Mind Map", caption: "the whole system, one graph", path: "mindmap.sh", href: "/map" },
   { label: "System Design", caption: "how I would build it", path: "architecture.sh", href: "/system-design" },
   { label: "Dashboard", caption: "the signal at a glance", path: "dashboard.sh", href: "/dashboard" },
