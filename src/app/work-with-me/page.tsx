@@ -41,7 +41,7 @@ export default function WorkWithMePage() {
             start a conversation
           </ButtonLink>
           <ButtonLink
-            href="/NiranjanVSKS_FDE.pdf"
+            href="/Niranjan_VSKS_FDE_P1.pdf"
             target="_blank"
             rel="noopener noreferrer"
             variant="outline"

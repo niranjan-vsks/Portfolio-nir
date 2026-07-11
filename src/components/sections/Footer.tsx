@@ -41,9 +41,9 @@ const COLUMNS: { title: string; links: { label: string; href: string; external?:
     links: [
       { label: "ask_niranjan", href: "/chat" },
       { label: "Contact", href: "/contact" },
-      { label: "GitHub", href: "https://github.com/niranjanvsks", external: true },
+      { label: "GitHub", href: "https://github.com/niranjan-vsks", external: true },
       { label: "LinkedIn", href: "https://www.linkedin.com/in/niranjanvsks", external: true },
-      { label: "Résumé (PDF)", href: "/NiranjanVSKS_FDE.pdf", external: true },
+      { label: "Résumé (PDF)", href: "/Niranjan_VSKS_FDE_P1.pdf", external: true },
     ],
   },
 ];

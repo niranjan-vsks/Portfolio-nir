@@ -24,7 +24,7 @@ export const SEARCH_INDEX: SearchEntry[] = [
   { label: "Education", href: "/education", group: "section", keywords: ["degree", "iiit", "btech", "ml diploma"] },
   { label: "Contact", href: "/contact", group: "section", keywords: ["email", "linkedin", "github", "hire", "reach"] },
   { label: "ask_niranjan", href: "/chat", group: "section", keywords: ["chat", "chatbot", "ask", "interview", "questions"] },
-  { label: "Résumé (PDF)", href: "/NiranjanVSKS_FDE.pdf", group: "action", keywords: ["cv", "resume", "download", "pdf"] },
+  { label: "Résumé (PDF)", href: "/Niranjan_VSKS_FDE_P1.pdf", group: "action", keywords: ["cv", "resume", "download", "pdf"] },
 
   { label: "Loop Copilot", href: "/projects/loop-copilot", group: "project", keywords: ["crm", "d365", "dynamics", "copilot", "live", "fortune 500"] },
   { label: "Saarthi", href: "/projects/saarthi", group: "project", keywords: ["voice", "financial", "gig workforce", "vernacular"] },

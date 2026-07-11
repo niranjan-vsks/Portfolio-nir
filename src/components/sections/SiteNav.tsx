@@ -28,7 +28,7 @@ export function SiteNav() {
         {/* actions */}
         <nav className="flex shrink-0 items-center gap-4 text-[16px]">
           <a
-            href="https://github.com/niranjanvsks"
+            href="https://github.com/niranjan-vsks"
             target="_blank"
             rel="noopener noreferrer"
             className="hidden text-text-dim transition-colors hover:text-green md:inline"
@@ -39,7 +39,7 @@ export function SiteNav() {
             Contact
           </Link>
           <SoundToggle />
-          <HoverBorderGradient href="/NiranjanVSKS_FDE.pdf" target="_blank" className="text-[15px]">
+          <HoverBorderGradient href="/Niranjan_VSKS_FDE_P1.pdf" target="_blank" className="text-[15px]">
             Résumé
           </HoverBorderGradient>
         </nav>

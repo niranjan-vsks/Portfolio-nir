@@ -2,7 +2,7 @@
 section: contact
 email: niranjan.vsks@gmail.com
 linkedin: https://www.linkedin.com/in/niranjanvsks
-github: https://github.com/niranjanvsks
+github: https://github.com/niranjan-vsks
 site: https://niranjanvsks.xyz
 availability: "Remote-first. Available to work with teams globally."
 ---
