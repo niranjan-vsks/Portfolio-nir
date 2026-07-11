@@ -7,7 +7,8 @@ import { WikiLink } from "@/components/ui/WikiLink";
  * hyperlinks with the hover caption dialog. Server-safe; longest match wins.
  */
 const LINKS: { pattern: RegExp; href: string; caption: string }[] = [
-  { pattern: /quality[- ]engineering platform/i, href: "/projects/qe-platform", caption: "Click to explore this project in detail" },
+  { pattern: /AI-Infused (?:Agentic )?QE Platform|quality[- ]engineering platform/i, href: "/projects/qe-platform", caption: "Click to explore this project in detail" },
+  { pattern: /WealthOS/, href: "/projects/wealthos", caption: "Click to explore this project in detail" },
   { pattern: /Loop Copilot/, href: "/projects/loop-copilot", caption: "Click to explore this project in detail" },
   { pattern: /Saarthi/, href: "/projects/saarthi", caption: "Click to explore this project in detail" },
   { pattern: /conversational (?:system|RAG)/i, href: "/projects/hpe-rag-chatbot", caption: "Click to explore this project in detail" },

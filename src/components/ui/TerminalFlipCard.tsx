@@ -22,6 +22,8 @@ export interface TerminalFlipCardProps {
   stack?: string[];
   external?: boolean;
   className?: string;
+  /** optional 2-liner on the flip back (FDE hub cards, Right_Now fixes) */
+  backCaption?: string;
 }
 
 const STATUS_COLOR: Record<string, string> = {
@@ -55,6 +57,7 @@ export function TerminalFlipCard({
   stack = [],
   external = false,
   className = "",
+  backCaption,
 }: TerminalFlipCardProps) {
   const reduced = useReducedMotion();
   const [typed, setTyped] = useState(reduced ? caption : "");
@@ -145,7 +148,11 @@ export function TerminalFlipCard({
           {chrome(`~/open ${path}`)}
           <div className="flex h-[calc(100%-37px)] flex-col p-4 font-mono text-[12.5px]">
             <div className="text-emerald-400">$ ./launch {name.toLowerCase().replace(/\s+/g, "-")}</div>
-            <div className="mt-1 text-neutral-400">{"> booting" + "…"}</div>
+            {backCaption ? (
+              <p className="mt-2 text-[12px] leading-relaxed text-neutral-300">{backCaption}</p>
+            ) : (
+              <div className="mt-1 text-neutral-400">{"> booting" + "…"}</div>
+            )}
             {stack.length > 0 && (
               <div className="mt-3 flex flex-wrap gap-1.5">
                 {stack.slice(0, 6).map((s) => (

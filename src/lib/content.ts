@@ -161,6 +161,28 @@ export function getAllExperience(): ContentDoc<ExperienceFrontmatter>[] {
     );
 }
 
+export interface FdeFrontmatter {
+  title: string;
+  slug: string;
+  order?: number;
+  caption?: string;
+  back?: string;
+  tags?: { label: string; node: string }[];
+}
+
+/** FDE capability sections (Right_Now fixes): /forward-deployed hub + pages. */
+export function getFdeSection(slug: string): ContentDoc<FdeFrontmatter> | null {
+  const abs = path.join(CONTENT_ROOT, "fde", `${slug}.md`);
+  if (!fs.existsSync(abs)) return null;
+  return readDoc<FdeFrontmatter>(abs);
+}
+
+export function getAllFdeSections(): ContentDoc<FdeFrontmatter>[] {
+  return listMd("fde")
+    .map((p) => readDoc<FdeFrontmatter>(p))
+    .sort((a, b) => (a.frontmatter.order ?? 99) - (b.frontmatter.order ?? 99));
+}
+
 export function getSystemDesign(
   slug: string,
 ): ContentDoc<SystemDesignFrontmatter> | null {

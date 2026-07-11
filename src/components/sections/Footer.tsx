@@ -30,6 +30,7 @@ const COLUMNS: { title: string; links: { label: string; href: string; external?:
     links: [
       { label: "About", href: "/about" },
       { label: "Experience", href: "/experience" },
+      { label: "Forward Deployed", href: "/forward-deployed" },
       { label: "Skills", href: "/skills" },
       { label: "Certifications", href: "/certifications" },
       { label: "Education", href: "/education" },

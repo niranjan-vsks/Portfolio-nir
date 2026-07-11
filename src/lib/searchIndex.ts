@@ -18,7 +18,7 @@ export const SEARCH_INDEX: SearchEntry[] = [
   { label: "Dashboard", href: "/dashboard", group: "section", keywords: ["metrics", "numbers", "impact", "signal"] },
   { label: "About", href: "/about", group: "section", keywords: ["bio", "story", "experience", "arc"] },
   { label: "Experience", href: "/experience", group: "section", keywords: ["coforge", "hpe", "mphasis", "work history"] },
-  { label: "Forward Deployed Engineering", href: "/experience#fde", group: "section", keywords: ["fde", "customer-facing", "solutions architecture", "cost optimization"] },
+  { label: "Forward Deployed Engineering", href: "/forward-deployed", group: "section", keywords: ["fde", "customer-facing", "solutions architecture", "cost optimization", "rag", "llmops", "observability"] },
   { label: "Skills", href: "/skills", group: "section", keywords: ["stack", "technologies", "agentic", "rag", "python"] },
   { label: "Certifications", href: "/certifications", group: "section", keywords: ["certs", "bitsom", "anthropic", "claude architect"] },
   { label: "Education", href: "/education", group: "section", keywords: ["degree", "iiit", "btech", "ml diploma"] },
