@@ -228,12 +228,14 @@ function AscendPlanet({ reduced }: { reduced: boolean }) {
   const { scene: lightsScene } = useGLTF("/models/planet-lights.glb");
   const cloudTex = useLoader(THREE.TextureLoader, "/models/planet-clouds.png");
   const spinRef = useRef<THREE.Group>(null!);
-  const planetTime = useRef({ value: 0 }).current;
-  const cloudTime = useRef({ value: 0 }).current;
 
-  const { planet, clouds } = useMemo(() => {
-    cloudTex.wrapS = cloudTex.wrapT = THREE.RepeatWrapping;
-    cloudTex.repeat.set(5, 5);
+  const { planet, clouds, planetTime, cloudTime } = useMemo(() => {
+    // shader uniform holders; frame-advanced via timesRef (see effect below)
+    const planetTime = { value: 0 };
+    const cloudTime = { value: 0 };
+    const tex = cloudTex.clone();
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+    tex.repeat.set(5, 5);
     const lmesh = firstMesh(lightsScene);
     const lmat = lmesh?.material as THREE.MeshStandardMaterial | undefined;
     const nightTex = lmat?.map ?? null;
@@ -256,24 +258,33 @@ function AscendPlanet({ reduced }: { reduced: boolean }) {
     ];
     const clouds = layers.map((l) => {
       const g = new THREE.SphereGeometry(RADIUS * l.h, 64, 64);
-      const m = makeCloudMaterial(cloudTex, l.o, l.phase, cloudTime);
+      const m = makeCloudMaterial(tex, l.o, l.phase, cloudTime);
       const c = new THREE.Mesh(g, m);
       c.rotation.y = l.ry;
       c.renderOrder = 2;
       return c;
     });
-    return { planet, clouds };
-  }, [planetScene, lightsScene, cloudTex, planetTime, cloudTime]);
+    return { planet, clouds, planetTime, cloudTime };
+  }, [planetScene, lightsScene, cloudTex]);
 
+  const timesRef = useRef<{ p: { value: number }; c: { value: number } } | null>(null);
+  useEffect(() => {
+    timesRef.current = { p: planetTime, c: cloudTime };
+  }, [planetTime, cloudTime]);
+
+  const cloudRefs = useRef<(THREE.Group | null)[]>([]);
   useFrame((_, dt) => {
     if (reduced) return;
-    planetTime.value += dt * 0.05;
-    cloudTime.value += dt * 0.02;
-    if (spinRef.current) spinRef.current.rotation.y += dt * CFG.spin;
-    for (let i = 0; i < clouds.length; i++) {
-      const spins = [CFG.cloud1Spin, CFG.cloud2Spin, CFG.cloud3Spin];
-      clouds[i].rotation.y += dt * spins[i];
+    const t = timesRef.current;
+    if (t) {
+      t.p.value += dt * 0.05;
+      t.c.value += dt * 0.02;
     }
+    if (spinRef.current) spinRef.current.rotation.y += dt * CFG.spin;
+    const spins = [CFG.cloud1Spin, CFG.cloud2Spin, CFG.cloud3Spin];
+    cloudRefs.current.forEach((g, i) => {
+      if (g) g.rotation.y += dt * spins[i];
+    });
   });
 
   return (
@@ -282,7 +293,9 @@ function AscendPlanet({ reduced }: { reduced: boolean }) {
         <primitive object={planet} />
       </group>
       {clouds.map((c, i) => (
-        <primitive key={i} object={c} />
+        <group key={i} ref={(el) => { cloudRefs.current[i] = el; }}>
+          <primitive object={c} />
+        </group>
       ))}
     </group>
   );
