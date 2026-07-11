@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { getSection, getAllExperience, splitSections } from "@/lib/content";
 import { PageShell } from "@/components/sections/PageShell";
 import { PageBackground } from "@/components/backgrounds/PageBackground";
-import { TerminalCard } from "@/components/ui/TerminalCard";
+import { AboutStrips } from "@/components/sections/AboutStrips";
 
 export const metadata: Metadata = {
   title: "About",
@@ -19,11 +19,24 @@ export default function AboutPage() {
     ? splitSections(about.body).filter((s) => !/credentials/i.test(s.title))
     : [];
 
-  const expCards = experience.map((e) => {
-    const fm = e.frontmatter;
-    const title = `${(fm.employer as string) ?? ""} · ${(fm.title as string) ?? ""}`;
-    return { title: title.toUpperCase(), html: e.html };
-  });
+  const expStrip = experience.map((e) => ({
+    employer: (e.frontmatter.employer as string) ?? "",
+    title: (e.frontmatter.title as string) ?? "",
+    tenure: (e.frontmatter.tenure as string) ?? "",
+    slug: (e.frontmatter.slug as string) ?? e.slug,
+  }));
+
+  // skills marquee items straight from skills.md (group per H2 heading)
+  const skillsDoc = getSection("skills");
+  const skillItems: { label: string; group: string }[] = [];
+  if (skillsDoc) {
+    for (const s of splitSections(skillsDoc.body)) {
+      const text = s.html.replace(/<[^>]+>/g, "");
+      for (const label of text.split("·").map((t) => t.trim()).filter(Boolean)) {
+        skillItems.push({ label, group: s.title });
+      }
+    }
+  }
 
   return (
     <>
@@ -42,13 +55,8 @@ export default function AboutPage() {
           ))}
         </div>
 
-        {/* Experience · terminal flip cards */}
-        <section id="experience" className="mt-16 scroll-mt-20">
-          <h2 className="mb-5 font-mono text-xl text-green">{"> experience"}</h2>
-          <div className="max-w-3xl">
-            {expCards.length > 0 && <TerminalCard cards={expCards} />}
-          </div>
-        </section>
+        {/* Experience strip + skills marquee (Infinite Moving Cards, PRD 11.2) */}
+        <AboutStrips experience={expStrip} skills={skillItems} />
 
         {/* Credentials */}
         <section className="mt-16">
