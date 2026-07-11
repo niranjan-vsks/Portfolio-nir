@@ -10,6 +10,7 @@ import { ButtonLink } from "@/components/ui/Button";
 import { PageBackground } from "@/components/backgrounds/PageBackground";
 import { ProjectShowcase } from "@/components/sections/ProjectShowcase";
 import { SliderSpectra } from "@/components/ui/SliderSpectra";
+import { SaarthiView } from "@/components/sections/SaarthiView";
 import type { Metadata } from "next";
 
 export function generateStaticParams() {
@@ -40,7 +41,7 @@ const SYSTEM_DESIGN_SLUGS = new Set(["loop-copilot", "qe-platform"]);
 // Confidentiality gate (PRD rule 3): screenshots only render for slugs whose
 // images are confirmed scrubbed of client data. Empty until Niranjan confirms;
 // Loop Copilot's dropped shots stay hidden (not scrubbed) until then.
-const SCREENSHOTS_CLEARED = new Set<string>([]);
+const SCREENSHOTS_CLEARED = new Set<string>(["loop-copilot"]);
 
 export default async function ProjectPage({
   params,
@@ -113,6 +114,7 @@ export default async function ProjectPage({
             (Saarthi keeps its dedicated mobile/web view, PRD 13.4). Real
             screenshots only when scrubbed; until then, honest labelled
             gradient placeholders per section. */}
+        {slug === "saarthi" && <SaarthiView />}
         {slug !== "saarthi" && (
           <section className="mb-4">
             <h2 className="mb-1 font-mono text-lg text-green">{"> view"}</h2>

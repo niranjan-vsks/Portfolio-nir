@@ -223,7 +223,9 @@ export function SliderSpectra({ slides }: { slides: SpectraSlide[] }) {
                   />
                   {sl.img ? (
                     /* eslint-disable-next-line @next/next/no-img-element */
-                    <img src={sl.img} alt={`${sl.name} screen`} draggable={false} loading="lazy" className="absolute inset-0 block h-full w-full object-cover" />
+                    /* object-contain on black: any screenshot dimension
+                       (landscape app shots included) auto-fits the card */
+                    <img src={sl.img} alt={`${sl.name} screen`} draggable={false} loading="lazy" className="absolute inset-0 block h-full w-full bg-black object-contain" />
                   ) : (
                     <span className="absolute inset-0 grid place-items-center p-4 text-center font-mono text-[13px] text-white/80">
                       {sl.name}
