@@ -1,13 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useReducedMotion } from "@/lib/hooks/useReducedMotion";
 
 /**
- * Collapsible avatar (landing). Replaces the space-hungry 3D photo card: a small
- * avatar bubble that expands into a compact identity card (name, title, summary,
- * ask_niranjan). The circular media slot is swappable — a real animated avatar
- * (video/Lottie/3D) can drop into `AvatarMedia` later with no layout change.
+ * Collapsible avatar (landing). Right_Now fixes 2026-07-11: expanding the
+ * bubble now pops up the Starman template — the looping video integrated AS
+ * IS (no resolution/color changes, only sized to its slot) — with a
+ * comic-style dialog box that typewrites the summary. Collapsed state stays
+ * the small photo bubble.
  */
 function AvatarMedia({ size }: { size: number }) {
   const [ok, setOk] = useState(true);
@@ -34,6 +36,37 @@ function AvatarMedia({ size }: { size: number }) {
   );
 }
 
+function ComicDialog({ text }: { text: string }) {
+  const reduced = useReducedMotion();
+  const [typed, setTyped] = useState(reduced ? text : "");
+
+  useEffect(() => {
+    if (reduced) {
+      setTyped(text);
+      return;
+    }
+    setTyped("");
+    let i = 0;
+    const id = setInterval(() => {
+      i++;
+      setTyped(text.slice(0, i));
+      if (i >= text.length) clearInterval(id);
+    }, 18);
+    return () => clearInterval(id);
+  }, [text, reduced]);
+
+  return (
+    <div className="relative rounded-2xl border-2 border-white/80 bg-white px-4 py-3 text-[13.5px] font-medium leading-relaxed text-neutral-900 shadow-[4px_4px_0_rgba(74,222,128,0.55)]">
+      {/* comic speech-bubble tail pointing at the starman */}
+      <span className="absolute -top-3 left-10 block h-0 w-0 border-x-8 border-b-[14px] border-x-transparent border-b-white" />
+      {typed}
+      {typed.length < text.length && (
+        <span className="ml-0.5 inline-block h-3.5 w-1.5 translate-y-0.5 bg-neutral-900" />
+      )}
+    </div>
+  );
+}
+
 export function CollapsibleAvatar({
   name,
   title,
@@ -50,28 +83,43 @@ export function CollapsibleAvatar({
   return (
     <div className="fixed bottom-6 left-6 z-40">
       {open ? (
-        <div className="w-72 rounded-2xl border border-white/10 bg-[#0b0e0c]/95 p-4 shadow-2xl backdrop-blur-xl">
-          <div className="flex items-start gap-3">
-            <AvatarMedia size={52} />
-            <div className="min-w-0 flex-1">
-              <p className="truncate font-semibold text-white">{name}</p>
-              <p className="text-[12px] text-green">{title}</p>
-            </div>
+        <div className="w-[340px] overflow-hidden rounded-2xl border border-white/10 bg-black/95 shadow-2xl backdrop-blur-xl">
+          {/* Starman, integrated as-is: looping, muted, its own colors */}
+          <div className="relative">
+            <video
+              src="/starman/star-man.mp4"
+              poster="/starman/star-man.jpg"
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="block aspect-square w-full object-cover"
+            />
             <button
               onClick={() => setOpen(false)}
               aria-label="Collapse"
-              className="text-text-dim transition-colors hover:text-green"
+              className="absolute right-3 top-3 grid h-7 w-7 place-items-center rounded-full bg-black/60 text-white backdrop-blur transition-colors hover:text-green"
             >
               ✕
             </button>
           </div>
-          <p className="mt-3 line-clamp-3 text-[13px] leading-relaxed text-text-dim">{summary}</p>
-          <button
-            onClick={onAsk}
-            className="mt-3 w-full rounded-lg bg-green py-1.5 text-[13px] font-medium text-bg transition-transform hover:scale-[1.02] active:scale-95"
-          >
-            ask_niranjan
-          </button>
+
+          <div className="space-y-3 p-4">
+            <div className="flex items-center gap-3">
+              <AvatarMedia size={40} />
+              <div className="min-w-0">
+                <p className="truncate font-semibold text-white">{name}</p>
+                <p className="text-[12px] text-green">{title}</p>
+              </div>
+            </div>
+            <ComicDialog text={summary} />
+            <button
+              onClick={onAsk}
+              className="w-full rounded-lg bg-green py-2 text-[13.5px] font-medium text-bg transition-transform hover:scale-[1.02] active:scale-95"
+            >
+              ask_niranjan
+            </button>
+          </div>
         </div>
       ) : (
         <button
