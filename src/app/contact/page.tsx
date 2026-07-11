@@ -1,8 +1,11 @@
 import { getSection } from "@/lib/content";
 import { Markdown } from "@/components/ui/Markdown";
 import { PageShell } from "@/components/sections/PageShell";
-import { PageBackground } from "@/components/backgrounds/PageBackground";
+import dynamic from "next/dynamic";
 import { HoverBorderGradient } from "@/components/ui/HoverBorderGradient";
+
+// Solaris (R9/DG-3): the breathing particle sun replaces Particle Sphere.
+const SolarisBackdrop = dynamic(() => import("@/components/backgrounds/SolarisBackdrop"));
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -78,7 +81,7 @@ export default function ContactPage() {
 
   return (
     <>
-      <PageBackground variant="particle-sphere" />
+      <SolarisBackdrop />
       <PageShell eyebrow="contact" title="Get in touch">
         <div className="max-w-3xl">
           <div className="text-[16px] leading-relaxed text-neutral-200">
