@@ -34,10 +34,54 @@ export const SEARCH_INDEX: SearchEntry[] = [
   { label: "Global Census Chatbot (HPE)", href: "/projects/global-census-chatbot", group: "project", keywords: ["hpe", "census", "chatbot"] },
 ];
 
+// FDE capability pages (R10: everything findable)
+SEARCH_INDEX.push(
+  { label: "Architecting the AI Solution", href: "/forward-deployed/architecting-ai-solution", group: "fde", keywords: ["architecture", "multi-cloud", "identity", "sso"] },
+  { label: "Building the Production RAG Pipeline", href: "/forward-deployed/production-rag-pipeline", group: "fde", keywords: ["graphrag", "hybrid search", "neo4j", "chunking"] },
+  { label: "Optimizing the RAG Pipeline", href: "/forward-deployed/optimizing-rag-pipeline", group: "fde", keywords: ["reranking", "compression", "rerouting", "ragas"] },
+  { label: "LLM Observability Layer", href: "/forward-deployed/llm-observability", group: "fde", keywords: ["telemetry", "cost", "evaluation", "finops"] },
+  { label: "Token Optimization", href: "/forward-deployed/token-optimization", group: "fde", keywords: ["context compression", "prompt", "model routing"] },
+  { label: "Cost Optimization", href: "/forward-deployed/cost-optimization", group: "fde", keywords: ["finops", "cloud sizing", "spend"] },
+  { label: "Fine-tuning · RLHF & LoRA", href: "/forward-deployed/finetuning-rlhf-lora", group: "fde", keywords: ["finetuning", "lora", "rlhf", "adapters"] },
+  { label: "LLMOps", href: "/forward-deployed/llmops", group: "fde", keywords: ["ci/cd", "guardrails", "rbac", "mcp", "kubernetes", "docker"] },
+  // experience entries (anchors on /experience)
+  { label: "Coforge · Senior Engineer, GenAI & Agentic AI", href: "/experience#coforge", group: "experience", keywords: ["coforge", "qe platform", "2024"] },
+  { label: "HPE · Data Scientist, GenAI & Conversational AI", href: "/experience#hpe", group: "experience", keywords: ["hpe", "rag", "conversational", "2022"] },
+  { label: "Mphasis · ML & Data Science", href: "/experience#mphasis", group: "experience", keywords: ["mphasis", "fraud", "risk scoring", "2019"] },
+);
+
+// key skill terms -> zoomed mind-map nodes (kept in sync with mindmap-data.json)
+const SKILL_TERMS: [string, string][] = [
+  ["GraphRAG", "skill_graphrag"],
+  ["Agentic RAG", "skill_agentic_rag"],
+  ["Multi-Agent Orchestration", "skill_multi_agent"],
+  ["LangGraph", "skill_langgraph"],
+  ["LangChain", "skill_langchain"],
+  ["Neo4j", "skill_neo4j"],
+  ["Hybrid Search", "skill_hybrid_search"],
+  ["Reranking", "skill_reranking"],
+  ["Context Compression", "skill_context_compression"],
+  ["MCP Servers", "skill_mcp_servers"],
+  ["LLM Observability", "skill_llm_observability"],
+  ["RAGAS", "skill_ragas"],
+  ["Multi-Tenant RBAC", "skill_multi_tenant_rbac"],
+  ["SSO & OAuth", "skill_sso_oauth"],
+  ["Risk Scoring", "skill_risk_scoring"],
+];
+for (const [label, node] of SKILL_TERMS) {
+  SEARCH_INDEX.push({
+    label,
+    href: `/map?node=${encodeURIComponent(node)}`,
+    group: "skill",
+    keywords: ["skill", "mind map", label.toLowerCase()],
+  });
+}
+
 export const SUGGESTIONS = [
-  "Loop Copilot",
-  "system design",
+  "Loop Copilot system design",
+  "Forward Deployed Engineering",
   "agentic RAG",
+  "GraphRAG",
   "experience",
   "ask niranjan",
 ];

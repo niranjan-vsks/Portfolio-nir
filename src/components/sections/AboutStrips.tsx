@@ -18,7 +18,7 @@ export interface ExperienceStripItem {
 }
 
 // skill label -> mind-map node id (only verified ids from mindmap-data.json)
-const SKILL_NODE: Record<string, string> = {
+export const SKILL_NODE: Record<string, string> = {
   "Agentic Workflows": "skill_agentic_workflows",
   "Multi-Agent Orchestration": "skill_multi_agent",
   LangGraph: "skill_langgraph",

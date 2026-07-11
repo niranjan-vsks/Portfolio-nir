@@ -43,9 +43,13 @@ export function GooeySearch() {
       if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) setOpen(false);
     };
     const onKey = (e: KeyboardEvent) => {
+      // `/` opens; Cmd+K / Ctrl+K toggles (PRD 8.2)
       if (e.key === "/" && !open && document.activeElement?.tagName !== "INPUT") {
         e.preventDefault();
         setOpen(true);
+      } else if (e.key.toLowerCase() === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setOpen((o) => !o);
       }
     };
     document.addEventListener("mousedown", onDoc);
