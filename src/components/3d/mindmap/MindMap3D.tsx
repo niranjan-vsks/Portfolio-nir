@@ -214,47 +214,40 @@ export default function MindMap3D({
   // consume ?node=<id> once the force layout has produced coordinates
   const deepLinkDoneRef = useRef(false)
   const handleEngineStop = useCallback(() => {
-    if (deepLinkDoneRef.current || !deepLinkId) return
-    if (nodesById.has(deepLinkId)) {
-      deepLinkDoneRef.current = true
+    if (deepLinkDoneRef.current) return
+    deepLinkDoneRef.current = true
+    if (deepLinkId && nodesById.has(deepLinkId)) {
       focusNode(deepLinkId)
+    } else {
+      // brain hand-off was landing too zoomed out: fit the graph tight
+      fgRef.current?.zoomToFit(900, 40)
     }
   }, [deepLinkId, focusNode, nodesById])
 
+  // Click contract (Right_Now fixes, 2026-07-11 — ABSOLUTELY no 404s):
+  //  - node with a dedicated page (href to a verified route) -> route, no
+  //    second thoughts (data layer only carries verified hrefs now);
+  //    EXCEPT domains, whose job is to gather subnodes -> zoom+focus.
+  //  - node without a page (all skills, domains) -> fly the camera in and
+  //    pin its neighbourhood highlight; user can still orbit/pan to the rest.
   const onNodeClick = useCallback(
     (node: MindMapNode) => {
       if (node.type === 'root') return // no-op at center
-
-      if (node.type === 'domain') {
-        setCollapsedDomains((prev) => {
-          const next = new Set(prev)
-          if (next.has(node.id)) next.delete(node.id)
-          else next.add(node.id)
-          return next
-        })
-        return
-      }
-
-      // Every other node type routes via href
-      if (node.href) {
+      if (node.type !== 'domain' && node.href) {
         router.push(node.href)
         return
       }
-
-      // Fallback: center camera (shouldn't trigger with all nodes having href)
-      const fg = fgRef.current
-      if (fg && node.x !== undefined) {
-        const distance = 200
-        const distRatio = 1 + distance / Math.hypot(node.x, node.y!, node.z!)
-        fg.cameraPosition(
-          { x: node.x * distRatio, y: node.y! * distRatio, z: node.z! * distRatio },
-          node as any,
-          1500
-        )
-      }
+      focusNode(node.id)
     },
-    [router]
+    [router, focusNode]
   )
+
+  // prefetch a hovered node's route so the focused click lands instantly
+  useEffect(() => {
+    if (!hoverNodeId) return
+    const href = nodesById.get(hoverNodeId)?.href
+    if (href) router.prefetch(href)
+  }, [hoverNodeId, nodesById, router])
 
   const nodeThreeObject = useCallback((node: MindMapNode) => {
     const group = new THREE.Group()
@@ -381,10 +374,10 @@ export default function MindMap3D({
         if (!node) return null
         const clickHint =
           node.type === 'project' ? 'click → open project' :
-          node.type === 'domain' ? `click → ${collapsedDomains.has(node.id) ? 'expand' : 'collapse'} branch` :
+          node.type === 'domain' ? 'click → zoom into this branch' :
           node.type === 'employer' ? 'click → view experience' :
           node.type === 'system_design' ? 'click → reference architectures' :
-          node.type === 'skill' ? 'click → where this shows up' :
+          node.type === 'skill' ? 'click → focus this neighbourhood' :
           ''
         return (
           <div

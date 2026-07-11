@@ -65,7 +65,7 @@
       "val": 12,
       "color": "#A78BFA",
       "description": "Senior Engineer \u2014 GenAI & Agentic AI. 03/2024 \u2013 Present. Hyderabad. Currently building agentic AI systems.",
-      "href": "/about#coforge",
+      "href": "/experience#coforge",
       "tenure": "03/2024 \u2013 Present"
     },
     {
@@ -76,7 +76,7 @@
       "val": 10,
       "color": "#A78BFA",
       "description": "Data Scientist \u2014 GenAI, ML & Conversational AI. 11/2022 \u2013 12/2023. Bangalore.",
-      "href": "/about#hpe",
+      "href": "/experience#hpe",
       "tenure": "11/2022 \u2013 12/2023"
     },
     {
@@ -87,7 +87,7 @@
       "val": 9,
       "color": "#A78BFA",
       "description": "Associate Data Scientist. 07/2019 \u2013 10/2022. Bangalore.",
-      "href": "/about#mphasis",
+      "href": "/experience#mphasis",
       "tenure": "07/2019 \u2013 10/2022"
     },
     {
@@ -192,7 +192,7 @@
       "val": 8,
       "color": "#9CA3AF",
       "description": "Migrated an enterprise conversational system from rule-based FAQ to LLM-assisted RAG over ~1500-1700 documents. ~40% reduction in repeat user escalations.",
-      "href": "/projects/hpe-rag",
+      "href": "/projects/hpe-rag-chatbot",
       "status": "history"
     },
     {
@@ -203,7 +203,7 @@
       "val": 8,
       "color": "#9CA3AF",
       "description": "Tree-based fraud detection and risk scoring for financial services clients. ~15% precision improvement over legacy rule-based systems.",
-      "href": "/projects/mphasis-ml",
+      "href": "/experience#mphasis",
       "status": "history"
     },
     {
@@ -223,8 +223,7 @@
       "group": "agentic",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/multi-agent-orchestration"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_agentic_workflows",
@@ -232,8 +231,7 @@
       "group": "agentic",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/agentic-workflows"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_mcp_servers",
@@ -241,8 +239,7 @@
       "group": "agentic",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/mcp-servers"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_langgraph",
@@ -250,8 +247,7 @@
       "group": "agentic",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/langgraph"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_langchain",
@@ -259,8 +255,7 @@
       "group": "agentic",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/langchain"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_event_sourcing_ctx",
@@ -268,8 +263,7 @@
       "group": "agentic",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/event-sourced-context"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_eleven_signal_fw",
@@ -277,8 +271,7 @@
       "group": "agentic",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/decision-frameworks"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_graphrag",
@@ -286,8 +279,7 @@
       "group": "rag",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/graphrag"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_agentic_rag",
@@ -295,8 +287,7 @@
       "group": "rag",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/agentic-rag"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_neo4j",
@@ -304,8 +295,7 @@
       "group": "rag",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/neo4j"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_pgvector",
@@ -313,8 +303,7 @@
       "group": "rag",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/pgvector"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_hybrid_search",
@@ -322,8 +311,7 @@
       "group": "rag",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/hybrid-search"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_reranking",
@@ -331,8 +319,7 @@
       "group": "rag",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/reranking"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_query_transformation",
@@ -340,8 +327,7 @@
       "group": "rag",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/query-transformation"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_context_compression",
@@ -349,8 +335,7 @@
       "group": "rag",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/context-compression"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_query_rerouting",
@@ -358,8 +343,7 @@
       "group": "rag",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/query-rerouting"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_entity_normalization",
@@ -367,8 +351,7 @@
       "group": "rag",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/entity-normalization"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_chunking_strategy",
@@ -376,8 +359,7 @@
       "group": "rag",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/chunking"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_ragas",
@@ -385,8 +367,7 @@
       "group": "rag",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/ragas"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_tenant_trust_model",
@@ -394,8 +375,7 @@
       "group": "fde",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/tenant-trust-model"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_multi_tenant_rbac",
@@ -403,8 +383,7 @@
       "group": "fde",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/multi-tenant-rbac"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_three_tier_integration",
@@ -412,8 +391,7 @@
       "group": "fde",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/three-tier-integration"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_crm_integration",
@@ -421,8 +399,7 @@
       "group": "fde",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/crm-integration"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_sso_oauth",
@@ -430,8 +407,7 @@
       "group": "fde",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/sso-oauth"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_multi_cloud_deploy",
@@ -439,8 +415,7 @@
       "group": "fde",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/multi-cloud-deploy"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_compliance_arch",
@@ -448,8 +423,7 @@
       "group": "fde",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/compliance-architecture"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_customer_discovery",
@@ -457,8 +431,7 @@
       "group": "fde",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/customer-discovery"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_production_deployment",
@@ -466,8 +439,7 @@
       "group": "fde",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/production-deployment"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_fastapi",
@@ -475,8 +447,7 @@
       "group": "eng",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/fastapi"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_react",
@@ -484,8 +455,7 @@
       "group": "eng",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/react"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_mongo",
@@ -493,8 +463,7 @@
       "group": "eng",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/mongodb"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_postgres",
@@ -502,8 +471,7 @@
       "group": "eng",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/postgresql"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_docker_cicd",
@@ -511,8 +479,7 @@
       "group": "eng",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/docker-cicd"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_multicloud",
@@ -520,8 +487,7 @@
       "group": "eng",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/multi-cloud"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_llm_observability",
@@ -529,8 +495,7 @@
       "group": "eng",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/llm-observability"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_system_design",
@@ -538,8 +503,7 @@
       "group": "eng",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/system-design"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_webhook_arch",
@@ -547,8 +511,7 @@
       "group": "eng",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/webhook-architecture"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_microservices",
@@ -556,8 +519,7 @@
       "group": "eng",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/microservices"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_tree_ensembles",
@@ -565,8 +527,7 @@
       "group": "ml",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/tree-ensembles"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_feature_eng",
@@ -574,8 +535,7 @@
       "group": "ml",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/feature-engineering"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_predictive_analytics",
@@ -583,8 +543,7 @@
       "group": "ml",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/predictive-analytics"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_risk_scoring",
@@ -592,8 +551,7 @@
       "group": "ml",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/risk-scoring"
+      "color": "#E5E7EB"
     },
     {
       "id": "skill_statistical_modeling",
@@ -601,8 +559,7 @@
       "group": "ml",
       "type": "skill",
       "val": 5,
-      "color": "#E5E7EB",
-      "href": "/skills/statistical-modeling"
+      "color": "#E5E7EB"
     }
   ],
   "links": [

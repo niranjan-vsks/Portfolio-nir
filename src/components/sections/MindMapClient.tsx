@@ -14,7 +14,7 @@ const MindMap3D = dynamic(() => import("@/components/3d/mindmap/MindMap3D"), {
   ssr: false,
   loading: () => <TerminalLoader label="loading_mind_map" />,
 });
-const MapBackdrop = dynamic(() => import("@/components/3d/plasma/MapBackdrop"), { ssr: false });
+const PlumeBackdrop = dynamic(() => import("@/components/3d/plume/PlumeBackdrop"), { ssr: false });
 
 /**
  * Mind Map (PRD 6.2). Brain particle intro hands off to the react-force-graph
@@ -52,9 +52,10 @@ export function MindMapClient() {
 
       {phase === "graph" && (
         <div className="absolute inset-0 animate-[fadeIn_0.8s_ease]">
-          {/* plasma burst (left) + starfield fills the dead space behind the
-              transparent graph; static frame on mobile / reduced-motion */}
-          <MapBackdrop staticFrame={isMobile || reduced} />
+          {/* subtle plume (left) + starfield behind the transparent graph —
+              replaces the glaring plasma burst (Right_Now fixes 2026-07-11);
+              static frame on mobile / reduced-motion */}
+          <PlumeBackdrop staticFrame={isMobile || reduced} />
           <div className="relative z-10 h-full w-full">
             <MindMap3D />
           </div>
