@@ -30,6 +30,7 @@ export interface ProjectFrontmatter {
   stack?: string[];
   metric?: string;
   signature_visual?: string;
+  group?: string;
   order?: number;
 }
 

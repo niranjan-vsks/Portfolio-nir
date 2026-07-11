@@ -73,6 +73,7 @@ export function AboutStrips({
           items={experience.map((e) => ({
             title: e.employer,
             subtitle: `${e.title} · ${e.tenure}`,
+            back: `${e.title}. Full record, proof, and inline links on the experience page.`,
             onClick: () => router.push(`/experience#${e.slug}`),
           }))}
         />
@@ -87,7 +88,10 @@ export function AboutStrips({
           speed={55}
           items={skills.map((s) => ({
             title: s.label,
-            subtitle: SKILL_NODE[s.label] ? `${s.group} · open in mind map` : s.group,
+            subtitle: s.group,
+            back: SKILL_NODE[s.label]
+              ? "Lives as a node in the mind map: see every project and employer it connects to."
+              : "Part of the full stack list on the skills page.",
             onClick: () =>
               router.push(
                 SKILL_NODE[s.label]

@@ -219,8 +219,16 @@ export default function MindMap3D({
     if (deepLinkId && nodesById.has(deepLinkId)) {
       focusNode(deepLinkId)
     } else {
-      // brain hand-off was landing too zoomed out: fit the graph tight
-      fgRef.current?.zoomToFit(900, 40)
+      // brain hand-off was landing too zoomed out (flagged twice): fit the
+      // graph, then dolly 30% closer so it fills the stage on arrival
+      const fg = fgRef.current
+      if (fg) {
+        fg.zoomToFit(700, 0)
+        setTimeout(() => {
+          const p = fg.camera().position
+          fg.cameraPosition({ x: p.x * 0.7, y: p.y * 0.7, z: p.z * 0.7 }, undefined, 500)
+        }, 750)
+      }
     }
   }, [deepLinkId, focusNode, nodesById])
 

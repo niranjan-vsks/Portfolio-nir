@@ -1,55 +1,51 @@
-import Link from "next/link";
 import { getAllProjects } from "@/lib/content";
 import { PageShell } from "@/components/sections/PageShell";
+import { PageBackground } from "@/components/backgrounds/PageBackground";
+import { TerminalFlipCard } from "@/components/ui/TerminalFlipCard";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = { title: "Projects" };
 
-const STATUS_COLOR: Record<string, string> = {
-  live: "text-green border-green/40",
-  production: "text-green border-green/40",
-  piloted: "text-cyan border-cyan/40",
-  in_development: "text-text-dim border-border",
-};
+/* AGain Fixes 2026-07-12: hub cards must be THE terminal flip card (PRD 12.1),
+   grouped Work / Independent, not plain boxes. */
 
 export default function ProjectsPage() {
   const projects = getAllProjects();
+  const groups: [string, typeof projects][] = [
+    ["independent", projects.filter((p) => p.frontmatter.group?.toLowerCase() !== "work")],
+    ["work", projects.filter((p) => p.frontmatter.group?.toLowerCase() === "work")],
+  ];
+
   return (
-    <PageShell eyebrow="all_projects" title="Projects">
-      <div className="grid gap-5 sm:grid-cols-2">
-        {projects.map((p) => {
-          const fm = p.frontmatter;
-          return (
-            <Link
-              key={fm.slug}
-              href={`/projects/${fm.slug}`}
-              className="group flex flex-col rounded-lg border border-border bg-surface/40 p-6 transition-colors hover:border-green/50"
-            >
-              <div className="mb-3 flex items-center justify-between gap-2">
-                <span
-                  className={`rounded border px-2 py-0.5 font-mono text-[11px] uppercase ${
-                    STATUS_COLOR[fm.status ?? ""] ?? "text-text-dim border-border"
-                  }`}
-                >
-                  {fm.status?.replace("_", " ")}
-                </span>
-                <span className="font-mono text-[11px] text-text-dim">
-                  {String(fm.order).padStart(2, "0")}
-                </span>
+    <>
+      <PageBackground variant="flow-wave" />
+      <PageShell eyebrow="all_projects" title="Projects">
+        {groups.map(([label, list]) =>
+          list.length === 0 ? null : (
+            <section key={label} className="mb-12">
+              <h2 className="mb-5 font-mono text-lg text-green">{`> ${label}`}</h2>
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {list.map((p, i) => {
+                  const fm = p.frontmatter;
+                  return (
+                    <TerminalFlipCard
+                      key={fm.slug ?? p.slug}
+                      href={`/projects/${fm.slug ?? p.slug}`}
+                      path={`${fm.slug ?? p.slug}.sh`}
+                      name={fm.public_name ?? fm.title}
+                      status={fm.status?.replace("_", " ")}
+                      caption={fm.tagline ?? ""}
+                      stat={fm.metric}
+                      index={String(fm.order ?? i + 1).padStart(2, "0")}
+                      stack={fm.stack ?? []}
+                    />
+                  );
+                })}
               </div>
-              <h2 className="mb-1 font-mono text-lg text-white group-hover:text-green">
-                {fm.public_name ?? fm.title}
-              </h2>
-              <p className="mb-4 text-sm text-text-dim">{fm.tagline}</p>
-              {fm.metric && (
-                <p className="mt-auto font-mono text-[12px] text-cyan">
-                  {fm.metric}
-                </p>
-              )}
-            </Link>
-          );
-        })}
-      </div>
-    </PageShell>
+            </section>
+          ),
+        )}
+      </PageShell>
+    </>
   );
 }

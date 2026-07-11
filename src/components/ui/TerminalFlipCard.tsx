@@ -124,7 +124,7 @@ export function TerminalFlipCard({
             </div>
             <div>
               <span className="text-sky-400">name:</span>{" "}
-              <span className="font-semibold text-white">{name}</span>
+              <span className="text-[13.5px] font-bold uppercase tracking-wide text-white">{name}</span>
             </div>
             {status && (
               <div>
