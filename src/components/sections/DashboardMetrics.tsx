@@ -22,7 +22,7 @@ const METRICS: Metric[] = [
   { value: "85–90%", label: "manual QA effort reduced", sub: "agentic QE platform", href: "/system-design" }, // qe-platform.md
   { value: "15% → <5%", label: "hallucination rate", sub: "GraphRAG + entity normalization", href: "/system-design" }, // qe-platform.md
   { value: "17", label: "enterprise QE teams", sub: "at peak adoption" }, // qe-platform.md (softened)
-  { value: "3", label: "independent products", sub: "Loop Copilot · Saarthi · Rebalancer", href: "/projects" },
+  { value: "3", label: "independent products", sub: "Loop Copilot · Saarthi · WealthOS", href: "/projects" },
   { value: "100%", label: "owned end to end", sub: "discovery → architecture → deploy" }, // hero.md positioning
 ];
 

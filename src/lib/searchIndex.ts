@@ -28,7 +28,7 @@ export const SEARCH_INDEX: SearchEntry[] = [
 
   { label: "Loop Copilot", href: "/projects/loop-copilot", group: "project", keywords: ["crm", "d365", "dynamics", "copilot", "live", "fortune 500"] },
   { label: "Saarthi", href: "/projects/saarthi", group: "project", keywords: ["voice", "financial", "gig workforce", "vernacular"] },
-  { label: "Rebalancer", href: "/projects/rebalancer", group: "project", keywords: ["portfolio", "trading", "agent", "recommendations"] },
+  { label: "WealthOS", href: "/projects/wealthos", group: "project", keywords: ["wealthos", "autonomous wealth", "portfolio", "trading", "multi-agent", "veto gate"] },
   { label: "QE Platform", href: "/projects/qe-platform", group: "project", keywords: ["quality engineering", "graphrag", "testing", "playwright", "agentic qa"] },
   { label: "Conversational RAG Chatbot (HPE)", href: "/projects/hpe-rag-chatbot", group: "project", keywords: ["hpe", "rag", "chatbot", "escalations"] },
   { label: "Global Census Chatbot (HPE)", href: "/projects/global-census-chatbot", group: "project", keywords: ["hpe", "census", "chatbot"] },

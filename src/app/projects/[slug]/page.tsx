@@ -12,7 +12,9 @@ import { ProjectShowcase } from "@/components/sections/ProjectShowcase";
 import type { Metadata } from "next";
 
 export function generateStaticParams() {
-  return getAllProjects().map((p) => ({ slug: p.frontmatter.slug }));
+  // p.slug falls back to the file basename, so a project md with missing or
+  // partial frontmatter can never crash the whole /projects/* tree again.
+  return getAllProjects().map((p) => ({ slug: p.frontmatter.slug ?? p.slug }));
 }
 
 export async function generateMetadata({

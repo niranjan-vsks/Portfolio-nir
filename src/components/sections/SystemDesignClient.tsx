@@ -105,11 +105,11 @@ export function SystemDesignClient() {
         <Mermaid chart={saarthiMermaid} />
       </Section>
 
-      <Section id="rebalancer" index="04" title="Portfolio Rebalancing Agent" badge="static">
+      <Section id="wealthos" index="04" title="WealthOS · Autonomous Wealth Operating System" badge="static">
         <p className="mb-4 max-w-3xl text-sm text-text-dim">
-          LLM for synthesis and explanation, deterministic Python for guardrails
-          and execution, the agentic layer where they meet. Surfaces
-          recommendations; it does not execute trades.
+          A 21-agent analyst council produces calibrated proposals; a
+          code-enforced veto gate with five concentric risk rings decides.
+          The LLM layer has no write access to money paths. In development.
         </p>
         <Mermaid chart={rebalancerMermaid} />
       </Section>

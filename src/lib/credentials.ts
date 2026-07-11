@@ -41,7 +41,7 @@ export const EDUCATION: Credential[] = [
     title: "PG Diploma in Machine Learning and AI",
     org: "IIIT Bangalore",
     related: [
-      { label: "Rebalancer", href: "/projects/rebalancer" },
+      { label: "WealthOS", href: "/projects/wealthos" },
       { label: "QE Platform", href: "/projects/qe-platform" },
     ],
   },

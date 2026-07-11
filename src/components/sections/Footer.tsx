@@ -21,7 +21,7 @@ const COLUMNS: { title: string; links: { label: string; href: string; external?:
       { label: "Projects", href: "/projects" },
       { label: "Loop Copilot", href: "/projects/loop-copilot" },
       { label: "Saarthi", href: "/projects/saarthi" },
-      { label: "Rebalancer", href: "/projects/rebalancer" },
+      { label: "WealthOS", href: "/projects/wealthos" },
       { label: "QE Platform", href: "/projects/qe-platform" },
     ],
   },

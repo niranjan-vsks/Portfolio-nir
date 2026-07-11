@@ -1,15 +1,15 @@
 {
   "_meta": {
     "version": "v2",
-    "generatedFor": "Niranjan VSKS Portfolio — MAP mode",
+    "generatedFor": "Niranjan VSKS Portfolio \u2014 MAP mode",
     "changesFromV1": [
       "Added employer nodes: Coforge, HPE, Mphasis (not anonymized)",
       "Added System Design Showcase as a separate destination node, framed as 'how I would build something like this' (reference architecture, not deployed claim)",
-      "LIABILITY FIREWALL: NO direct edge from any employer node to System Design. Employer → Project → System Design only.",
+      "LIABILITY FIREWALL: NO direct edge from any employer node to System Design. Employer \u2192 Project \u2192 System Design only.",
       "Added LangGraph, LangChain skills (per resume v6 Agentic AI skills)",
       "Added Statistical Modeling, Risk Scoring (per resume v6 ML skills)",
       "Added explicit RAG technique leaves from Coforge bullet: Query Transformation, Context Compression, Query Rerouting",
-      "Added Multi-Cloud Customer Tenant Deploy skill — Coforge bullet now explicitly mentions deploying across AWS, Azure, GCP customer environments",
+      "Added Multi-Cloud Customer Tenant Deploy skill \u2014 Coforge bullet now explicitly mentions deploying across AWS, Azure, GCP customer environments",
       "Every node has 'href' field for click routing",
       "Added 'interactionContract' to _meta to drive build prompt for click/hover behavior"
     ],
@@ -46,7 +46,6 @@
       "liabilityFirewall": "Employer nodes (Coforge, HPE, Mphasis) link ONLY to their corresponding project node and to root. Never directly to System Design, domains, or skill nodes. Project nodes are the only path from employer context into the technical-pattern layer."
     }
   },
-
   "nodes": [
     {
       "id": "root",
@@ -55,10 +54,9 @@
       "type": "root",
       "val": 24,
       "color": "#4ADE80",
-      "description": "Senior agentic AI engineer who ships into enterprise environments end-to-end — cold-start discovery through production deployment. Seven years across data science, GenAI, and agentic AI.",
+      "description": "Senior agentic AI engineer who ships into enterprise environments end-to-end \u2014 cold-start discovery through production deployment. Seven years across data science, GenAI, and agentic AI.",
       "href": "/"
     },
-
     {
       "id": "emp_coforge",
       "label": "Coforge",
@@ -66,9 +64,9 @@
       "type": "employer",
       "val": 12,
       "color": "#A78BFA",
-      "description": "Senior Engineer — GenAI & Agentic AI. 03/2024 – Present. Hyderabad. Currently building agentic AI systems.",
+      "description": "Senior Engineer \u2014 GenAI & Agentic AI. 03/2024 \u2013 Present. Hyderabad. Currently building agentic AI systems.",
       "href": "/about#coforge",
-      "tenure": "03/2024 – Present"
+      "tenure": "03/2024 \u2013 Present"
     },
     {
       "id": "emp_hpe",
@@ -77,9 +75,9 @@
       "type": "employer",
       "val": 10,
       "color": "#A78BFA",
-      "description": "Data Scientist — GenAI, ML & Conversational AI. 11/2022 – 12/2023. Bangalore.",
+      "description": "Data Scientist \u2014 GenAI, ML & Conversational AI. 11/2022 \u2013 12/2023. Bangalore.",
       "href": "/about#hpe",
-      "tenure": "11/2022 – 12/2023"
+      "tenure": "11/2022 \u2013 12/2023"
     },
     {
       "id": "emp_mphasis",
@@ -88,11 +86,10 @@
       "type": "employer",
       "val": 9,
       "color": "#A78BFA",
-      "description": "Associate Data Scientist. 07/2019 – 10/2022. Bangalore.",
+      "description": "Associate Data Scientist. 07/2019 \u2013 10/2022. Bangalore.",
       "href": "/about#mphasis",
-      "tenure": "07/2019 – 10/2022"
+      "tenure": "07/2019 \u2013 10/2022"
     },
-
     {
       "id": "domain_agentic",
       "label": "Agentic AI & Orchestration",
@@ -140,10 +137,9 @@
       "type": "domain",
       "val": 12,
       "color": "#FF006E",
-      "description": "Tree-based ensembles, predictive modeling, feature engineering, statistical modeling, risk scoring — the foundation that informs the AI engineering work above.",
+      "description": "Tree-based ensembles, predictive modeling, feature engineering, statistical modeling, risk scoring \u2014 the foundation that informs the AI engineering work above.",
       "href": "/skills?domain=ml"
     },
-
     {
       "id": "proj_qe_platform",
       "label": "AI-Infused Quality\nEngineering Platform",
@@ -151,7 +147,7 @@
       "type": "project",
       "val": 12,
       "color": "#4ADE80",
-      "description": "Agentic QA platform — user story to deployed test. GraphRAG + Agentic RAG + LLM observability + tenant-aware RBAC. Deployed across 17 enterprise QA teams in customer-managed AWS, Azure, and GCP environments.",
+      "description": "Agentic QA platform \u2014 user story to deployed test. GraphRAG + Agentic RAG + LLM observability + tenant-aware RBAC. Deployed across 17 enterprise QA teams in customer-managed AWS, Azure, and GCP environments.",
       "href": "/projects/qe-platform",
       "status": "live"
     },
@@ -179,13 +175,13 @@
     },
     {
       "id": "proj_rebalancer",
-      "label": "Autonomous Portfolio\nRebalancing Agent",
+      "label": "WealthOS\nAutonomous Wealth OS",
       "group": "projects",
       "type": "project",
       "val": 10,
       "color": "#FBBF24",
-      "description": "Multi-asset agentic rebalancing across stocks, MFs, ETFs, bonds, NPS. MCP broker integration, 11-signal decision framework. In active development.",
-      "href": "/projects/rebalancer",
+      "description": "Autonomous wealth operating system: a 21-agent analyst council with calibration-weighted votes, a code-enforced veto gate, five-ring risk system, and an evolution gauntlet for strategy changes. In development.",
+      "href": "/projects/wealthos",
       "status": "in_development"
     },
     {
@@ -210,7 +206,6 @@
       "href": "/projects/mphasis-ml",
       "status": "history"
     },
-
     {
       "id": "showcase_system_design",
       "label": "System Design\nShowcase",
@@ -218,199 +213,866 @@
       "type": "system_design",
       "val": 13,
       "color": "#00E5FF",
-      "description": "Interactive reference architectures — how I would build systems like the projects shown here. Pattern-level diagrams using industry-standard primitives (Docker, AWS, Azure, secrets managers, etc.). Counterpart to the product-frameworks layer in the FDE portfolio narrative.",
+      "description": "Interactive reference architectures \u2014 how I would build systems like the projects shown here. Pattern-level diagrams using industry-standard primitives (Docker, AWS, Azure, secrets managers, etc.). Counterpart to the product-frameworks layer in the FDE portfolio narrative.",
       "href": "/system-design",
       "framing": "reference_architectures"
     },
-
-    { "id": "skill_multi_agent", "label": "Multi-Agent Orchestration", "group": "agentic", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/multi-agent-orchestration" },
-    { "id": "skill_agentic_workflows", "label": "Agentic Workflows", "group": "agentic", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/agentic-workflows" },
-    { "id": "skill_mcp_servers", "label": "MCP Servers", "group": "agentic", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/mcp-servers" },
-    { "id": "skill_langgraph", "label": "LangGraph", "group": "agentic", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/langgraph" },
-    { "id": "skill_langchain", "label": "LangChain", "group": "agentic", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/langchain" },
-    { "id": "skill_event_sourcing_ctx", "label": "Event-Sourced Chat Context", "group": "agentic", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/event-sourced-context" },
-    { "id": "skill_eleven_signal_fw", "label": "11-Signal Decision Framework", "group": "agentic", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/decision-frameworks" },
-
-    { "id": "skill_graphrag", "label": "GraphRAG", "group": "rag", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/graphrag" },
-    { "id": "skill_agentic_rag", "label": "Agentic RAG", "group": "rag", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/agentic-rag" },
-    { "id": "skill_neo4j", "label": "Neo4j", "group": "rag", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/neo4j" },
-    { "id": "skill_pgvector", "label": "pgvector / Supabase", "group": "rag", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/pgvector" },
-    { "id": "skill_hybrid_search", "label": "Hybrid Search", "group": "rag", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/hybrid-search" },
-    { "id": "skill_reranking", "label": "Reranking", "group": "rag", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/reranking" },
-    { "id": "skill_query_transformation", "label": "Query Transformation", "group": "rag", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/query-transformation" },
-    { "id": "skill_context_compression", "label": "Context Compression", "group": "rag", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/context-compression" },
-    { "id": "skill_query_rerouting", "label": "Query Rerouting", "group": "rag", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/query-rerouting" },
-    { "id": "skill_entity_normalization", "label": "Entity Normalization", "group": "rag", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/entity-normalization" },
-    { "id": "skill_chunking_strategy", "label": "Chunking + Overlap Calibration", "group": "rag", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/chunking" },
-    { "id": "skill_ragas", "label": "RAGAS Evaluation", "group": "rag", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/ragas" },
-
-    { "id": "skill_tenant_trust_model", "label": "Customer Tenant Trust Model", "group": "fde", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/tenant-trust-model" },
-    { "id": "skill_multi_tenant_rbac", "label": "Multi-Tenant RBAC", "group": "fde", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/multi-tenant-rbac" },
-    { "id": "skill_three_tier_integration", "label": "Three-Tier Integration Strategy", "group": "fde", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/three-tier-integration" },
-    { "id": "skill_crm_integration", "label": "Enterprise CRM Integration", "group": "fde", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/crm-integration" },
-    { "id": "skill_sso_oauth", "label": "Identity & SSO Architecture", "group": "fde", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/sso-oauth" },
-    { "id": "skill_multi_cloud_deploy", "label": "Multi-Cloud Customer Tenant Deploy", "group": "fde", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/multi-cloud-deploy" },
-    { "id": "skill_compliance_arch", "label": "Multi-Layer Compliance Architecture", "group": "fde", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/compliance-architecture" },
-    { "id": "skill_customer_discovery", "label": "Customer Discovery", "group": "fde", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/customer-discovery" },
-    { "id": "skill_production_deployment", "label": "Production Deployment", "group": "fde", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/production-deployment" },
-
-    { "id": "skill_fastapi", "label": "FastAPI (async)", "group": "eng", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/fastapi" },
-    { "id": "skill_react", "label": "React 19", "group": "eng", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/react" },
-    { "id": "skill_mongo", "label": "MongoDB", "group": "eng", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/mongodb" },
-    { "id": "skill_postgres", "label": "PostgreSQL", "group": "eng", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/postgresql" },
-    { "id": "skill_docker_cicd", "label": "Docker + CI/CD", "group": "eng", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/docker-cicd" },
-    { "id": "skill_multicloud", "label": "Multi-Cloud (Azure · GCP · AWS)", "group": "eng", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/multi-cloud" },
-    { "id": "skill_llm_observability", "label": "LLM Observability", "group": "eng", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/llm-observability" },
-    { "id": "skill_system_design", "label": "System Design", "group": "eng", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/system-design" },
-    { "id": "skill_webhook_arch", "label": "Webhook Architecture", "group": "eng", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/webhook-architecture" },
-    { "id": "skill_microservices", "label": "Microservices", "group": "eng", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/microservices" },
-
-    { "id": "skill_tree_ensembles", "label": "Tree-Based Ensembles\n(XGBoost · LightGBM · RF)", "group": "ml", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/tree-ensembles" },
-    { "id": "skill_feature_eng", "label": "Feature Engineering", "group": "ml", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/feature-engineering" },
-    { "id": "skill_predictive_analytics", "label": "Predictive Analytics", "group": "ml", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/predictive-analytics" },
-    { "id": "skill_risk_scoring", "label": "Risk Scoring", "group": "ml", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/risk-scoring" },
-    { "id": "skill_statistical_modeling", "label": "Statistical Modeling", "group": "ml", "type": "skill", "val": 5, "color": "#E5E7EB", "href": "/skills/statistical-modeling" }
+    {
+      "id": "skill_multi_agent",
+      "label": "Multi-Agent Orchestration",
+      "group": "agentic",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/multi-agent-orchestration"
+    },
+    {
+      "id": "skill_agentic_workflows",
+      "label": "Agentic Workflows",
+      "group": "agentic",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/agentic-workflows"
+    },
+    {
+      "id": "skill_mcp_servers",
+      "label": "MCP Servers",
+      "group": "agentic",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/mcp-servers"
+    },
+    {
+      "id": "skill_langgraph",
+      "label": "LangGraph",
+      "group": "agentic",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/langgraph"
+    },
+    {
+      "id": "skill_langchain",
+      "label": "LangChain",
+      "group": "agentic",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/langchain"
+    },
+    {
+      "id": "skill_event_sourcing_ctx",
+      "label": "Event-Sourced Chat Context",
+      "group": "agentic",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/event-sourced-context"
+    },
+    {
+      "id": "skill_eleven_signal_fw",
+      "label": "11-Signal Decision Framework",
+      "group": "agentic",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/decision-frameworks"
+    },
+    {
+      "id": "skill_graphrag",
+      "label": "GraphRAG",
+      "group": "rag",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/graphrag"
+    },
+    {
+      "id": "skill_agentic_rag",
+      "label": "Agentic RAG",
+      "group": "rag",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/agentic-rag"
+    },
+    {
+      "id": "skill_neo4j",
+      "label": "Neo4j",
+      "group": "rag",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/neo4j"
+    },
+    {
+      "id": "skill_pgvector",
+      "label": "pgvector / Supabase",
+      "group": "rag",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/pgvector"
+    },
+    {
+      "id": "skill_hybrid_search",
+      "label": "Hybrid Search",
+      "group": "rag",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/hybrid-search"
+    },
+    {
+      "id": "skill_reranking",
+      "label": "Reranking",
+      "group": "rag",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/reranking"
+    },
+    {
+      "id": "skill_query_transformation",
+      "label": "Query Transformation",
+      "group": "rag",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/query-transformation"
+    },
+    {
+      "id": "skill_context_compression",
+      "label": "Context Compression",
+      "group": "rag",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/context-compression"
+    },
+    {
+      "id": "skill_query_rerouting",
+      "label": "Query Rerouting",
+      "group": "rag",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/query-rerouting"
+    },
+    {
+      "id": "skill_entity_normalization",
+      "label": "Entity Normalization",
+      "group": "rag",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/entity-normalization"
+    },
+    {
+      "id": "skill_chunking_strategy",
+      "label": "Chunking + Overlap Calibration",
+      "group": "rag",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/chunking"
+    },
+    {
+      "id": "skill_ragas",
+      "label": "RAGAS Evaluation",
+      "group": "rag",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/ragas"
+    },
+    {
+      "id": "skill_tenant_trust_model",
+      "label": "Customer Tenant Trust Model",
+      "group": "fde",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/tenant-trust-model"
+    },
+    {
+      "id": "skill_multi_tenant_rbac",
+      "label": "Multi-Tenant RBAC",
+      "group": "fde",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/multi-tenant-rbac"
+    },
+    {
+      "id": "skill_three_tier_integration",
+      "label": "Three-Tier Integration Strategy",
+      "group": "fde",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/three-tier-integration"
+    },
+    {
+      "id": "skill_crm_integration",
+      "label": "Enterprise CRM Integration",
+      "group": "fde",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/crm-integration"
+    },
+    {
+      "id": "skill_sso_oauth",
+      "label": "Identity & SSO Architecture",
+      "group": "fde",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/sso-oauth"
+    },
+    {
+      "id": "skill_multi_cloud_deploy",
+      "label": "Multi-Cloud Customer Tenant Deploy",
+      "group": "fde",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/multi-cloud-deploy"
+    },
+    {
+      "id": "skill_compliance_arch",
+      "label": "Multi-Layer Compliance Architecture",
+      "group": "fde",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/compliance-architecture"
+    },
+    {
+      "id": "skill_customer_discovery",
+      "label": "Customer Discovery",
+      "group": "fde",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/customer-discovery"
+    },
+    {
+      "id": "skill_production_deployment",
+      "label": "Production Deployment",
+      "group": "fde",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/production-deployment"
+    },
+    {
+      "id": "skill_fastapi",
+      "label": "FastAPI (async)",
+      "group": "eng",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/fastapi"
+    },
+    {
+      "id": "skill_react",
+      "label": "React 19",
+      "group": "eng",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/react"
+    },
+    {
+      "id": "skill_mongo",
+      "label": "MongoDB",
+      "group": "eng",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/mongodb"
+    },
+    {
+      "id": "skill_postgres",
+      "label": "PostgreSQL",
+      "group": "eng",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/postgresql"
+    },
+    {
+      "id": "skill_docker_cicd",
+      "label": "Docker + CI/CD",
+      "group": "eng",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/docker-cicd"
+    },
+    {
+      "id": "skill_multicloud",
+      "label": "Multi-Cloud (Azure \u00b7 GCP \u00b7 AWS)",
+      "group": "eng",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/multi-cloud"
+    },
+    {
+      "id": "skill_llm_observability",
+      "label": "LLM Observability",
+      "group": "eng",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/llm-observability"
+    },
+    {
+      "id": "skill_system_design",
+      "label": "System Design",
+      "group": "eng",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/system-design"
+    },
+    {
+      "id": "skill_webhook_arch",
+      "label": "Webhook Architecture",
+      "group": "eng",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/webhook-architecture"
+    },
+    {
+      "id": "skill_microservices",
+      "label": "Microservices",
+      "group": "eng",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/microservices"
+    },
+    {
+      "id": "skill_tree_ensembles",
+      "label": "Tree-Based Ensembles\n(XGBoost \u00b7 LightGBM \u00b7 RF)",
+      "group": "ml",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/tree-ensembles"
+    },
+    {
+      "id": "skill_feature_eng",
+      "label": "Feature Engineering",
+      "group": "ml",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/feature-engineering"
+    },
+    {
+      "id": "skill_predictive_analytics",
+      "label": "Predictive Analytics",
+      "group": "ml",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/predictive-analytics"
+    },
+    {
+      "id": "skill_risk_scoring",
+      "label": "Risk Scoring",
+      "group": "ml",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/risk-scoring"
+    },
+    {
+      "id": "skill_statistical_modeling",
+      "label": "Statistical Modeling",
+      "group": "ml",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB",
+      "href": "/skills/statistical-modeling"
+    }
   ],
-
   "links": [
-    { "source": "root", "target": "emp_coforge" },
-    { "source": "root", "target": "emp_hpe" },
-    { "source": "root", "target": "emp_mphasis" },
-
-    { "source": "root", "target": "domain_agentic" },
-    { "source": "root", "target": "domain_rag" },
-    { "source": "root", "target": "domain_fde" },
-    { "source": "root", "target": "domain_eng" },
-    { "source": "root", "target": "domain_ml" },
-
-    { "source": "root", "target": "showcase_system_design" },
-
-    { "source": "emp_coforge", "target": "proj_qe_platform" },
-    { "source": "emp_hpe", "target": "proj_hpe_rag" },
-    { "source": "emp_mphasis", "target": "proj_mphasis_ml" },
-
-    { "source": "proj_qe_platform", "target": "showcase_system_design" },
-    { "source": "proj_loop_copilot", "target": "showcase_system_design" },
-    { "source": "proj_saarthi", "target": "showcase_system_design" },
-    { "source": "proj_rebalancer", "target": "showcase_system_design" },
-
-    { "source": "root", "target": "proj_loop_copilot" },
-    { "source": "root", "target": "proj_saarthi" },
-    { "source": "root", "target": "proj_rebalancer" },
-
-    { "source": "proj_qe_platform", "target": "domain_agentic" },
-    { "source": "proj_qe_platform", "target": "domain_rag" },
-    { "source": "proj_qe_platform", "target": "domain_fde" },
-    { "source": "proj_qe_platform", "target": "domain_eng" },
-
-    { "source": "proj_loop_copilot", "target": "domain_agentic" },
-    { "source": "proj_loop_copilot", "target": "domain_fde" },
-    { "source": "proj_loop_copilot", "target": "domain_eng" },
-
-    { "source": "proj_saarthi", "target": "domain_agentic" },
-    { "source": "proj_saarthi", "target": "domain_rag" },
-    { "source": "proj_saarthi", "target": "domain_fde" },
-    { "source": "proj_saarthi", "target": "domain_eng" },
-
-    { "source": "proj_rebalancer", "target": "domain_agentic" },
-    { "source": "proj_rebalancer", "target": "domain_eng" },
-
-    { "source": "proj_hpe_rag", "target": "domain_rag" },
-    { "source": "proj_hpe_rag", "target": "domain_eng" },
-
-    { "source": "proj_mphasis_ml", "target": "domain_ml" },
-
-    { "source": "domain_agentic", "target": "skill_multi_agent" },
-    { "source": "domain_agentic", "target": "skill_agentic_workflows" },
-    { "source": "domain_agentic", "target": "skill_mcp_servers" },
-    { "source": "domain_agentic", "target": "skill_langgraph" },
-    { "source": "domain_agentic", "target": "skill_langchain" },
-    { "source": "domain_agentic", "target": "skill_event_sourcing_ctx" },
-    { "source": "domain_agentic", "target": "skill_eleven_signal_fw" },
-
-    { "source": "domain_rag", "target": "skill_graphrag" },
-    { "source": "domain_rag", "target": "skill_agentic_rag" },
-    { "source": "domain_rag", "target": "skill_neo4j" },
-    { "source": "domain_rag", "target": "skill_pgvector" },
-    { "source": "domain_rag", "target": "skill_hybrid_search" },
-    { "source": "domain_rag", "target": "skill_reranking" },
-    { "source": "domain_rag", "target": "skill_query_transformation" },
-    { "source": "domain_rag", "target": "skill_context_compression" },
-    { "source": "domain_rag", "target": "skill_query_rerouting" },
-    { "source": "domain_rag", "target": "skill_entity_normalization" },
-    { "source": "domain_rag", "target": "skill_chunking_strategy" },
-    { "source": "domain_rag", "target": "skill_ragas" },
-
-    { "source": "domain_fde", "target": "skill_tenant_trust_model" },
-    { "source": "domain_fde", "target": "skill_multi_tenant_rbac" },
-    { "source": "domain_fde", "target": "skill_three_tier_integration" },
-    { "source": "domain_fde", "target": "skill_crm_integration" },
-    { "source": "domain_fde", "target": "skill_sso_oauth" },
-    { "source": "domain_fde", "target": "skill_multi_cloud_deploy" },
-    { "source": "domain_fde", "target": "skill_compliance_arch" },
-    { "source": "domain_fde", "target": "skill_customer_discovery" },
-    { "source": "domain_fde", "target": "skill_production_deployment" },
-
-    { "source": "domain_eng", "target": "skill_fastapi" },
-    { "source": "domain_eng", "target": "skill_react" },
-    { "source": "domain_eng", "target": "skill_mongo" },
-    { "source": "domain_eng", "target": "skill_postgres" },
-    { "source": "domain_eng", "target": "skill_docker_cicd" },
-    { "source": "domain_eng", "target": "skill_multicloud" },
-    { "source": "domain_eng", "target": "skill_llm_observability" },
-    { "source": "domain_eng", "target": "skill_system_design" },
-    { "source": "domain_eng", "target": "skill_webhook_arch" },
-    { "source": "domain_eng", "target": "skill_microservices" },
-
-    { "source": "domain_ml", "target": "skill_tree_ensembles" },
-    { "source": "domain_ml", "target": "skill_feature_eng" },
-    { "source": "domain_ml", "target": "skill_predictive_analytics" },
-    { "source": "domain_ml", "target": "skill_risk_scoring" },
-    { "source": "domain_ml", "target": "skill_statistical_modeling" },
-
-    { "source": "proj_qe_platform", "target": "skill_graphrag" },
-    { "source": "proj_qe_platform", "target": "skill_agentic_rag" },
-    { "source": "proj_qe_platform", "target": "skill_neo4j" },
-    { "source": "proj_qe_platform", "target": "skill_entity_normalization" },
-    { "source": "proj_qe_platform", "target": "skill_query_transformation" },
-    { "source": "proj_qe_platform", "target": "skill_reranking" },
-    { "source": "proj_qe_platform", "target": "skill_context_compression" },
-    { "source": "proj_qe_platform", "target": "skill_query_rerouting" },
-    { "source": "proj_qe_platform", "target": "skill_multi_tenant_rbac" },
-    { "source": "proj_qe_platform", "target": "skill_multi_cloud_deploy" },
-    { "source": "proj_qe_platform", "target": "skill_llm_observability" },
-    { "source": "proj_qe_platform", "target": "skill_ragas" },
-    { "source": "proj_qe_platform", "target": "skill_mcp_servers" },
-
-    { "source": "proj_loop_copilot", "target": "skill_tenant_trust_model" },
-    { "source": "proj_loop_copilot", "target": "skill_three_tier_integration" },
-    { "source": "proj_loop_copilot", "target": "skill_crm_integration" },
-    { "source": "proj_loop_copilot", "target": "skill_sso_oauth" },
-    { "source": "proj_loop_copilot", "target": "skill_event_sourcing_ctx" },
-    { "source": "proj_loop_copilot", "target": "skill_fastapi" },
-    { "source": "proj_loop_copilot", "target": "skill_react" },
-    { "source": "proj_loop_copilot", "target": "skill_mongo" },
-
-    { "source": "proj_saarthi", "target": "skill_pgvector" },
-    { "source": "proj_saarthi", "target": "skill_compliance_arch" },
-    { "source": "proj_saarthi", "target": "skill_customer_discovery" },
-    { "source": "proj_saarthi", "target": "skill_multi_agent" },
-    { "source": "proj_saarthi", "target": "skill_agentic_workflows" },
-    { "source": "proj_saarthi", "target": "skill_react" },
-
-    { "source": "proj_rebalancer", "target": "skill_mcp_servers" },
-    { "source": "proj_rebalancer", "target": "skill_eleven_signal_fw" },
-    { "source": "proj_rebalancer", "target": "skill_agentic_workflows" },
-    { "source": "proj_rebalancer", "target": "skill_multi_agent" },
-
-    { "source": "proj_hpe_rag", "target": "skill_hybrid_search" },
-    { "source": "proj_hpe_rag", "target": "skill_chunking_strategy" },
-    { "source": "proj_hpe_rag", "target": "skill_customer_discovery" },
-
-    { "source": "proj_mphasis_ml", "target": "skill_tree_ensembles" },
-    { "source": "proj_mphasis_ml", "target": "skill_feature_eng" },
-    { "source": "proj_mphasis_ml", "target": "skill_predictive_analytics" },
-    { "source": "proj_mphasis_ml", "target": "skill_risk_scoring" },
-    { "source": "proj_mphasis_ml", "target": "skill_statistical_modeling" }
+    {
+      "source": "root",
+      "target": "emp_coforge"
+    },
+    {
+      "source": "root",
+      "target": "emp_hpe"
+    },
+    {
+      "source": "root",
+      "target": "emp_mphasis"
+    },
+    {
+      "source": "root",
+      "target": "domain_agentic"
+    },
+    {
+      "source": "root",
+      "target": "domain_rag"
+    },
+    {
+      "source": "root",
+      "target": "domain_fde"
+    },
+    {
+      "source": "root",
+      "target": "domain_eng"
+    },
+    {
+      "source": "root",
+      "target": "domain_ml"
+    },
+    {
+      "source": "root",
+      "target": "showcase_system_design"
+    },
+    {
+      "source": "emp_coforge",
+      "target": "proj_qe_platform"
+    },
+    {
+      "source": "emp_hpe",
+      "target": "proj_hpe_rag"
+    },
+    {
+      "source": "emp_mphasis",
+      "target": "proj_mphasis_ml"
+    },
+    {
+      "source": "proj_qe_platform",
+      "target": "showcase_system_design"
+    },
+    {
+      "source": "proj_loop_copilot",
+      "target": "showcase_system_design"
+    },
+    {
+      "source": "proj_saarthi",
+      "target": "showcase_system_design"
+    },
+    {
+      "source": "proj_rebalancer",
+      "target": "showcase_system_design"
+    },
+    {
+      "source": "root",
+      "target": "proj_loop_copilot"
+    },
+    {
+      "source": "root",
+      "target": "proj_saarthi"
+    },
+    {
+      "source": "root",
+      "target": "proj_rebalancer"
+    },
+    {
+      "source": "proj_qe_platform",
+      "target": "domain_agentic"
+    },
+    {
+      "source": "proj_qe_platform",
+      "target": "domain_rag"
+    },
+    {
+      "source": "proj_qe_platform",
+      "target": "domain_fde"
+    },
+    {
+      "source": "proj_qe_platform",
+      "target": "domain_eng"
+    },
+    {
+      "source": "proj_loop_copilot",
+      "target": "domain_agentic"
+    },
+    {
+      "source": "proj_loop_copilot",
+      "target": "domain_fde"
+    },
+    {
+      "source": "proj_loop_copilot",
+      "target": "domain_eng"
+    },
+    {
+      "source": "proj_saarthi",
+      "target": "domain_agentic"
+    },
+    {
+      "source": "proj_saarthi",
+      "target": "domain_rag"
+    },
+    {
+      "source": "proj_saarthi",
+      "target": "domain_fde"
+    },
+    {
+      "source": "proj_saarthi",
+      "target": "domain_eng"
+    },
+    {
+      "source": "proj_rebalancer",
+      "target": "domain_agentic"
+    },
+    {
+      "source": "proj_rebalancer",
+      "target": "domain_eng"
+    },
+    {
+      "source": "proj_hpe_rag",
+      "target": "domain_rag"
+    },
+    {
+      "source": "proj_hpe_rag",
+      "target": "domain_eng"
+    },
+    {
+      "source": "proj_mphasis_ml",
+      "target": "domain_ml"
+    },
+    {
+      "source": "domain_agentic",
+      "target": "skill_multi_agent"
+    },
+    {
+      "source": "domain_agentic",
+      "target": "skill_agentic_workflows"
+    },
+    {
+      "source": "domain_agentic",
+      "target": "skill_mcp_servers"
+    },
+    {
+      "source": "domain_agentic",
+      "target": "skill_langgraph"
+    },
+    {
+      "source": "domain_agentic",
+      "target": "skill_langchain"
+    },
+    {
+      "source": "domain_agentic",
+      "target": "skill_event_sourcing_ctx"
+    },
+    {
+      "source": "domain_agentic",
+      "target": "skill_eleven_signal_fw"
+    },
+    {
+      "source": "domain_rag",
+      "target": "skill_graphrag"
+    },
+    {
+      "source": "domain_rag",
+      "target": "skill_agentic_rag"
+    },
+    {
+      "source": "domain_rag",
+      "target": "skill_neo4j"
+    },
+    {
+      "source": "domain_rag",
+      "target": "skill_pgvector"
+    },
+    {
+      "source": "domain_rag",
+      "target": "skill_hybrid_search"
+    },
+    {
+      "source": "domain_rag",
+      "target": "skill_reranking"
+    },
+    {
+      "source": "domain_rag",
+      "target": "skill_query_transformation"
+    },
+    {
+      "source": "domain_rag",
+      "target": "skill_context_compression"
+    },
+    {
+      "source": "domain_rag",
+      "target": "skill_query_rerouting"
+    },
+    {
+      "source": "domain_rag",
+      "target": "skill_entity_normalization"
+    },
+    {
+      "source": "domain_rag",
+      "target": "skill_chunking_strategy"
+    },
+    {
+      "source": "domain_rag",
+      "target": "skill_ragas"
+    },
+    {
+      "source": "domain_fde",
+      "target": "skill_tenant_trust_model"
+    },
+    {
+      "source": "domain_fde",
+      "target": "skill_multi_tenant_rbac"
+    },
+    {
+      "source": "domain_fde",
+      "target": "skill_three_tier_integration"
+    },
+    {
+      "source": "domain_fde",
+      "target": "skill_crm_integration"
+    },
+    {
+      "source": "domain_fde",
+      "target": "skill_sso_oauth"
+    },
+    {
+      "source": "domain_fde",
+      "target": "skill_multi_cloud_deploy"
+    },
+    {
+      "source": "domain_fde",
+      "target": "skill_compliance_arch"
+    },
+    {
+      "source": "domain_fde",
+      "target": "skill_customer_discovery"
+    },
+    {
+      "source": "domain_fde",
+      "target": "skill_production_deployment"
+    },
+    {
+      "source": "domain_eng",
+      "target": "skill_fastapi"
+    },
+    {
+      "source": "domain_eng",
+      "target": "skill_react"
+    },
+    {
+      "source": "domain_eng",
+      "target": "skill_mongo"
+    },
+    {
+      "source": "domain_eng",
+      "target": "skill_postgres"
+    },
+    {
+      "source": "domain_eng",
+      "target": "skill_docker_cicd"
+    },
+    {
+      "source": "domain_eng",
+      "target": "skill_multicloud"
+    },
+    {
+      "source": "domain_eng",
+      "target": "skill_llm_observability"
+    },
+    {
+      "source": "domain_eng",
+      "target": "skill_system_design"
+    },
+    {
+      "source": "domain_eng",
+      "target": "skill_webhook_arch"
+    },
+    {
+      "source": "domain_eng",
+      "target": "skill_microservices"
+    },
+    {
+      "source": "domain_ml",
+      "target": "skill_tree_ensembles"
+    },
+    {
+      "source": "domain_ml",
+      "target": "skill_feature_eng"
+    },
+    {
+      "source": "domain_ml",
+      "target": "skill_predictive_analytics"
+    },
+    {
+      "source": "domain_ml",
+      "target": "skill_risk_scoring"
+    },
+    {
+      "source": "domain_ml",
+      "target": "skill_statistical_modeling"
+    },
+    {
+      "source": "proj_qe_platform",
+      "target": "skill_graphrag"
+    },
+    {
+      "source": "proj_qe_platform",
+      "target": "skill_agentic_rag"
+    },
+    {
+      "source": "proj_qe_platform",
+      "target": "skill_neo4j"
+    },
+    {
+      "source": "proj_qe_platform",
+      "target": "skill_entity_normalization"
+    },
+    {
+      "source": "proj_qe_platform",
+      "target": "skill_query_transformation"
+    },
+    {
+      "source": "proj_qe_platform",
+      "target": "skill_reranking"
+    },
+    {
+      "source": "proj_qe_platform",
+      "target": "skill_context_compression"
+    },
+    {
+      "source": "proj_qe_platform",
+      "target": "skill_query_rerouting"
+    },
+    {
+      "source": "proj_qe_platform",
+      "target": "skill_multi_tenant_rbac"
+    },
+    {
+      "source": "proj_qe_platform",
+      "target": "skill_multi_cloud_deploy"
+    },
+    {
+      "source": "proj_qe_platform",
+      "target": "skill_llm_observability"
+    },
+    {
+      "source": "proj_qe_platform",
+      "target": "skill_ragas"
+    },
+    {
+      "source": "proj_qe_platform",
+      "target": "skill_mcp_servers"
+    },
+    {
+      "source": "proj_loop_copilot",
+      "target": "skill_tenant_trust_model"
+    },
+    {
+      "source": "proj_loop_copilot",
+      "target": "skill_three_tier_integration"
+    },
+    {
+      "source": "proj_loop_copilot",
+      "target": "skill_crm_integration"
+    },
+    {
+      "source": "proj_loop_copilot",
+      "target": "skill_sso_oauth"
+    },
+    {
+      "source": "proj_loop_copilot",
+      "target": "skill_event_sourcing_ctx"
+    },
+    {
+      "source": "proj_loop_copilot",
+      "target": "skill_fastapi"
+    },
+    {
+      "source": "proj_loop_copilot",
+      "target": "skill_react"
+    },
+    {
+      "source": "proj_loop_copilot",
+      "target": "skill_mongo"
+    },
+    {
+      "source": "proj_saarthi",
+      "target": "skill_pgvector"
+    },
+    {
+      "source": "proj_saarthi",
+      "target": "skill_compliance_arch"
+    },
+    {
+      "source": "proj_saarthi",
+      "target": "skill_customer_discovery"
+    },
+    {
+      "source": "proj_saarthi",
+      "target": "skill_multi_agent"
+    },
+    {
+      "source": "proj_saarthi",
+      "target": "skill_agentic_workflows"
+    },
+    {
+      "source": "proj_saarthi",
+      "target": "skill_react"
+    },
+    {
+      "source": "proj_rebalancer",
+      "target": "skill_mcp_servers"
+    },
+    {
+      "source": "proj_rebalancer",
+      "target": "skill_eleven_signal_fw"
+    },
+    {
+      "source": "proj_rebalancer",
+      "target": "skill_agentic_workflows"
+    },
+    {
+      "source": "proj_rebalancer",
+      "target": "skill_multi_agent"
+    },
+    {
+      "source": "proj_hpe_rag",
+      "target": "skill_hybrid_search"
+    },
+    {
+      "source": "proj_hpe_rag",
+      "target": "skill_chunking_strategy"
+    },
+    {
+      "source": "proj_hpe_rag",
+      "target": "skill_customer_discovery"
+    },
+    {
+      "source": "proj_mphasis_ml",
+      "target": "skill_tree_ensembles"
+    },
+    {
+      "source": "proj_mphasis_ml",
+      "target": "skill_feature_eng"
+    },
+    {
+      "source": "proj_mphasis_ml",
+      "target": "skill_predictive_analytics"
+    },
+    {
+      "source": "proj_mphasis_ml",
+      "target": "skill_risk_scoring"
+    },
+    {
+      "source": "proj_mphasis_ml",
+      "target": "skill_statistical_modeling"
+    }
   ]
 }
