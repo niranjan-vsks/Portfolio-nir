@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { ROUTES, FIREWALL_NAMES, BANNED } from "./routes";
+import { ROUTES, FIREWALL_NAMES, FIREWALL_ROUTES, BANNED } from "./routes";
 
 /**
  * Scripted verification (PRD §20.1). Per route: no 4xx/5xx, no uncaught page
@@ -35,11 +35,13 @@ for (const route of ROUTES) {
   });
 }
 
-test("firewall: no employer/client names on /system-design", async ({ page }) => {
-  await page.goto("/system-design", { waitUntil: "domcontentloaded" });
-  await page.waitForTimeout(1000);
-  const html = (await page.content()).toLowerCase();
-  for (const name of FIREWALL_NAMES) {
-    expect(html.includes(name.toLowerCase()), `firewall leak: ${name}`).toBeFalsy();
-  }
-});
+for (const route of FIREWALL_ROUTES) {
+  test(`firewall: no employer/client names on ${route}`, async ({ page }) => {
+    await page.goto(route, { waitUntil: "domcontentloaded" });
+    await page.waitForTimeout(1000);
+    const html = (await page.content()).toLowerCase();
+    for (const name of FIREWALL_NAMES) {
+      expect(html.includes(name.toLowerCase()), `firewall leak: ${name} on ${route}`).toBeFalsy();
+    }
+  });
+}

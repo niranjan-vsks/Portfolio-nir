@@ -47,7 +47,7 @@ export function WorkWithMe() {
       <h2 className="mb-3 font-mono text-xl text-green">{"> work_with_me"}</h2>
       <p className="max-w-xl text-[15px] leading-relaxed text-neutral-300">
         Hiring for forward deployed, agentic AI, or production RAG work? Start
-        the conversation in one click — the email is drafted, you just press
+        the conversation in one click: the email is drafted, you just press
         send.
       </p>
       <div className="mt-5">

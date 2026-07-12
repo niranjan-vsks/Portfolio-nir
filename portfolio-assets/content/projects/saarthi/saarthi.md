@@ -22,7 +22,7 @@ India's gig workers face structural financial precarity: irregular daily income,
 
 ## My role
 
-I owned the complete product lifecycle—from customer discovery and product strategy through architecture, implementation, AI orchestration, and full-stack development. I designed and built the entire production-grade platform with cross-platform support for mobile and web, integrating multilingual voice intelligence, financial AI workflows, and enterprise-ready infrastructure now undergoing pilot deployment.
+I owned the complete product lifecycle: from customer discovery and product strategy through architecture, implementation, AI orchestration, and full-stack development. I designed and built the entire production-grade platform with cross-platform support for mobile and web, integrating multilingual voice intelligence, financial AI workflows, and enterprise-ready infrastructure now undergoing pilot deployment.
 
 ## Why it mattered
 
@@ -61,6 +61,6 @@ Start with a WhatsApp bot rather than a standalone app to cut install friction.
 ## Forward Deployed Engineer framing (reference architecture, not a claim of deployment)
 This section is legitimate to publish now because it is framed as "how I would build this at enterprise scale," not as a fact about what has already happened. Use "reference architecture" / "how I would build" language throughout, consistent with the liability firewall.
 
-- **Cold-start discovery approach:** `TODO(niranjan)` — your actual discovery process for Saarthi (user interviews, sample size, how you validated the trust-first reframe before building).
+- **Cold-start discovery approach:** `TODO(niranjan)` · your actual discovery process for Saarthi (user interviews, sample size, how you validated the trust-first reframe before building).
 - **Deployment topology (reference):** Voice input -> STT -> orchestrator -> sub-agent routing -> curated RAG retrieval -> guardrail layer -> Gemini -> TTS -> response. Describe as the pattern you would deploy into a customer environment, not as a live system.
 - **Multi-tenant / scale considerations (reference):** How this architecture would need to change to serve enterprise-scale gig platforms (a logistics company's driver base, for example) rather than a 15-user pilot. Write this as forward-looking judgment, clearly labeled as such.
