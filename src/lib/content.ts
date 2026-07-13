@@ -28,6 +28,7 @@ export interface ProjectFrontmatter {
   demo?: string;
   tagline?: string;
   stack?: string[];
+  tags?: string[];
   metric?: string;
   signature_visual?: string;
   group?: string;
@@ -110,6 +111,8 @@ export function getProject(slug: string): ContentDoc<ProjectFrontmatter> | null 
 export function getAllProjects(): ContentDoc<ProjectFrontmatter>[] {
   return listProjectFiles()
     .map((p) => readDoc<ProjectFrontmatter>(p.file))
+    // skip empty / frontmatter-less files so a stray file never crashes a build
+    .filter((d) => d.frontmatter.title || d.frontmatter.public_name)
     .sort(
       (a, b) => (a.frontmatter.order ?? 99) - (b.frontmatter.order ?? 99),
     );
@@ -128,6 +131,21 @@ export function getProjectImages(slug: string): string[] {
     .filter((f) => /\.(png|webp|jpe?g)$/i.test(f))
     .sort()
     .map((f) => `/api/project-image/${slug}/${encodeURIComponent(f)}`);
+}
+
+/**
+ * Saarthi wireframe screens, read live from the project's wireframes/ folder.
+ * Dropping refreshed wireframes into that folder updates the site with no code
+ * change (FINAL_SHOWDOWN auto-update pipeline). Served via /api/saarthi-wireframe.
+ */
+export function getSaarthiWireframes(): string[] {
+  const dir = path.join(PROJECTS_ROOT, "saarthi", "wireframes");
+  if (!fs.existsSync(dir)) return [];
+  return fs
+    .readdirSync(dir)
+    .filter((f) => /\.(png|webp|jpe?g)$/i.test(f))
+    .sort()
+    .map((f) => `/api/saarthi-wireframe/${encodeURIComponent(f)}`);
 }
 
 export interface ContentSection {

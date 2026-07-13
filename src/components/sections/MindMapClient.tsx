@@ -49,7 +49,7 @@ function brainPlan(): { show: boolean; autoMs: number } {
   }
 }
 
-export function MindMapClient() {
+export function MindMapClient({ graph }: { graph?: unknown } = {}) {
   const reduced = useReducedMotion();
   const isMobile = useIsMobile();
   const [phase, setPhase] = useState<"brain" | "graph">("brain");
@@ -92,7 +92,7 @@ export function MindMapClient() {
               was rejected too (AGain Fixes 2026-07-12): keep space, no effects */}
           <StarfieldBackdrop count={reduced ? 3000 : 7000} />
           <div className="relative z-10 h-full w-full">
-            <MindMap3D />
+            <MindMap3D data={graph as never} />
           </div>
         </div>
       )}

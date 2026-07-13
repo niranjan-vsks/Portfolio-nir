@@ -96,7 +96,7 @@ export const PRODUCT_SECTIONS: Record<string, ProductSpec> = {
       },
       {
         title: "success_metrics.md",
-        heading: "Success Metrics",
+        heading: "Success Metrics (design targets)",
         rows: [
           {
             label: "Activation",

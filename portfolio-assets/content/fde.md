@@ -38,4 +38,4 @@ The role I actually do: ship into enterprise environments end to end, from cold-
 
 - Customer stakeholders use the cost and quality telemetry live to track spend and output quality.
 - Designed the D365 integration inside the customer's tenant trust model: Power Automate flows authenticated by internal tenant identity, with direct Dataverse REST via MSAL held in reserve for environments that grant broader permissions.
-- Drove production hallucination from ~15% to under 5%, the metric that kept enterprise QA teams onboard.
+- Drove production hallucination from ~15% to under 5% via GraphRAG and entity normalization, the accuracy bar enterprise QA teams held the platform to.

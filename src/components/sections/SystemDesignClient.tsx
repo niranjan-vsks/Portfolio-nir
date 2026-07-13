@@ -3,9 +3,8 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { SD_SECTIONS, type InterviewNotes } from "@/components/sections/systemDesignData";
+import { SD_SECTIONS, type InterviewNotes, type SDSection } from "@/components/sections/systemDesignData";
 import { useRouter } from "next/navigation";
-import { Mermaid } from "@/components/sections/Mermaid";
 import { TerminalLoader } from "@/components/ui/TerminalLoader";
 import { MovingBorderButton } from "@/components/ui/MovingBorderButton";
 
@@ -112,6 +111,70 @@ const INTERVIEW_BLOCKS: { key: keyof InterviewNotes; label: string; hover: strin
   { key: "tradeoffs", label: "key tradeoffs", hover: "The calls that cost something, and why they were worth it." },
 ];
 
+type ViewItem =
+  | { id: string; label: string; kind: "image"; image: string }
+  | { id: string; label: string; kind: "flow" };
+
+/** Build the toggleable view list for a section from its data. */
+function buildViews(s: SDSection): ViewItem[] {
+  const views: ViewItem[] = [];
+  if (s.image) {
+    views.push({ id: "img1", label: s.imageLabel ?? "Architecture", kind: "image", image: s.image });
+  }
+  if (s.image2) {
+    views.push({ id: "img2", label: s.image2Label ?? "Orchestration", kind: "image", image: s.image2 });
+  }
+  if (s.kind === "flow" && s.nodes && s.edges) {
+    views.push({ id: "flow", label: s.flowLabel ?? "Interactive explorer", kind: "flow" });
+  }
+  return views;
+}
+
+/**
+ * Toggleable architecture views: a segmented control switches between the
+ * deployment/platform render, a second render (e.g. orchestration flow), and
+ * the interactive explorer. Only the active view renders — no stacked boxes.
+ */
+function SectionViews({ section }: { section: SDSection }) {
+  const views = buildViews(section);
+  const [active, setActive] = useState(0);
+  if (views.length === 0) return null;
+  const view = views[Math.min(active, views.length - 1)];
+
+  return (
+    <div>
+      {views.length > 1 && (
+        <div className="mb-4 inline-flex rounded-lg border border-border/70 bg-surface/40 p-1 font-mono text-[12px]">
+          {views.map((v, i) => (
+            <button
+              key={v.id}
+              onClick={() => setActive(i)}
+              className={`rounded-md px-3.5 py-1.5 transition-colors ${
+                i === active ? "bg-green text-bg" : "text-text-dim hover:text-green"
+              }`}
+            >
+              {v.label}
+            </button>
+          ))}
+        </div>
+      )}
+      {view.kind === "image" ? (
+        <ArchImage src={view.image} title={section.title} />
+      ) : (
+        section.nodes &&
+        section.edges && (
+          <FlowDiagram
+            nodes={section.nodes}
+            edges={section.edges}
+            height={section.height ?? 520}
+            title={section.title}
+          />
+        )
+      )}
+    </div>
+  );
+}
+
 /** System-design-interview notes: FRs, NFRs, capacity, tradeoffs. */
 function InterviewGrid({ notes }: { notes: InterviewNotes }) {
   return (
@@ -162,18 +225,7 @@ export function SystemDesignClient() {
             {s.intro}
           </p>
           <TagChips tags={s.tags} />
-          {s.image && <ArchImage src={s.image} title={s.title} />}
-          {s.kind === "flow" && s.nodes && s.edges && (
-            <FlowDiagram
-              nodes={s.nodes}
-              edges={s.edges}
-              height={s.height ?? 520}
-              title={s.title}
-            />
-          )}
-          {s.kind === "mermaid" && s.mermaid && (
-            <Mermaid chart={s.mermaid} hoverCaption={s.caption} />
-          )}
+          <SectionViews section={s} />
           <p className="mt-2 font-mono text-[12px] text-text-dim/80">{s.caption}</p>
           <InterviewGrid notes={s.interview} />
         </section>

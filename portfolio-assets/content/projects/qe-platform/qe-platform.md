@@ -6,7 +6,7 @@ status: production
 demo: none
 tagline: Agentic QA platform · from user story to deployed test
 stack: [GraphRAG, Neo4j, vector store, Agentic RAG, custom Playwright MCP, AWS Bedrock LLM, FastAPI, React, tenant-aware RBAC, LLM observability]
-metric: "Manual QA effort down 85-90%; hallucination ~15% -> under 5%; deployed across 17 enterprise QA teams at peak adoption"
+metric: "Manual effort on covered workflows cut ~85%; hallucination ~15% -> under 5%; deployed across 17 enterprise QA teams at peak adoption"
 signature_visual: static-architecture
 order: 4
 nda: true
@@ -22,7 +22,7 @@ QA at enterprise scale means thousands of test cases to author, maintain, and ex
 Owned the platform end to end as senior engineer: feasibility framing, architecture, build, production rollout, and adoption across enterprise QA teams. Made the architectural calls, established the metrics framework, and drove iterative refinement on team-specific feedback.
 
 ## The outcome
-Manual QA effort down 85-90%. Test authoring time down ~75%. Hallucination from ~15% to under 5% via GraphRAG and entity normalization. Deployed across 17 QA teams at peak adoption with sustained usage beyond MVP, on customer-managed AWS, Azure, and GCP.
+Manual effort on covered test-authoring and triage workflows cut ~85%. Script authoring time down ~75% versus writing Playwright/Cypress by hand. Hallucination from ~15% to under 5% via GraphRAG and entity normalization. Deployed across 17 QA teams at peak adoption with sustained usage beyond MVP, on customer-managed AWS, Azure, and GCP.
 
 ## Key decisions
 1. **GraphRAG over vanilla RAG.** Enterprise QA docs have entity relationships (epics, stories, acceptance criteria, existing tests) that cosine similarity loses. GraphRAG plus entity normalization preserves them. Cost framing: ~30-40% higher token cost per query, offset by ~50% fewer regenerations, netting a lower cost per acceptable output.

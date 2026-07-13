@@ -6,7 +6,7 @@ status: piloting
 build_status: production-ready
 demo: "pilot"
 tagline: Voice intelligence for India's gig workforce
-stack: [Voice STT, Master AI Orchestrator, Gemini, Supabase + pgvector, Google Cloud TTS, Levan Labs, Multi-language, Mobile + Web]
+stack: [Voice STT, Master AI Orchestrator, Gemini, Supabase + pgvector, Google Cloud TTS, Multi-language, Mobile + Web]
 metric: "~55% repeat usage within first week (target >40%), ~15 pilot users over 2 weeks (V1 pilot)"
 signature_visual: phone-mockup
 order: 2

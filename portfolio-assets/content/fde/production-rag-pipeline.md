@@ -19,7 +19,7 @@ Demo RAG is a weekend; production RAG is a discipline. I have built the full ret
 
 - Engineered GraphRAG on Neo4j for the AI-Infused QE Platform with entity normalization at ingest, so "login page", "sign-in screen", and "auth UI" resolve to one entity instead of three retrieval misses.
 - Layered Agentic RAG over Jira and Azure DevOps so test generation is scoped against linked stories, epics, and acceptance criteria, not just similar-looking text.
-- Designed an enterprise conversational RAG pipeline end to end: chunking with overlap calibration over ~1,500-1,700 internal documents, hybrid search combining semantic and keyword signals (OpenSearch), and metadata filtering tuned for enterprise-jargon queries. Response relevance improved 30-40% in pilot; repeat escalations fell ~40%.
+- Designed an enterprise conversational RAG pipeline end to end: chunking with overlap calibration over ~1,700 internal documents, hybrid search combining semantic and keyword signals (OpenSearch), and metadata filtering tuned for enterprise-jargon queries. Response relevance improved 30-40% in pilot; repeat escalations fell ~40%.
 - Guardrails sit at both ends: input-side scope checks and output-side grounding checks, so the pipeline fails safe instead of failing confident.
 
 ## Where it shows up

@@ -6,7 +6,7 @@ location: Bangalore, India
 slug: hpe
 ---
 
-Architected the migration of an enterprise conversational system from rule-based FAQ to LLM-assisted RAG over a corpus of ~1,500-1,700 internal documents, cutting repeat user escalations ~40%.
+Architected the migration of an enterprise conversational system from rule-based FAQ to LLM-assisted RAG over a corpus of ~1,700 internal documents, cutting repeat user escalations ~40%.
 
 Designed the retrieval pipeline end to end: chunking with overlap calibration, hybrid search combining semantic and keyword signals, and metadata filtering tuned for enterprise-jargon queries, with evaluation loops measuring retrieval precision against a held-out set and improving response relevance 30-40% in pilot.
 

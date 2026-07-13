@@ -27,13 +27,19 @@ export interface SDSection {
   badge: string;
   intro: string;
   tags: string[];
-  kind: "flow" | "mermaid";
+  kind?: "flow";
   nodes?: N[];
   edges?: Edge[];
-  mermaid?: string;
   height?: number;
-  /** presentation-grade architecture render (Eraser, official icons); click maximizes */
+  /** primary architecture render (Eraser, official icons); click maximizes */
   image?: string;
+  /** toggle label for the primary image view (default "Architecture") */
+  imageLabel?: string;
+  /** optional second architecture render, toggled beside the first */
+  image2?: string;
+  image2Label?: string;
+  /** optional label for the interactive React Flow view (default "Interactive explorer") */
+  flowLabel?: string;
   /** one-line caption about how the element was built / how to use it */
   caption: string;
   interview: InterviewNotes;
@@ -164,7 +170,7 @@ const loopNodes: N[] = [
   { id: "web", position: { x: 0, y: 90 }, data: { label: "web client (React 19)", plane: "control", rationale: "Rep-facing SPA; sub-second interactive paths were non-negotiable for adoption." } },
   { id: "tg", position: { x: 0, y: 210 }, data: { label: "Telegram bot", plane: "control", primitive: "Telegram Bot API", rationale: "Alerts and conversational logging where reps already live; same API surface as web." } },
   { id: "fd", position: { x: 230, y: 150 }, data: { label: "Azure Front Door + WAF", plane: "control", primitive: "edge + WAF", rationale: "TLS, WAF, and global entry for the scaled deployment; static assets cached at the edge." } },
-  { id: "api2", position: { x: 460, y: 150 }, data: { label: "async FastAPI (container apps)", plane: "control", primitive: "autoscaled containers", rationale: "Async FastAPI + Motor, packaged as containers with autoscale rules sized for ~1,000 concurrent users at launch." } },
+  { id: "api2", position: { x: 460, y: 150 }, data: { label: "async FastAPI (container apps)", plane: "control", primitive: "autoscaled containers", rationale: "Async FastAPI + Motor, packaged as containers with autoscale rules load-modeled for ~1,000 concurrent users." } },
   { id: "entra", position: { x: 460, y: 20 }, data: { label: "Entra ID (MSAL)", plane: "control", primitive: "identity", rationale: "Auth stays inside the customer's tenant trust model; tokens scoped per user, no external OAuth grants." } },
   { id: "kv2", position: { x: 230, y: 20 }, data: { label: "Azure Key Vault", plane: "observability", primitive: "secrets manager", rationale: "CRM credentials, bot tokens, and LLM keys resolved at runtime via managed identity; nothing in env files." } },
   { id: "events2", position: { x: 690, y: 40 }, data: { label: "event store (Cosmos DB for Mongo)", plane: "data", primitive: "append-only event log", rationale: "Event sourcing over vector RAG: live workflow events, portfolio, and recent history injected per request as structured JSON. Hallucinated memory eliminated." } },
@@ -233,20 +239,6 @@ const saarthiEdges: Edge[] = [
 ];
 
 // ---------------------------------------------------------------------------
-// 06 · WealthOS — static (in development).
-// ---------------------------------------------------------------------------
-const wealthosMermaid = `flowchart TD
-  B[broker MCP: multi-asset] --> P[portfolio state]
-  P --> S[21-agent analyst council]
-  S --> DA[devil's advocate stage]
-  DA --> AG[accuracy-weighted aggregation]
-  AG --> LLM[LLM synthesis + explanation]
-  LLM --> D[code-enforced veto gate: five risk rings]
-  D --> REC[recommendations only]
-  REC --> H[human-in-the-loop approval]
-  H -. no auto-execution .-> X[(broker)]`;
-
-// ---------------------------------------------------------------------------
 // Sections
 // ---------------------------------------------------------------------------
 export const SD_SECTIONS: SDSection[] = [
@@ -263,7 +255,7 @@ export const SD_SECTIONS: SDSection[] = [
     edges: qeEdges,
     height: 560,
     caption:
-      "Above: the architecture render (official product icons, built in Eraser), click to maximize. Below: the same system as an interactive React Flow explorer: hover any node for the design rationale, toggle planes, click to expand fullscreen.",
+      "Toggle between the presentation render (built in Eraser, official product icons) and an interactive explorer where you can hover any node for the design rationale. Click either to maximize.",
     projectHref: "/projects/qe-platform",
     interview: {
       functional: [
@@ -304,7 +296,7 @@ export const SD_SECTIONS: SDSection[] = [
     edges: hpeEdges,
     height: 560,
     caption:
-      "Above: the architecture render (official product icons, built in Eraser), click to maximize. Below: the same system as an interactive React Flow explorer: hover any node for the design rationale, toggle planes, click to expand fullscreen.",
+      "Toggle between the presentation render (built in Eraser, official product icons) and an interactive explorer where you can hover any node for the design rationale. Click either to maximize.",
     projectHref: "/projects/hpe-rag-chatbot",
     interview: {
       functional: [
@@ -345,7 +337,7 @@ export const SD_SECTIONS: SDSection[] = [
     edges: censusEdges,
     height: 560,
     caption:
-      "Above: the architecture render (official product icons, built in Eraser), click to maximize. Below: the same system as an interactive React Flow explorer: hover any node for the design rationale, toggle planes, click to expand fullscreen.",
+      "Toggle between the presentation render (built in Eraser, official product icons) and an interactive explorer where you can hover any node for the design rationale. Click either to maximize.",
     projectHref: "/projects/global-census-chatbot",
     interview: {
       functional: [
@@ -379,14 +371,14 @@ export const SD_SECTIONS: SDSection[] = [
     title: "Loop Copilot",
     badge: "interactive · production architecture",
     intro:
-      "The production-scale architecture Loop Copilot grows into as it scales past its Fortune 500 pilot: Azure-native because the product lives inside Microsoft tenants, sized for ~1,000 concurrent users at launch. Event sourcing over vector RAG for chat context, and the three-tier D365 integration shell that lives within the customer's tenant trust model.",
+      "The production-scale architecture Loop Copilot grows into as it scales past its Fortune 500 pilot: Azure-native because the product lives inside Microsoft tenants, load-modeled for ~1,000 concurrent users. Event sourcing over vector RAG for chat context, and the three-tier D365 integration shell that lives within the customer's tenant trust model.",
     tags: ["event sourcing", "tenant trust model", "async API", "multi-CRM shell", "Azure"],
     kind: "flow",
     nodes: loopNodes,
     edges: loopEdges,
     height: 600,
     caption:
-      "Above: the architecture render (official product icons, built in Eraser), click to maximize. Below: the same system as an interactive React Flow explorer: hover any node for the design rationale, toggle planes, click to expand fullscreen.",
+      "Toggle between the presentation render (built in Eraser, official product icons) and an interactive explorer where you can hover any node for the design rationale. Click either to maximize.",
     projectHref: "/projects/loop-copilot",
     interview: {
       functional: [
@@ -396,7 +388,7 @@ export const SD_SECTIONS: SDSection[] = [
         "Multi-CRM expansion shell: D365 today, Salesforce/HubSpot/Zoho slots architected",
       ],
       nonFunctional: [
-        "~1,000 concurrent users at launch with sub-second p95 on interactive paths",
+        "load-modeled for ~1,000 concurrent users with sub-second p95 on interactive paths",
         "All auth inside the customer's tenant trust model (Entra ID / MSAL); no external OAuth grants",
         "Secrets resolved at runtime from Key Vault via managed identity; zero credentials at rest in config",
         "Batch work (bulk uploads, transcription) isolated on queues so it never blocks interactive latency",
@@ -426,7 +418,7 @@ export const SD_SECTIONS: SDSection[] = [
     edges: saarthiEdges,
     height: 520,
     caption:
-      "Above: the architecture render (official product icons, built in Eraser), click to maximize. Below: the same system as an interactive React Flow explorer: hover any node for the design rationale, toggle planes, click to expand fullscreen.",
+      "Toggle between the presentation render (built in Eraser, official product icons) and an interactive explorer where you can hover any node for the design rationale. Click either to maximize.",
     projectHref: "/projects/saarthi",
     interview: {
       functional: [
@@ -454,14 +446,16 @@ export const SD_SECTIONS: SDSection[] = [
   {
     id: "wealthos",
     title: "WealthOS · Autonomous Wealth Operating System",
-    badge: "static · in development",
+    badge: "in development · two views",
     intro:
-      "A 21-agent analyst council produces calibrated proposals through a devil's advocate stage and accuracy-weighted aggregation; a code-enforced veto gate with five concentric risk rings decides. The LLM layer has no write access to money paths. In development.",
+      "A 21-agent analyst council produces calibrated proposals through a devil's advocate stage and accuracy-weighted aggregation; a code-enforced veto gate with five concentric risk rings decides. The LLM layer has no write access to money paths. Toggle between the platform architecture and how the council actually reaches a decision.",
     tags: ["multi-agent", "risk guardrails", "human-in-the-loop", "MCP"],
-    kind: "mermaid",
-    mermaid: wealthosMermaid,
+    image: "/architecture/wealthos-platform.png",
+    imageLabel: "Platform architecture",
+    image2: "/architecture/wealthos-orchestration.png",
+    image2Label: "Council orchestration",
     caption:
-      "Static diagram (Mermaid render): hover for this caption, click to view it fullscreen. Goes interactive when the build exits development.",
+      "Two architecture views (built in Eraser, official product icons): the layered platform, and the multi-agent council decision procedure. Click either to maximize.",
     projectHref: "/projects/wealthos",
     interview: {
       functional: [

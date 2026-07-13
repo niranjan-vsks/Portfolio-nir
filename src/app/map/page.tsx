@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { MindMapClient } from "@/components/sections/MindMapClient";
+import { getMindmapGraph } from "@/lib/mindmapGraph";
 
 export const metadata: Metadata = {
   title: "Mind Map",
@@ -8,5 +9,8 @@ export const metadata: Metadata = {
 };
 
 export default function MindMapPage() {
-  return <MindMapClient />;
+  // Built server-side from the curated base + live content, so new projects,
+  // tags, and capability pages grow the graph automatically.
+  const graph = getMindmapGraph();
+  return <MindMapClient graph={graph} />;
 }

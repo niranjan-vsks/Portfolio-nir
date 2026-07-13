@@ -73,13 +73,13 @@ export function GooeySearch() {
         <button
           onClick={() => setOpen(true)}
           aria-label="Search"
-          className="flex h-8 items-center gap-2 rounded-full border border-border px-3 font-mono text-[12px] text-text-dim transition-colors hover:border-green/50 hover:text-green"
+          className="flex h-9 items-center gap-2.5 rounded-full border border-border px-4 font-mono text-[13px] text-text-dim transition-colors hover:border-green/50 hover:text-green"
         >
-          <Search size={14} /> <span className="hidden sm:inline">search</span>
-          <span className="hidden rounded border border-border px-1 text-[10px] sm:inline">/</span>
+          <Search size={15} /> <span className="hidden sm:inline">search</span>
+          <span className="hidden rounded border border-border px-1.5 text-[10px] sm:inline">/</span>
         </button>
       ) : (
-        <div className="absolute right-0 top-0 z-50 w-[min(92vw,22rem)]">
+        <div className="absolute right-0 top-0 z-50 w-[min(92vw,26rem)]">
           <div className="flex items-center gap-2 rounded-full border border-green/60 bg-bg px-3 py-1.5 shadow-[0_0_22px_-4px_rgba(74,222,128,0.6)]">
             <Search size={15} className="text-green" />
             <input

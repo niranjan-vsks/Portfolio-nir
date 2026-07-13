@@ -4,6 +4,7 @@ import {
   getProject,
   getAllProjects,
   getProjectImages,
+  getSaarthiWireframes,
   splitSections,
 } from "@/lib/content";
 import { ButtonLink } from "@/components/ui/Button";
@@ -133,7 +134,7 @@ export default async function ProjectPage({
             cleared screenshots the narrative reads directly on the page below,
             not inside placeholder cards. Saarthi keeps its dedicated
             mobile/web view (PRD 13.4). */}
-        {slug === "saarthi" && <SaarthiView />}
+        {slug === "saarthi" && <SaarthiView screens={getSaarthiWireframes()} />}
         {slug !== "saarthi" && images.length > 0 && (
           <section className="mb-4">
             <h2 className="mb-1 font-mono text-lg text-green">{"> view"}</h2>

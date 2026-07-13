@@ -55,6 +55,9 @@ interface MindMapLink {
 interface Props {
   initiallyPaused?: boolean
   mobileBreakpoint?: number
+  /** server-built graph (curated base + content-derived nodes/edges); falls
+   *  back to the static curated JSON when not supplied */
+  data?: { nodes: MindMapNode[]; links: MindMapLink[] }
 }
 
 function buildChildMap(links: MindMapLink[]): Map<string, string[]> {
@@ -85,6 +88,7 @@ function collectSkillDescendants(
 export default function MindMap3D({
   initiallyPaused = false,
   mobileBreakpoint = 768,
+  data,
 }: Props) {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -134,8 +138,9 @@ export default function MindMap3D({
   }, [paused])
 
   const { nodesById, childMap, rawNodes, rawLinks, adjacency } = useMemo(() => {
-    const rawNodes = (mindmapData as any).nodes as MindMapNode[]
-    const rawLinks = (mindmapData as any).links as MindMapLink[]
+    const source = data ?? (mindmapData as any)
+    const rawNodes = source.nodes as MindMapNode[]
+    const rawLinks = source.links as MindMapLink[]
     const nodesById = new Map(rawNodes.map((n) => [n.id, n]))
     const childMap = buildChildMap(rawLinks)
     const adjacency = new Map<string, Set<string>>()
@@ -148,7 +153,7 @@ export default function MindMap3D({
       adjacency.get(t)!.add(s)
     }
     return { nodesById, childMap, rawNodes, rawLinks, adjacency }
-  }, [])
+  }, [data])
 
   const isLit = useCallback(
     (id: string) => {

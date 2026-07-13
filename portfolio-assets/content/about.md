@@ -12,7 +12,7 @@ Seven years in, across data science, GenAI, and agentic AI, the lesson that stuc
 
 ## The arc
 - **Mphasis** (2019-2022): built fraud-detection and risk-scoring models for financial-services clients using tree-based ensembles (XGBoost, LightGBM, Random Forest). Where I learned to ship models against real data.
-- **HPE** (2022-2023): architected the migration of an enterprise conversational system from rule-based FAQ to LLM-assisted RAG over ~1,500-1,700 internal documents, cutting repeat escalations ~40%. Where I learned retrieval at enterprise scale.
+- **HPE** (2022-2023): architected the migration of an enterprise conversational system from rule-based FAQ to LLM-assisted RAG over ~1,700 internal documents, cutting repeat escalations ~40%. Where I learned retrieval at enterprise scale.
 - **Coforge** (2024-present): architected and shipped an agentic quality-engineering platform from feasibility through production rollout to 17 enterprise QA teams at peak adoption, across customer-managed AWS, Azure, and GCP. Where I learned to deliver agentic systems inside real customer constraints.
 
 Alongside the day job I build and ship my own products: Loop Copilot (live, Fortune 500 pilot), a voice-first financial copilot for India's gig workforce, and an autonomous multi-asset portfolio agent.
@@ -27,4 +27,4 @@ Agentic AI on real customer data, with real consequences, is where the next deca
 - Advanced Certification in Product Management for GenAI/Agentic AI, BITSoM
 - PG Diploma in Machine Learning and AI, IIIT Bangalore
 - B.Tech, Computer Science and Engineering
-- Claude Certified Architect, Anthropic (in progress, expected June 2026)
+- Claude Certified Architect, Anthropic (registered, exam scheduled)
