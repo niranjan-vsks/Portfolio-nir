@@ -48,7 +48,7 @@ export default function AboutPage() {
             <section key={s.title}>
               <h2 className="mb-3 font-mono text-xl text-green">{`> ${s.title}`}</h2>
               <div
-                className="prose-nir text-[16px] leading-relaxed [&_li]:text-[15.5px] [&_p]:text-[16px]"
+                className="prose-nir text-[17px] leading-[1.75] text-neutral-300 [&_li]:text-[16.5px] [&_p]:text-[17px]"
                 dangerouslySetInnerHTML={{ __html: s.html }}
               />
               {/* AGain Fixes: "Why FDE" gets real data + a path to the proof */}
@@ -56,7 +56,7 @@ export default function AboutPage() {
                 <div className="mt-5 grid gap-3 sm:grid-cols-3">
                   {[
                     { v: "17", l: "enterprise QA teams", s: "one platform, at peak adoption" },
-                    { v: "3 clouds", l: "AWS · Azure · GCP", s: "one codebase, per-tenant identity" },
+                    { v: "3", l: "Deployed Across 3 Cloud Service Providers", s: "AWS · Azure · GCP, one codebase, per-tenant identity" },
                     { v: "15% → <5%", l: "hallucination", s: "GraphRAG + evaluation loops" },
                   ].map((c) => (
                     <div key={c.l} className="rounded-xl border border-green/20 bg-surface/60 p-4">
@@ -65,12 +65,14 @@ export default function AboutPage() {
                       <div className="mt-0.5 text-[12.5px] text-text-dim">{c.s}</div>
                     </div>
                   ))}
-                  <Link
-                    href="/forward-deployed"
-                    className="sm:col-span-3 font-mono text-[13.5px] text-green underline decoration-dotted underline-offset-4 hover:text-green/80"
-                  >
-                    the full forward deployed track record →
-                  </Link>
+                  <div className="sm:col-span-3 flex justify-end">
+                    <Link
+                      href="/forward-deployed"
+                      className="rounded-lg border border-green/50 bg-green/10 px-5 py-2.5 font-mono text-[15px] font-medium text-green shadow-[0_0_20px_rgba(74,222,128,0.15)] transition-colors hover:bg-green hover:text-bg"
+                    >
+                      See the full FDE track record →
+                    </Link>
+                  </div>
                 </div>
               )}
             </section>

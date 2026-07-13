@@ -1,0 +1,106 @@
+New Portfolio Fixes Now
+Who the fuck puts a phone inside a phone? That is the shittiest template that you've built.
+What I asked you was: this phone, which is floating, is madly just doing up and down, back and
+forth, back and forth, back and forth, flipping. You directly copied down that green screen saver
+template as it is.
+What I meant was this iPhone would be slowly flipping, slowly rotating, and inside that iPhone
+would be the actual mobile view wireframes of the actual application. That was the point of
+mobile view, right? Why do we want to have an outer mobile background again and inside that?
+Are we shooting a fucking inception movie?
+Also it is pretty useless. It's a waste of tokens even building that so you can increase the size of
+that iPhone a little. That iPhone should be floating in mid-air. That iPhone should be occupying
+the center stage and it is moving a little fast right now. You can make it slowly move and inside
+that iPhone we should have the screenshots, the wireframes of it. Plane, so that is how I want it
+to be.
+Edit that video Accordingly and do it , I think I have remotion Module installed if not install it.
+Also size of the avatar can be increased a little, not too much, but it should maybe expand it a
+little more. It's anyway on the left so just ever so slightly increase the size of it a little. Make it
+appear a little bigger.
+So in the About section I clearly asked you to, even if you have to change the font styling,
+change it. This font size is fucking small. It is not readable. The first impression is making your
+eyes stress. The user has to stress a little and read it out. You can increase the font size. It will
+slightly change the font styling or whatever so it is a little troublesome to read.
+Also in the Why FDE section, see the full FDE track record. This button hyperlink is not clearly
+visible. Maybe add it to the right side or maybe put it as a button and increase the font size a
+little. Change the styling if you have to but make it readable please.
+And Make it Deployed Across 3 Cloud Service Providers
+Also For the Certifications , What is the point of Creating a dedicated page if it is Empty :
+I am giving you some context of what the program includes from their main site, Frame up a
+professional Description of what I gained from it and what value I provide with the product
+understanding . This table i sent from their website is for YOU to understand and get context ,
+dont mention all those placement stuff and the replit , lovable usage, We Actually used Claude
+Code but dont even mention that , we converted them into full fledged apps and not just MVPs .
+Also Voice First Financial Copilot was the one under this related work , Not Loop Copilot . But I
+dont mind it if you Add it Under that related works . But I also Told you to add a Product Section
+to the Projects right , For Saarthi , I uploaded the PRD , in the Saarthi folder Take all the
+knowledge from there . Also There it is mentioned as MVP but we upgraded it to a full fledged
+pilot ready Production app. So Play it as that and only derive the Product knowledge we need
+like Success metrics , maybe SWOT , MosCow , JTBD , value proposition , etc , Dont over
+clutter with too much data so it overshadows the FDE part because the Portfolio is of a FDE not
+a PM . But it should have good amount of data that it deserves a dedicated page of itself , so
+keep that balance. You can use Terminal Style cards here again , Like a Card for JTBD , A card
+for MosCow and RICE maybe , A card for Success Metrics , etc. And for the other Projects till
+your best knowledge and Reasoning write that up based on the data you have about that
+project (Product section Not Required for HPE and Mphasis Projects ) Only AI Infused QE
+platform , Loop Copilot , Saarthi .
+So Build that .
+Also I attached the actual certificate file in the Saarthi folder. Upload that certificate image as
+well in the Page of the Certification.
+For Claude Certified Architect , Give a Professionally acceptable Description saying that I
+registered for the Exam and once I complete the certification it will be uploaded.
+
+Also in project sections :
+These Tags have to be Clickable and should Redirect to the Mindmap and zoomed in to that
+node of it , that is still not fixed. for example I click Solutions Architecture , It should go to
+Mindmap page , the Solution Architect Node should be zoomed on and the first thing to be
+shown , also the Brain transition must be shown only for the first time that the user is logging
+into the mindmap page. After that the subsequent logins need not show the brain transition.
+Every time it shows, he can directly load the mindmap and it should zoom into the exact node
+that is being clicked. Ok? If the user manually goes back to mindmap again, even from the
+home screen, for the subsequent times until the browser cache is refreshed, we don't need to
+show the brain transition again and again. Or lets do it like this , If user has Clicked on MindMap
+Card On the Landing Page , then we show the brain transition and For Subsequent navigations
+from the landing page after the first navigation we reduce the automatic burst effect time , so
+right now I guess the animation effect takes place after four or five seconds. In the subsequent
+navigations from the home landing page we do it immediately after one second or so. If you are
+redirecting to the mind map from these clickable keywords, no brain transition will be shown.
+Any navigation to the mind map section apart from the home landing page globe terminal card
+click, no brain transition is shown for the subsequent navigation.
+Let's say the user has not clicked on mind map ever in his workflow, in his flow path, and the
+first ever time he is navigating to the mind section is from the keywords. In that case we will
+show the brain transition with the five-second transition only. Keep it as four seconds, that is,
+the four-second transition only, the four-second automatic transition. When he clicks it should
+transition, okay, that is already there.
+That is what I want to integrate and it is still showing very small when it is loaded. Please zoom
+in. The default loading of the mind map should be a little zoomed view. That is what I am
+asking. Why are you not able to deliver that?
+Also that font style styling change to make it readable, which I asked for the about section. It is
+not just for the about section. It is for the projects section and maintain that consistent styling
+throughout wherever it is. Even the product sections .
+ARCHITECTURE DIAGRAMS :
+also regarding the architecture diagrams, there are some basic flaws here. The arrows are
+extending out and overlapping with each other and it is very waywardly looking. I want you to
+first fix that and also refine it to look a little more professional grade and premium.
+I actually expected a dark theme but right now keep it as a light theme only. Don't stress too
+much on it. I will fix it later but right now we need to get it ready at least so do it that way. At
+least fix this, make it look more professional, and refine the quality a little more.
+Also I want there is another placeholder reference architecture that I see. Please fix that. Also I
+clearly mentioned that the reference architecture and how I would build it is only and only and
+only for the AI-infused agent tech QE platform. For all of them you can actually say that this was
+the actual architecture by the way. That is not the problem at all. Even for the HPE I don't mind
+if you use the "how I would build" narrative but other than that I am definitely okay with "for loop
+copilot" and Sarthi. I would actually in fact want you to use "this was the actual architecture built
+tone". I mean that notation is okay for me.
+
+Coming to the chat bot, it is looking very plain and bland. I want you to style the chatbot a little
+better to make it look like a good chat assistant. Maybe if you can make some conversational
+dialogue boxes or something, I don't know. Make it look a little premium and better. Kind of not
+looking the best now is what I would say.
+So why the fuck are you mentioning Todo Niranjan in the actual website? If you want to tell me
+that there is anything pending from me, create another separate markdown and tell me what all
+I need to do. Why are you presenting it out there? We need to fucking deploy this right. It
+should be end-to-end presentable. We are trying our best to create a presentable version so
+that we can deploy it on our domain. Tup send placeholders and Todo tags and all that in
+production. That is absolutely unacceptable.
+SURGICALLY IMPLEMENT ALL OF THIS END TO END AND COMPLETE ANY REMAINING
+PHASES AS WELL AND WE CAN GET ONE VERSION READY FOR PRODUCTION.

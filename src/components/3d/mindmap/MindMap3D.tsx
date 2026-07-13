@@ -220,14 +220,14 @@ export default function MindMap3D({
       focusNode(deepLinkId)
     } else {
       // brain hand-off was landing too zoomed out (flagged THREE times, last
-      // in NOW_FIXES): fit the graph, then dolly 52% closer so node and edge
+      // in NOW_FIXES): fit the graph, then dolly 62% closer so node and edge
       // labels arrive readable without manual zooming
       const fg = fgRef.current
       if (fg) {
         fg.zoomToFit(700, 0)
         setTimeout(() => {
           const p = fg.camera().position
-          fg.cameraPosition({ x: p.x * 0.48, y: p.y * 0.48, z: p.z * 0.48 }, undefined, 600)
+          fg.cameraPosition({ x: p.x * 0.38, y: p.y * 0.38, z: p.z * 0.38 }, undefined, 600)
         }, 750)
       }
     }

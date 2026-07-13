@@ -25,7 +25,7 @@ const FAQS = [
  * context; no session history persisted. Honest-but-thin until interview
  * content lands (by design, never fabricated).
  */
-export function ChatSurface() {
+export function ChatSurface({ embedded = false }: { embedded?: boolean }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
@@ -96,7 +96,11 @@ export function ChatSurface() {
   );
 
   return (
-    <div className="relative isolate mx-auto flex h-[calc(100vh-7.5rem)] max-w-2xl flex-col overflow-hidden rounded-2xl border border-green/25 bg-[#080b09]/92 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9),0_0_50px_-25px_rgba(74,222,128,0.4)] backdrop-blur-md">
+    <div
+      className={`relative isolate mx-auto flex max-w-2xl flex-col overflow-hidden rounded-2xl border border-green/25 bg-[#080b09]/92 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9),0_0_50px_-25px_rgba(74,222,128,0.4)] backdrop-blur-md ${
+        embedded ? "h-full w-full" : "h-[calc(100vh-7.5rem)]"
+      }`}
+    >
       {/* terminal chrome header */}
       <div className="flex items-center gap-3 border-b border-white/5 bg-neutral-900/80 px-4 py-3">
         <div className="flex items-center gap-1.5">
@@ -151,19 +155,38 @@ export function ChatSurface() {
         ) : (
           messages.map((m, i) =>
             m.role === "user" ? (
-              <div key={i} className="mb-5 flex justify-end">
-                <div className="max-w-[85%] rounded-2xl rounded-br-md border border-cyan-400/20 bg-cyan-400/[0.07] px-4 py-2.5 text-[14px] leading-relaxed text-neutral-100">
+              <div key={i} className="mb-5 flex flex-col items-end">
+                <span className="mb-1 mr-1 font-mono text-[10.5px] uppercase tracking-wide text-cyan-300/70">
+                  you
+                </span>
+                <div className="max-w-[85%] rounded-2xl rounded-br-md border border-cyan-400/25 bg-gradient-to-br from-cyan-400/[0.12] to-cyan-400/[0.04] px-4 py-2.5 text-[14px] leading-relaxed text-neutral-100 shadow-[0_4px_18px_-8px_rgba(0,229,255,0.35)]">
                   {m.content}
                 </div>
               </div>
             ) : (
               <div key={i} className="mb-5 flex items-start gap-3">
                 <Avatar />
-                <div className="max-w-[85%] rounded-2xl rounded-tl-md border border-green/15 bg-green/[0.05] px-4 py-2.5 text-[14px] leading-relaxed text-neutral-200">
-                  <span className="whitespace-pre-wrap">{m.content}</span>
-                  {busy && i === messages.length - 1 && (
-                    <span className="ml-1 inline-block h-3.5 w-1.5 translate-y-0.5 animate-pulse bg-green" />
-                  )}
+                <div className="max-w-[85%]">
+                  <span className="mb-1 ml-1 block font-mono text-[10.5px] uppercase tracking-wide text-green/70">
+                    niranjan
+                  </span>
+                  <div className="rounded-2xl rounded-tl-md border border-green/20 bg-gradient-to-br from-green/[0.1] to-green/[0.03] px-4 py-2.5 text-[14px] leading-relaxed text-neutral-200 shadow-[0_4px_18px_-8px_rgba(74,222,128,0.35)]">
+                    {m.content ? (
+                      <span className="whitespace-pre-wrap">{m.content}</span>
+                    ) : (
+                      busy &&
+                      i === messages.length - 1 && (
+                        <span className="inline-flex gap-1 py-1" aria-label="thinking">
+                          <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-green [animation-delay:0ms]" />
+                          <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-green [animation-delay:150ms]" />
+                          <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-green [animation-delay:300ms]" />
+                        </span>
+                      )
+                    )}
+                    {busy && m.content && i === messages.length - 1 && (
+                      <span className="ml-1 inline-block h-3.5 w-1.5 translate-y-0.5 animate-pulse bg-green" />
+                    )}
+                  </div>
                 </div>
               </div>
             ),

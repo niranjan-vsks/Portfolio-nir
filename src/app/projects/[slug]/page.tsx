@@ -11,7 +11,18 @@ import { PageBackground } from "@/components/backgrounds/PageBackground";
 import { ProjectShowcase } from "@/components/sections/ProjectShowcase";
 import { SliderSpectra } from "@/components/ui/SliderSpectra";
 import { SaarthiView } from "@/components/sections/SaarthiView";
+import { ProductSection } from "@/components/sections/ProductSection";
+import { TagChip } from "@/components/ui/TagChip";
+import { SKILL_NODE } from "@/components/sections/AboutStrips";
 import type { Metadata } from "next";
+
+/** Case-insensitive skill → mind-map node resolution for stack tag chips. */
+const SKILL_NODE_CI: Record<string, string> = Object.fromEntries(
+  Object.entries(SKILL_NODE).map(([k, v]) => [k.toLowerCase(), v]),
+);
+function resolveNode(label: string): string | undefined {
+  return SKILL_NODE_CI[label.toLowerCase()];
+}
 
 export function generateStaticParams() {
   // p.slug falls back to the file basename, so a project md with missing or
@@ -62,7 +73,9 @@ export default async function ProjectPage({
   const name = fm.public_name ?? fm.title;
   const images = SCREENSHOTS_CLEARED.has(slug) ? getProjectImages(slug) : [];
   const cards = splitSections(project.body)
-    .filter((s) => !INTERNAL_SECTION.test(s.title))
+    // hard gate: internal note titles AND any section still carrying a
+    // TODO(niranjan) placeholder never reach production markup
+    .filter((s) => !INTERNAL_SECTION.test(s.title) && !s.html.includes("TODO("))
     .map((s) => ({ title: `${name} · ${s.title}`, html: s.html }));
 
   return (
@@ -90,13 +103,11 @@ export default async function ProjectPage({
           )}
           {fm.stack && fm.stack.length > 0 && (
             <div className="mt-5 flex flex-wrap gap-2">
+              {/* FINAL_SHOWDOWN: every tag is clickable and deep-links the
+                  matching mind-map node (zoomed on arrival); unmapped tags
+                  still land on the graph, never a dead chip */}
               {fm.stack.map((s) => (
-                <span
-                  key={s}
-                  className="rounded border border-border bg-surface/70 px-2 py-1 font-mono text-[12px] text-text-dim"
-                >
-                  {s}
-                </span>
+                <TagChip key={s} label={s} node={resolveNode(s) ?? ""} />
               ))}
             </div>
           )}
@@ -142,6 +153,9 @@ export default async function ProjectPage({
           demo={fm.demo}
           cards={cards}
         />
+
+        {/* Product-thinking cards: Saarthi, Loop Copilot, QE platform only */}
+        <ProductSection slug={slug} />
       </main>
     </>
   );

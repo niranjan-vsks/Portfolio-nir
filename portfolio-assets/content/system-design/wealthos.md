@@ -1,5 +1,5 @@
 ---
-title: WealthOS Reference Architecture
+title: WealthOS Architecture (in development)
 slug: wealthos
 project: wealthos
 diagram: static

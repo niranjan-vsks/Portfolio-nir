@@ -129,7 +129,7 @@ export function CollapsibleAvatar({
   return (
     <div ref={rootRef} className="fixed bottom-6 left-6 z-40">
       {open ? (
-        <div className="flex w-[300px] flex-col items-center">
+        <div className="flex w-[340px] flex-col items-center">
           {showDialog && (
             <div data-dialog className="mb-4 w-full">
               <ComicDialog text={summary} />
@@ -139,7 +139,7 @@ export function CollapsibleAvatar({
           {/* The starman floats in mid-air: no frame, no card. The video's
               black background blends into the page (screen blend), so only
               the glowing figure remains, like an avatar standing there. */}
-          <div className="relative w-[260px]">
+          <div className="relative w-[300px]">
             <video
               src="/starman/star-man.mp4"
               poster="/starman/star-man.jpg"

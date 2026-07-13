@@ -42,25 +42,3 @@ Pilot of about 15 users over two weeks: ~55% repeat usage within the first week 
 
 ## What I would do differently
 Start with a WhatsApp bot rather than a standalone app to cut install friction.
-
----
-
-## Token / cost optimization
-`TODO(niranjan)`: Requires a live deployment with real API traffic before this section can be written honestly. Do not fill this in with estimates. Once V2 is deployed:
-- Capture real token spend per session (input + output, by sub-agent).
-- Identify the highest-cost interaction type.
-- Apply one real technique (prompt compression, caching repeated context, model routing by task complexity, batching).
-- Report actual before/after numbers here. If no optimization work has been done yet, leave this section out of the live portfolio rather than publishing a placeholder claim.
-
-## Infrastructure optimization
-`TODO(niranjan)`: Same rule. Requires real deployment + real load before this is honest content. Once deployed:
-- Document actual hosting tier and cost.
-- Document any scaling decision made in response to a real bottleneck (not a hypothetical one).
-- Report actual latency numbers (STT round-trip, LLM response, TTS synthesis) under real conditions.
-
-## Forward Deployed Engineer framing (reference architecture, not a claim of deployment)
-This section is legitimate to publish now because it is framed as "how I would build this at enterprise scale," not as a fact about what has already happened. Use "reference architecture" / "how I would build" language throughout, consistent with the liability firewall.
-
-- **Cold-start discovery approach:** `TODO(niranjan)` · your actual discovery process for Saarthi (user interviews, sample size, how you validated the trust-first reframe before building).
-- **Deployment topology (reference):** Voice input -> STT -> orchestrator -> sub-agent routing -> curated RAG retrieval -> guardrail layer -> Gemini -> TTS -> response. Describe as the pattern you would deploy into a customer environment, not as a live system.
-- **Multi-tenant / scale considerations (reference):** How this architecture would need to change to serve enterprise-scale gig platforms (a logistics company's driver base, for example) rather than a 15-user pilot. Write this as forward-looking judgment, clearly labeled as such.

@@ -28,12 +28,24 @@ const StarfieldBackdrop = dynamic(() => import("@/components/backgrounds/Starfie
  */
 const BRAIN_SEEN_KEY = "brain-intro-seen";
 
-function shouldSkipBrain(): boolean {
+/**
+ * FINAL_SHOWDOWN intro contract:
+ * - First-ever /map visit this session: brain intro, 4s auto-dissolve
+ *   (whatever the entry point, including tag-chip / search deep links).
+ * - Repeat visit FROM the landing Mind Map card (?intro=landing): brain
+ *   intro again but fast (~1s auto-dissolve).
+ * - Every other repeat navigation (keywords, nav, search): no intro.
+ */
+function brainPlan(): { show: boolean; autoMs: number } {
   try {
-    if (new URLSearchParams(window.location.search).has("node")) return true;
-    return sessionStorage.getItem(BRAIN_SEEN_KEY) === "1";
+    const seen = sessionStorage.getItem(BRAIN_SEEN_KEY) === "1";
+    const fromLanding =
+      new URLSearchParams(window.location.search).get("intro") === "landing";
+    if (!seen) return { show: true, autoMs: 4000 };
+    if (fromLanding) return { show: true, autoMs: 1000 };
+    return { show: false, autoMs: 0 };
   } catch {
-    return false;
+    return { show: true, autoMs: 4000 };
   }
 }
 
@@ -41,9 +53,13 @@ export function MindMapClient() {
   const reduced = useReducedMotion();
   const isMobile = useIsMobile();
   const [phase, setPhase] = useState<"brain" | "graph">("brain");
+  // computed once on the client at first render (SSR falls back to default)
+  const [plan] = useState(() =>
+    typeof window === "undefined" ? { show: true, autoMs: 4000 } : brainPlan(),
+  );
 
   useEffect(() => {
-    if (isMobile || shouldSkipBrain()) {
+    if (isMobile || !plan.show) {
       const t = setTimeout(() => setPhase("graph"), isMobile ? 700 : 0);
       return () => clearTimeout(t);
     }
@@ -52,13 +68,13 @@ export function MindMapClient() {
     } catch {
       // storage unavailable: the intro just replays, which is harmless
     }
-  }, [isMobile]);
+  }, [isMobile, plan.show]);
 
   return (
     <main className="relative h-screen w-screen overflow-hidden bg-[radial-gradient(ellipse_at_50%_45%,#0a1a3a_0%,#060a18_55%,#04060f_100%)] pt-12">
       {phase === "brain" && !isMobile && (
         <>
-          <BrainScene onComplete={() => setPhase("graph")} />
+          <BrainScene autoAdvanceMs={plan.autoMs} onComplete={() => setPhase("graph")} />
           <div className="pointer-events-none absolute inset-x-0 bottom-16 flex flex-col items-center gap-2 px-6 text-center">
             <p className="text-base font-medium text-[#9fc4ff] sm:text-lg [text-shadow:0_2px_20px_rgba(0,0,0,0.8)]">
               Seven years of building, drawn as one mind.

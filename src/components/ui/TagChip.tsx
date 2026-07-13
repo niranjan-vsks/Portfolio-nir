@@ -9,7 +9,7 @@ import Link from "next/link";
 export function TagChip({ label, node }: { label: string; node: string }) {
   return (
     <Link
-      href={`/map?node=${encodeURIComponent(node)}`}
+      href={node ? `/map?node=${encodeURIComponent(node)}` : "/map"}
       className="group inline-flex items-center gap-1 rounded-full border border-white/12 bg-white/[0.03] px-3 py-1 font-mono text-[12px] text-text-dim transition-all duration-200 hover:-translate-y-px hover:border-green/60 hover:text-green hover:shadow-[0_0_16px_-4px_rgba(74,222,128,0.6)]"
     >
       {label}

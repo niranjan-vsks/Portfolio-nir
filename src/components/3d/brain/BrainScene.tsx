@@ -357,19 +357,27 @@ function AmbientCloud() {
   );
 }
 
-export default function BrainScene({ onComplete }: { onComplete: () => void }) {
+export default function BrainScene({
+  onComplete,
+  autoAdvanceMs = 4000,
+}: {
+  onComplete: () => void;
+  autoAdvanceMs?: number;
+}) {
   const reduced = useReducedMotion();
   const [dissolving, setDissolving] = useState(false);
 
-  // auto after 5s (PRD 6.2); click also triggers. Reduced motion hands off fast.
+  // auto-dissolve after autoAdvanceMs (4s first visit, ~1s on repeat landing
+  // navigations per FINAL_SHOWDOWN); click also triggers. Reduced motion
+  // hands off fast.
   useEffect(() => {
     if (reduced) {
       const t = setTimeout(onComplete, 500);
       return () => clearTimeout(t);
     }
-    const t = setTimeout(() => setDissolving(true), 5000);
+    const t = setTimeout(() => setDissolving(true), autoAdvanceMs);
     return () => clearTimeout(t);
-  }, [reduced, onComplete]);
+  }, [reduced, onComplete, autoAdvanceMs]);
 
   return (
     <div
