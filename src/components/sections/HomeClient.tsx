@@ -58,14 +58,14 @@ export function HomeClient({
       <div className="pointer-events-none relative z-20 mx-auto max-w-[1200px] px-6 pt-28 sm:pt-32">
         <LayoutTextFlip
           prefix="I ship"
-          words={["agentic systems", "production RAG", "into real environments"]}
+          words={["production RAG pipelines", "into real customer environments"]}
           className="text-4xl font-semibold leading-tight text-white sm:text-5xl [text-shadow:0_2px_30px_rgba(0,0,0,0.85)]"
           wordClassName="text-green"
         />
         <EncryptedText
           as="p"
           text={caption}
-          className="mt-4 block max-w-xl text-[15px] leading-relaxed text-neutral-300 [text-shadow:0_1px_20px_rgba(0,0,0,0.95)]"
+          className="mt-4 block max-w-2xl text-[17px] leading-relaxed text-neutral-200 [text-shadow:0_1px_20px_rgba(0,0,0,0.95)]"
         />
       </div>
 

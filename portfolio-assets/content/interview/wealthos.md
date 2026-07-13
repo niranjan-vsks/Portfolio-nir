@@ -10,4 +10,4 @@ Q: Does it trade real money?
 A: Not today, by design. Execution is gated behind a five-ring risk system and ships paper-first. I do not let language models touch money directly, and I built the architecture so that rule is structurally impossible to break, not just discouraged.
 
 Q: Why should a recruiter care?
-A: Because it demonstrates the two things forward deployed work actually needs: systems judgment under real constraints, and the ability to make agentic tools build production-grade software under enforced specs instead of vibes.
+A: Because it demonstrates the two things forward deployed work actually needs: systems judgment under real constraints, and the discipline to enforce production specs (invariants, risk gates, frozen thresholds) instead of shipping on vibes.

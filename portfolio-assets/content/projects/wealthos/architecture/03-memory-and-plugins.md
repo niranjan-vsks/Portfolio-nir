@@ -6,7 +6,7 @@
 
 - Everything outside the kernel is a plugin. TradeS's concrete integrations become the
   **reference plugins** (Alpaca broker, Yahoo data, EDGAR/Stocktwits/Reddit/Quiver research
-  sources, Claude Agent SDK provider) — their code moves behind interfaces *without
+  sources, the LLM provider plugin provider) — their code moves behind interfaces *without
   behavioral change*.
 - Plugins declare capabilities and constraints; the kernel never special-cases a plugin id.
 - Agents never see plugin identities: they see `PortfolioView`, `Quote`, `ResearchSection`,
@@ -74,7 +74,7 @@ interface PluginManifest {
 | Broker | §4 below | `alpaca` (paper+live, brackets, one-WS constraint declared) |
 | Market data | `getBars/getQuote/stream?` | `alpaca-iex`, `yahoo` (delayed, intl) |
 | Research source | `fetchSection(instrument): ResearchSection` | `alpaca-news`, `yahoo-fundamentals`, `sec-edgar`, `stocktwits`, `reddit`, `polymarket`, `quiver` |
-| LLM provider | `invoke(spec, prompt, tools): Stream` | `claude-agent-sdk` (incl. the guardAnthropicKey semantics as plugin config, INV-11) |
+| LLM provider | `invoke(spec, prompt, tools): Stream` | `llm-provider` (incl. the guardLlmKey semantics as plugin config, INV-11) |
 | Notification | `send(channel, msg, urgency)` | (new) web-inbox first; WhatsApp/Telegram/Slack/email later |
 | Interface | session + message in/out | web cockpit; voice (OpenClaw) later — interfaces are clients of the same API, per the vision |
 | Memory provider | `index/search/expire` | `sqlite-embeddings` |

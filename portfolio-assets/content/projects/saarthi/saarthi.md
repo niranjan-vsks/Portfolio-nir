@@ -3,18 +3,17 @@ title: Voice-First Financial AI Copilot
 public_name: Voice-First Financial AI Copilot
 slug: saarthi
 status: piloting
-build_status: production-ready
 demo: "pilot"
 tagline: Voice intelligence for India's gig workforce
 stack: [Voice STT, Master AI Orchestrator, Gemini, Supabase + pgvector, Google Cloud TTS, Multi-language, Mobile + Web]
-metric: "~55% repeat usage within first week (target >40%), ~15 pilot users over 2 weeks (V1 pilot)"
+metric: "~55% first-week repeat usage against a >40% target (V1 pilot, ~15 users over 2 weeks)"
 signature_visual: phone-mockup
 order: 2
 ---
 
 ## Status note
 
-Production-grade platform completed end-to-end with cross-platform support across mobile and web. The platform has completed development, AI integration, multilingual voice workflows, and financial intelligence capabilities. It is currently in pilot deployment with selected users before broader production rollout.
+Built end to end across mobile and web: AI integration, multilingual voice workflows, and financial-intelligence features are complete. Currently in pilot with a small user group ahead of broader rollout.
 
 ## The problem
 
@@ -22,7 +21,7 @@ India's gig workers face structural financial precarity: irregular daily income,
 
 ## My role
 
-I owned the complete product lifecycle: from customer discovery and product strategy through architecture, implementation, AI orchestration, and full-stack development. I designed and built the entire production-grade platform with cross-platform support for mobile and web, integrating multilingual voice intelligence, financial AI workflows, and enterprise-ready infrastructure now undergoing pilot deployment.
+I led the build end to end within my BITSoM program team: customer discovery, product strategy, the agentic architecture, AI orchestration, and full-stack delivery across mobile and web. I owned the technical calls, including the trust-first reframe below, and shipped the platform from spec to pilot.
 
 ## Why it mattered
 

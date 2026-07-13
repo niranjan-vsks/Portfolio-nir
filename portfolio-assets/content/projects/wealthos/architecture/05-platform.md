@@ -106,11 +106,11 @@ src/
     engines/              # NEW: portfolio/, investment/, risk/ (wraps bot safeguards as R0),
                           #      learning/ (wraps improve/), tax/
     plugins/              # NEW: brokers/{alpaca,indmoney-mcp,upstox-mcp}/, market-data/,
-                          #      research-sources/, llm/{claude-agent-sdk}/, notifications/,
+                          #      research-sources/, llm/{llm-provider}/, notifications/,
                           #      memory/, mcp-bridge/
     repo/                 # NEW: repository seam for all new tables
 worker/
-  index.ts                # boot: dotenv → guardAnthropicKey → runners + kernel services
+  index.ts                # boot: dotenv → guardLlmKey → runners + kernel services
   (12 TradeS runners)     # PRESERVED verbatim
   dispatcher.ts           # NEW: event delivery loop
   council-runner.ts       # NEW: consumes decision events

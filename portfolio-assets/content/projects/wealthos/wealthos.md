@@ -26,7 +26,7 @@ WealthOS is architected around three laws: preserve the validated trading core, 
 
 ## Outcome
 
-Status: In development. What exists today is a complete engineering launchpad: roughly 40 specification documents covering 15 frozen architectural invariants, 11 architecture decision records, 15 subsystem PRDs, a legal and product analysis layer, and an agent-guardrail harness (policy hooks, specialist review agents, frozen-path protection) that lets agentic coding tools build the system end to end under enforced constraints. The trading core design derives from a previously validated system. Build metrics will be published here as phases ship.
+Status: In development. The engineering substrate is locked before feature work: 15 frozen architectural invariants, 11 architecture decision records, and 15 subsystem PRDs that make the veto gate, five-ring risk system, and calibration loop enforceable rather than aspirational. The trading core derives from a previously validated system. I engineered a guardrail harness (policy hooks, frozen-path protection, specialist review agents) so implementation cannot violate those invariants. Build metrics publish here as phases ship.
 
 ## Product Design
 

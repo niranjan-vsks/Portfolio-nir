@@ -2,6 +2,11 @@
 
 Kept out of live content: no TODO tags or placeholders ship to production. These need YOUR real data or action.
 
+## Confirm / decide (small)
+0a. **Saarthi team vs solo framing** — the audit flagged a contradiction (project page said "I built the entire platform" while the BITSoM cert says "my team delivered it"). I reconciled it to "I led the build end to end within my BITSoM program team." Confirm that's accurate.
+0b. **Claude Certified Architect** — the audit's view is that an unearned cert listed next to completed ones can read as filler at a top-tier panel. I kept it (you asked to, hedged as "registered, exam scheduled"). If you'd rather drop it from the /about credentials list until earned, say the word.
+0c. **Loop Copilot "one beta user"** — reframed to lead with the validation event (Fortune 500 pilot drove a V2 expansion request in two weeks) instead of the headcount of one. Confirm the two-week detail is accurate.
+
 ## Content you can strengthen (from the FDE recruiter-panel audit)
 1. **Saarthi TTS vendor** — I removed "Levan Labs" (garbled, and it contradicted the Google Cloud TTS decision). If you actually used ElevenLabs for a specific voice, tell me and I'll add it correctly and reconcile with decision #2.
 2. **Saarthi cost / infra / discovery write-ups** — still need real deployment data:

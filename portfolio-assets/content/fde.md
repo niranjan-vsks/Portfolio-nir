@@ -20,7 +20,7 @@ The role I actually do: ship into enterprise environments end to end, from cold-
 
 - Took an agentic quality-engineering platform from feasibility framing through production rollout to 17 enterprise QA teams at peak adoption.
 - Built the case for an enterprise conversational RAG redesign through customer usage analysis showing the rule-based system failing outside its predefined set, then owned the rollout end to end.
-- Took Loop Copilot from customer discovery through V2 with an active beta user inside a Fortune 500 sales org.
+- Took Loop Copilot from customer discovery through V2 inside a Fortune 500 sales org, where the pilot drove a V2 expansion request within two weeks.
 
 ## Architecture-level work
 

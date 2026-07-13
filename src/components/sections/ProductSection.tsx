@@ -37,7 +37,7 @@ export function ProductSection({ slug }: { slug: string }) {
                     <dt className="font-mono text-[12px] uppercase tracking-wide text-cyan">
                       {r.label}
                     </dt>
-                    <dd className="mt-1 text-[14.5px] leading-relaxed text-neutral-300">
+                    <dd className="mt-1 text-[15.5px] leading-relaxed text-neutral-300">
                       {r.body}
                     </dd>
                   </div>

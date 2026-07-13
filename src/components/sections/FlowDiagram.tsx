@@ -5,8 +5,11 @@ import {
   ReactFlow,
   Background,
   Controls,
+  Handle,
+  Position,
   type Node,
   type Edge,
+  type NodeProps,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
@@ -30,6 +33,71 @@ const PLANES: { id: Plane; label: string }[] = [
   { id: "control", label: "control plane" },
   { id: "observability", label: "observability" },
 ];
+
+// ---------------------------------------------------------------------------
+// Flowchart-convention shapes: nodes are no longer identical rectangles. Their
+// shape + icon + size follow what the node IS (terminal, gateway, data store,
+// decision/guard, model, or a plain process), so the diagram reads as a real
+// flow chart instead of a grid of boxes.
+// ---------------------------------------------------------------------------
+type Shape = "terminal" | "gateway" | "store" | "decision" | "model" | "process";
+
+const SHAPE_META: Record<Shape, { icon: string; clip?: string; radius: number; width: number }> = {
+  terminal: { icon: "◉", radius: 999, width: 158 }, // actors / clients / users (stadium)
+  gateway: { icon: "⇆", clip: "polygon(12% 0, 100% 0, 88% 100%, 0 100%)", radius: 6, width: 176 }, // LB / API gateway (parallelogram)
+  store: { icon: "▤", radius: 6, width: 168 }, // databases / caches / indexes (with a cylinder cue bar)
+  decision: { icon: "◆", clip: "polygon(14% 0, 86% 0, 100% 50%, 86% 100%, 14% 100%, 0 50%)", radius: 6, width: 182 }, // guardrails / veto / eval (hexagon)
+  model: { icon: "✦", radius: 12, width: 168 }, // LLM / model endpoints
+  process: { icon: "▷", radius: 8, width: 168 }, // default process
+};
+
+function roleOf(data: FlowNodeData): Shape {
+  const t = `${data.label} ${data.primitive ?? ""}`.toLowerCase();
+  if (/\b(user|users|citizen|citizens|client|engineer|support|customer|human)\b/.test(t)) return "terminal";
+  if (/(load balancer|alb|front door|api management|apim|gateway|waf|ingress|networking)/.test(t)) return "gateway";
+  if (/(database|db|store|graph|cache|redis|cosmos|mongo|postgres|s3|index|registry|event log|event store|events|queue|bus|memory|knowledge)/.test(t)) return "store";
+  if (/(guard|guardrail|veto|risk|compliance|eval|rbac|safety|audit|policy)/.test(t)) return "decision";
+  if (/(llm|bedrock|openai|model|generation|gemini|inference|rerank|re-rank)/.test(t)) return "model";
+  return "process";
+}
+
+function RoleNode({ data, selected }: NodeProps) {
+  const d = data as FlowNodeData;
+  const plane = d.plane ?? "control";
+  const color = PLANE_COLOR[plane];
+  const shape = roleOf(d);
+  const meta = SHAPE_META[shape];
+  const isPolygon = Boolean(meta.clip);
+
+  return (
+    <div
+      style={{
+        width: meta.width,
+        // hexagon/parallelogram need vertical breathing room so text clears the cut corners
+        padding: isPolygon ? "14px 22px" : "9px 12px",
+        borderRadius: meta.radius,
+        clipPath: meta.clip,
+        background: shape === "store"
+          ? `linear-gradient(90deg, ${color}22 0 6px, #111317 6px)`
+          : "#111317",
+        border: `${selected ? 2 : 1.4}px solid ${color}`,
+        color: "#e5e7eb",
+        fontFamily: "var(--font-jetbrains-mono), monospace",
+        fontSize: 11,
+        lineHeight: 1.35,
+        textAlign: "center",
+        boxShadow: `0 0 0 1px ${color}18, 0 6px 18px -12px ${color}`,
+      }}
+    >
+      <Handle type="target" position={Position.Top} style={{ background: color, width: 6, height: 6, border: "none" }} />
+      <span style={{ color, marginRight: 6 }}>{meta.icon}</span>
+      <span>{d.label}</span>
+      <Handle type="source" position={Position.Bottom} style={{ background: color, width: 6, height: 6, border: "none" }} />
+    </div>
+  );
+}
+
+const NODE_TYPES = { role: RoleNode };
 
 export function FlowDiagram({
   nodes,
@@ -66,21 +134,10 @@ export function FlowDiagram({
     () =>
       nodes.map((n) => {
         const plane = n.data.plane ?? "control";
-        const visible = active.has(plane);
-        const color = PLANE_COLOR[plane];
         return {
           ...n,
-          hidden: !visible,
-          style: {
-            background: "#111317",
-            border: `1px solid ${color}`,
-            borderRadius: 8,
-            color: "#e5e7eb",
-            fontFamily: "var(--font-jetbrains-mono), monospace",
-            fontSize: 11,
-            padding: "8px 10px",
-            width: 168,
-          },
+          type: "role",
+          hidden: !active.has(plane),
         };
       }),
     [nodes, active],
@@ -90,7 +147,8 @@ export function FlowDiagram({
     () =>
       edges.map((e) => ({
         ...e,
-        style: { stroke: "#4ade80", strokeWidth: 1.4, ...e.style },
+        type: "smoothstep",
+        style: { stroke: "#4ade80", strokeWidth: 1.5, ...e.style },
         labelStyle: { fill: "#9ca3af", fontFamily: "monospace", fontSize: 10 },
       })),
     [edges],
@@ -160,6 +218,7 @@ export function FlowDiagram({
         key={expanded ? "fullscreen" : "inline"}
         nodes={styledNodes}
         edges={styledEdges}
+        nodeTypes={NODE_TYPES}
         fitView
         proOptions={{ hideAttribution: true }}
         nodesDraggable={false}

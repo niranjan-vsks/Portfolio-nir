@@ -10,6 +10,6 @@ Architected and shipped an AI-infused agentic quality-engineering platform end t
 
 Drove production hallucination from ~15% to under 5% by engineering advanced RAG from scratch: GraphRAG on Neo4j with entity normalization, reranking, context compression, metadata filtering, query rerouting, and guardrails, with Agentic RAG over Jira and Azure DevOps to scope test generation.
 
-Cut manual QA effort 85-90% through agentic test generation, execution, and CI-integrated automation, and built a custom Playwright MCP integration that generates production-grade Playwright and Cypress scripts from natural language, cutting authoring time ~75%.
+Cut manual effort on covered test-authoring and triage workflows ~85% through agentic test generation, execution, and CI-integrated automation, and built a custom Playwright MCP integration that generates production-grade Playwright and Cypress scripts from natural language, cutting authoring time ~75%.
 
 Engineered an LLM observability layer with per-tenant cost telemetry and quality evaluation (Acceptance Criteria Coverage, Test Design Coverage, RAGAS), and built tenant-aware RBAC with module-level CRUD-X permissions and role templates that onboard new customers without rebuilding permissions.

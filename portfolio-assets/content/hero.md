@@ -1,6 +1,6 @@
 ---
 section: hero
-tagline: "Senior Agentic AI Engineer who ships into enterprise environments end to end."
+tagline: "Forward Deployed Engineer who ships production agentic and RAG systems into enterprise environments, end to end."
 ---
 
 ## Terminal intro lines (typewriter)

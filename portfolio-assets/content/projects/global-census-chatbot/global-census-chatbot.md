@@ -6,6 +6,7 @@ status: production
 group: work
 order: 6
 tags: [Conversational AI, RAG, Deterministic State Machines, Azure, Guardrails, Civic Tech]
+stack: [Azure API Management, Azure AI Search, Bot Service, Cosmos DB, State-machine flows, RAG]
 ---
 
 ## Overview
@@ -14,7 +15,7 @@ A civic-scale conversational assistant supporting India's census operations, bui
 
 ## My role
 
-I designed the conversational architecture and the split that makes it safe: generative answering for open questions, and deterministic transactional flows for anything that writes a civic record. I owned the guardrail and audit posture so the assistant never speculates on policy and every registration step is traceable.
+Working against a government program's compliance and audit requirements, I designed the conversational architecture and the split that makes it safe: generative answering for open questions, and deterministic transactional flows for anything that writes a civic record. I owned the guardrail and audit posture so the assistant never speculates on policy and every registration step is traceable.
 
 ## Key decisions
 

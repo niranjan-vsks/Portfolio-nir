@@ -19,9 +19,9 @@ export interface SpectraSlide {
   description?: string;
 }
 
-// template geometry, verbatim
-const GEO = { gap: 164, rotate: 38, depth: 150, drop: 24, shrink: 0.14, fade: 0.26, dim: 0.2, visible: 3 };
-const CARD_W = 260, CARD_H = 330, PERSP = 1680;
+// geometry (cards enlarged for a more readable screenshot per feedback)
+const GEO = { gap: 190, rotate: 38, depth: 150, drop: 24, shrink: 0.14, fade: 0.26, dim: 0.2, visible: 3 };
+const CARD_W = 320, CARD_H = 400, PERSP = 1680;
 const AUTOPLAY_MS = 3200, EASE = 0.14, SENSITIVITY = 0.0072;
 
 // green↔cyan lane replaces the template's per-card eyewear hues (frontend.md)
@@ -40,6 +40,22 @@ export function SliderSpectra({ slides }: { slides: SpectraSlide[] }) {
   const cardRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const goRef = useRef<(i: number) => void>(() => {});
   const [active, setActive] = useState(0);
+  const [expanded, setExpanded] = useState<string | null>(null);
+
+  // clicking the centred card maximizes it fullscreen (same UX as the
+  // architecture diagrams); Esc or a click on the backdrop closes it
+  useEffect(() => {
+    if (!expanded) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setExpanded(null);
+    };
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [expanded]);
 
   const state = useRef({
     pos: 0, target: 0, dragging: false, moved: false,
@@ -206,7 +222,11 @@ export function SliderSpectra({ slides }: { slides: SpectraSlide[] }) {
                 ref={(el) => { cardRefs.current[i] = el; }}
                 aria-label={`${sl.name} — screen ${i + 1} of ${N}`}
                 onClick={() => {
-                  if (!state.current.moved) goRef.current(i);
+                  if (state.current.moved) return;
+                  // centred card + a real screenshot → maximize; otherwise
+                  // bring the clicked card to the centre
+                  if (i === active && sl.img) setExpanded(sl.img);
+                  else goRef.current(i);
                 }}
                 className="absolute m-0 border-0 bg-transparent p-0 [transform-style:preserve-3d] will-change-transform"
                 style={{
@@ -223,9 +243,9 @@ export function SliderSpectra({ slides }: { slides: SpectraSlide[] }) {
                   />
                   {sl.img ? (
                     /* eslint-disable-next-line @next/next/no-img-element */
-                    /* object-contain on black: any screenshot dimension
-                       (landscape app shots included) auto-fits the card */
-                    <img src={sl.img} alt={`${sl.name} screen`} draggable={false} loading="lazy" className="absolute inset-0 block h-full w-full bg-black object-contain" />
+                    /* object-cover: the screenshot fills the whole card, no
+                       letterbox bars; click the centred card to see it full */
+                    <img src={sl.img} alt={`${sl.name} screen`} draggable={false} loading="lazy" className="absolute inset-0 block h-full w-full object-cover object-top" />
                   ) : (
                     <span className="absolute inset-0 grid place-items-center p-4 text-center font-mono text-[13px] text-white/80">
                       {sl.name}
@@ -242,10 +262,38 @@ export function SliderSpectra({ slides }: { slides: SpectraSlide[] }) {
       <div className="relative z-[2] min-h-[3.5rem] max-w-xl text-center">
         <p className="font-mono text-[14px] text-green">{slide.caption ?? slide.name}</p>
         {slide.description && (
-          <p className="mt-1 text-[13.5px] leading-relaxed text-text-dim">{slide.description}</p>
+          <p className="mt-1.5 text-[15px] leading-relaxed text-neutral-300">{slide.description}</p>
+        )}
+        {slide.img && (
+          <p className="mt-2 font-mono text-[11px] text-text-dim/70">click to expand</p>
         )}
       </div>
       <p className="sr-only" aria-live="polite">{`${slide.name}, ${active + 1} of ${N}`}</p>
+
+      {/* fullscreen expand (matches the architecture-diagram maximize UX) */}
+      {expanded && (
+        <div
+          className="fixed inset-0 z-[80] grid place-items-center bg-black/92 p-4 sm:p-8"
+          onClick={() => setExpanded(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Expanded screenshot"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={expanded}
+            alt="Expanded screen"
+            className="max-h-[94vh] w-auto max-w-[96vw] rounded-lg object-contain shadow-[0_40px_120px_-30px_rgba(0,0,0,0.9)]"
+          />
+          <button
+            onClick={() => setExpanded(null)}
+            aria-label="Close"
+            className="absolute right-5 top-5 grid h-9 w-9 place-items-center rounded-full bg-white/10 font-mono text-white backdrop-blur transition-colors hover:text-green"
+          >
+            ✕
+          </button>
+        </div>
+      )}
     </div>
   );
 }

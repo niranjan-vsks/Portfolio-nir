@@ -9,7 +9,7 @@ A role-aware QE workbench (React) behind tenant-aware RBAC (module-level CRUD-X,
 GraphRAG on a knowledge graph (Neo4j class) with entity normalization preserves the entity relationships cosine similarity loses, alongside a vector store with query transformation, re-ranking, context compression, and metadata filtering. Hallucination went from ~15% to under 5%.
 
 ## Generation and execution
-Natural language becomes production-grade Playwright/Cypress scripts through a custom Playwright MCP tool server; suites execute CI-integrated. Test authoring time down ~75%; manual QA effort down 85-90%.
+Natural language becomes production-grade Playwright/Cypress scripts through a custom Playwright MCP tool server; suites execute CI-integrated. Test authoring time down ~75%; manual effort on covered workflows down ~85%.
 
 ## Quality and cost planes
 - Guardrails + eval harness: Acceptance-Criteria Coverage, Test-Design Coverage, RAGAS. Audit-defensible at budget reviews.

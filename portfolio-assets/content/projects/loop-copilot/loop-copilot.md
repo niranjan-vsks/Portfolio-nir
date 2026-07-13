@@ -18,7 +18,7 @@ Enterprise sales reps spend 4 to 6 minutes per CRM activity logging in Dynamics 
 Sole architect and engineer. I owned the system from customer discovery through V2 production deployment, and built the entire stack solo, including the integration architecture that respected the customer's IT OAuth policy constraints.
 
 ## The outcome
-CRM activity logging dropped from 4 to 6 minutes to about 45 seconds, an ~85% reduction. It is live with an active beta user inside a Fortune 500 sales org. V2 shipped in a single sprint covering Microsoft Graph calendar integration, bulk activity upload with AI summarization, Telegram alerts, admin monitoring, and a multi-CRM expansion shell.
+CRM activity logging dropped from 4 to 6 minutes to about 45 seconds, an ~85% reduction. It is live in pilot inside a Fortune 500 sales org, where the beta drove a V2 expansion request within two weeks of V1. V2 shipped in a single sprint covering Microsoft Graph calendar integration, bulk activity upload with AI summarization, Telegram alerts, admin monitoring, and a multi-CRM expansion shell.
 
 ## Key decisions
 1. **Three-tier integration within the customer's tenant trust model.** Power Automate flows authenticated by internal tenant identity (primary), direct Dataverse REST via MSAL (secondary, broader-permission environments), Playwright session paths (fallback). The customer's IT policy blocked standard external OAuth grants, so I designed within their tenant trust boundary, not against it. Tradeoff: a more complex three-path strategy, but cross-environment portable from day one.

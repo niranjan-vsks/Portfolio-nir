@@ -20,11 +20,11 @@ two-process SQLite safe without locks.
 | # | Subsystem | Files | Role |
 |---|---|---|---|
 | S1 | DB layer | `src/lib/db/` | better-sqlite3 + Drizzle, WAL, globalThis singleton, ~20 tables |
-| S2 | Env & safety | `src/lib/env.ts` | Zod-validated env; single paper/live decision point; `guardAnthropicKey()` |
+| S2 | Env & safety | `src/lib/env.ts` | Zod-validated env; single paper/live decision point; `guardLlmKey()` |
 | S3 | Market data | `worker/price-stream.ts`, `worker/yahoo-poller.ts`, `src/lib/alpaca/` | One IEX websocket (hard Alpaca limit), Yahoo delayed poller, hand-rolled REST client |
 | S4 | Quant signals | `src/lib/...indicators/patterns`, `worker/signal-runner.ts` | Pure, unit-tested SMA/EMA/RSI/MACD/ATR/Bollinger/OBV + pattern detection |
 | S5 | Research packet | `src/lib/research/packet.ts` | `Promise.allSettled` fan-out (news, fundamentals, EDGAR, insiders, sentiment, congress, market context) → markdown + quantSnapshot; bars are the only hard dependency; "Data Gaps" honesty section |
-| S6 | Analyst engine | `research/agent.ts`, `prompts.ts`, `schema.ts` | Claude Agent SDK (`query()`), WebSearch/WebFetch, one JSON-validation retry, English-only output contract |
+| S6 | Analyst engine | `research/agent.ts`, `prompts.ts`, `schema.ts` | the LLM provider plugin (`query()`), WebSearch/WebFetch, one JSON-validation retry, English-only output contract |
 | S7 | Strategy versioning | `research/strategy.ts`, `strategy_versions` | DB-backed philosophy; exactly one `active`; fullText + quantText tiers |
 | S8 | Grading & calibration | `research/{grading,calibration,regime}.ts` | ATR-scaled neutral band, SPY benchmark, dumb baselines, `effectiveConfidence` capping, regime tags |
 | S9 | Jobs queue | `jobs` table, `research-runner.ts` | Priority order chat → research → postmortem → relations; stale-job healing |
@@ -46,7 +46,7 @@ two-process SQLite safe without locks.
 ```
 env.ts ──────────────► alpaca client ──► price-stream / order-sync / bot engine
   │                          ▲
-  └─ guardAnthropicKey ──────┼──► agent.ts (Agent SDK) ◄── prompts ◄── strategy.ts (DB)
+  └─ guardLlmKey ──────┼──► agent.ts (Agent SDK) ◄── prompts ◄── strategy.ts (DB)
 bars_cache ──► indicators ──► packet.ts ──► agent.ts ──► predictions ──► outcome-runner
                                                             │                │
                                              shadow_predictions        lessons ──► strategist
@@ -63,7 +63,7 @@ jobs ◄── Next API routes (enqueue) ◄── UI polls /api/jobs/{id}
 | A1 | One user, one laptop, machine sleeps | Catch-up pattern is essential; must generalize, not disappear |
 | A2 | SQLite + two processes + writer-ownership | Works until multi-tenant; contract concept must survive the DB swap |
 | A3 | Alpaca is *the* broker; Yahoo fills the gaps | Hard-coded — the single biggest thing to abstract |
-| A4 | Claude Code subscription login, no API key | Budget model assumes one shared login; LLM provider must become a plugin |
+| A4 | a shared LLM subscription login, no API key | Budget model assumes one shared login; LLM provider must become a plugin |
 | A5 | English is the base language of all machine text | Keep — it's what makes i18n config-driven |
 | A6 | Predictions/holdings are US-equity-centric | Symbol model, currency handling, market hours all need generalizing |
 | A7 | One IEX websocket per account (free tier) | Data-provider plugins must declare connection constraints |
@@ -103,7 +103,7 @@ jobs ◄── Next API routes (enqueue) ◄── UI polls /api/jobs/{id}
 | W4 | Memory = tables only; no semantic retrieval, no cross-symbol pattern memory beyond lessons | High | Memory architecture (doc 03 §2); lessons table becomes one memory store among ten |
 | W5 | US-equity assumptions (symbol format, currency, market hours, EDGAR, IEX) | High | Instrument model + market-calendar service (doc 04 §2) |
 | W6 | SQLite ceiling — fine for Stage A, blocks multi-tenant SaaS | Medium (deliberate) | DB evolution plan (doc 06 §2): repository seam now, Postgres later |
-| W7 | LLM provider hard-coded (Claude Agent SDK, model IDs in code) | Medium | LLM provider plugin interface; TradeS model table becomes config |
+| W7 | LLM provider hard-coded (the LLM provider plugin, model IDs in code) | Medium | LLM provider plugin interface; TradeS model table becomes config |
 | W8 | Risk = bot safeguards only; no portfolio-level VaR/concentration/drawdown view | High | Risk Engine (doc 04 §5) — safeguards remain the execution-layer floor |
 | W9 | No tax awareness | Medium | Tax Intelligence agent + lot-tracking extension of the FIFO ledger |
 | W10 | Auth is single-owner+guests; no tenancy | Medium (deliberate) | Security model (doc 05 §5) |
@@ -131,7 +131,7 @@ These are contractual. Any PR that violates one requires an ADR and explicit hum
   regime no-catastrophe; rollback is automatic on live degradation.
 - **INV-10** English base language for all machine text; translation is display-only,
   cached, never schema'd per-language.
-- **INV-11** `guardAnthropicKey()` semantics: the platform never silently switches billing
+- **INV-11** `guardLlmKey()` semantics: the platform never silently switches billing
   modes (generalizes to: provider credentials are explicit plugin config, never ambient).
 - **INV-12** Long AI work never runs inline in a request handler.
 - **INV-13** Writer-ownership: every table/stream has exactly one writing process,

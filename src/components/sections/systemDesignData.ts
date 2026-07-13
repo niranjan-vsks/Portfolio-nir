@@ -31,7 +31,7 @@ export interface SDSection {
   nodes?: N[];
   edges?: Edge[];
   height?: number;
-  /** primary architecture render (Eraser, official icons); click maximizes */
+  /** primary architecture render (official product icons); click maximizes */
   image?: string;
   /** toggle label for the primary image view (default "Architecture") */
   imageLabel?: string;
@@ -255,7 +255,7 @@ export const SD_SECTIONS: SDSection[] = [
     edges: qeEdges,
     height: 560,
     caption:
-      "Toggle between the presentation render (built in Eraser, official product icons) and an interactive explorer where you can hover any node for the design rationale. Click either to maximize.",
+      "Toggle between the presentation architecture render and an interactive explorer where you can hover any node for the design rationale. Click either to maximize.",
     projectHref: "/projects/qe-platform",
     interview: {
       functional: [
@@ -296,7 +296,7 @@ export const SD_SECTIONS: SDSection[] = [
     edges: hpeEdges,
     height: 560,
     caption:
-      "Toggle between the presentation render (built in Eraser, official product icons) and an interactive explorer where you can hover any node for the design rationale. Click either to maximize.",
+      "Toggle between the presentation architecture render and an interactive explorer where you can hover any node for the design rationale. Click either to maximize.",
     projectHref: "/projects/hpe-rag-chatbot",
     interview: {
       functional: [
@@ -337,7 +337,7 @@ export const SD_SECTIONS: SDSection[] = [
     edges: censusEdges,
     height: 560,
     caption:
-      "Toggle between the presentation render (built in Eraser, official product icons) and an interactive explorer where you can hover any node for the design rationale. Click either to maximize.",
+      "Toggle between the presentation architecture render and an interactive explorer where you can hover any node for the design rationale. Click either to maximize.",
     projectHref: "/projects/global-census-chatbot",
     interview: {
       functional: [
@@ -378,7 +378,7 @@ export const SD_SECTIONS: SDSection[] = [
     edges: loopEdges,
     height: 600,
     caption:
-      "Toggle between the presentation render (built in Eraser, official product icons) and an interactive explorer where you can hover any node for the design rationale. Click either to maximize.",
+      "Toggle between the presentation architecture render and an interactive explorer where you can hover any node for the design rationale. Click either to maximize.",
     projectHref: "/projects/loop-copilot",
     interview: {
       functional: [
@@ -418,7 +418,7 @@ export const SD_SECTIONS: SDSection[] = [
     edges: saarthiEdges,
     height: 520,
     caption:
-      "Toggle between the presentation render (built in Eraser, official product icons) and an interactive explorer where you can hover any node for the design rationale. Click either to maximize.",
+      "Toggle between the presentation architecture render and an interactive explorer where you can hover any node for the design rationale. Click either to maximize.",
     projectHref: "/projects/saarthi",
     interview: {
       functional: [
@@ -455,7 +455,7 @@ export const SD_SECTIONS: SDSection[] = [
     image2: "/architecture/wealthos-orchestration.png",
     image2Label: "Council orchestration",
     caption:
-      "Two architecture views (built in Eraser, official product icons): the layered platform, and the multi-agent council decision procedure. Click either to maximize.",
+      "Two architecture views: the layered platform, and the multi-agent council decision procedure. Click either to maximize.",
     projectHref: "/projects/wealthos",
     interview: {
       functional: [
@@ -470,7 +470,9 @@ export const SD_SECTIONS: SDSection[] = [
         "Frozen-threshold evolution gauntlet: strategy changes must beat the incumbent on fixed statistical gates",
       ],
       capacity: [
-        "40-document engineering launchpad (15 frozen invariants, 11 ADRs, 15 subsystem PRDs) so agentic tools build under enforced constraints",
+        "Sized for free-tier deployment today: single-node modular monolith with a database-backed event bus, no external queue infrastructure",
+        "21-agent fan-out per high-stakes decision cycle, with budget shedding that drops low-tier councils first",
+        "Documented ports-and-adapters seams for horizontal scale: swap the event bus and split into role-scoped workers when volume demands it",
       ],
       tradeoffs: [
         "Agent council costs tokens and latency versus a single model call, traded for calibrated, auditable proposals",

@@ -14,7 +14,7 @@ and act through pluggable brokers across asset classes and geographies.
 
 **Mental models:**
 
-- *Cursor for Wealth Management* — the user stays in control; agents do the heavy lifting.
+- *a co-pilot for wealth management* — the user stays in control; agents do the heavy lifting.
 - *Devin meets Bloomberg Terminal* — autonomous multi-step work grounded in live market data.
 - *AI Chief Investment Officer* — one accountable supervisor, many specialist reports, and
   a paper trail for every decision.

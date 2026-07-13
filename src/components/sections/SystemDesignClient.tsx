@@ -52,7 +52,7 @@ function TagChips({ tags }: { tags: string[] }) {
 }
 
 /**
- * Presentation-grade architecture render (Eraser export, official product
+ * Presentation-grade architecture render (official product
  * icons). Click (or the button) maximizes it fullscreen; Esc collapses.
  */
 function ArchImage({ src, title }: { src: string; title: string }) {
@@ -187,7 +187,7 @@ function InterviewGrid({ notes }: { notes: InterviewNotes }) {
           </h3>
           <ul className="space-y-2">
             {notes[key].map((item) => (
-              <li key={item} className="flex gap-2 text-[15px] leading-relaxed text-text-dim">
+              <li key={item} className="flex gap-2 text-[15.5px] leading-relaxed text-neutral-300">
                 <span aria-hidden className="mt-[2px] text-cyan">·</span>
                 <span>{item}</span>
               </li>
@@ -221,7 +221,7 @@ export function SystemDesignClient() {
               </Link>
             )}
           </div>
-          <p className="mb-4 max-w-3xl text-[15px] leading-relaxed text-text-dim">
+          <p className="mb-4 max-w-3xl text-[16.5px] leading-relaxed text-neutral-300">
             {s.intro}
           </p>
           <TagChips tags={s.tags} />
