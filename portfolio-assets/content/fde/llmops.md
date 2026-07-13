@@ -1,7 +1,7 @@
 ---
 title: LLMOps
 slug: llmops
-order: 8
+order: 9
 caption: shipping, versioning, and guarding LLM systems in production
 back: "The operational spine under my AI systems: CI-integrated pipelines, guardrails, multi-tenant RBAC, and deployments that survive customer change windows."
 tags:

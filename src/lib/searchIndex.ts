@@ -30,8 +30,8 @@ export const SEARCH_INDEX: SearchEntry[] = [
   { label: "Saarthi", href: "/projects/saarthi", group: "project", keywords: ["voice", "financial", "gig workforce", "vernacular"] },
   { label: "WealthOS", href: "/projects/wealthos", group: "project", keywords: ["wealthos", "autonomous wealth", "portfolio", "trading", "multi-agent", "veto gate"] },
   { label: "QE Platform", href: "/projects/qe-platform", group: "project", keywords: ["quality engineering", "graphrag", "testing", "playwright", "agentic qa"] },
-  { label: "Conversational RAG Chatbot (HPE)", href: "/projects/hpe-rag-chatbot", group: "project", keywords: ["hpe", "rag", "chatbot", "escalations"] },
-  { label: "Global Census Chatbot (HPE)", href: "/projects/global-census-chatbot", group: "project", keywords: ["hpe", "census", "chatbot"] },
+  { label: "Enterprise Knowledge Assistant (HPE RAG)", href: "/projects/hpe-rag-chatbot", group: "project", keywords: ["hpe", "rag", "chatbot", "escalations", "knowledge assistant", "squidex", "confluence"] },
+  { label: "National Census Digital Assistant (HPE)", href: "/projects/global-census-chatbot", group: "project", keywords: ["hpe", "census", "chatbot", "npr", "government"] },
 ];
 
 // FDE capability pages (R10: everything findable)
@@ -43,6 +43,7 @@ SEARCH_INDEX.push(
   { label: "Token Optimization", href: "/forward-deployed/token-optimization", group: "fde", keywords: ["context compression", "prompt", "model routing"] },
   { label: "Cost Optimization", href: "/forward-deployed/cost-optimization", group: "fde", keywords: ["finops", "cloud sizing", "spend"] },
   { label: "Fine-tuning · RLHF & LoRA", href: "/forward-deployed/finetuning-rlhf-lora", group: "fde", keywords: ["finetuning", "lora", "rlhf", "adapters"] },
+  { label: "Guardrails & AI Safety", href: "/forward-deployed/guardrails-ai-safety", group: "fde", keywords: ["guardrails", "ai safety", "refusal", "veto gate", "compliance"] },
   { label: "LLMOps", href: "/forward-deployed/llmops", group: "fde", keywords: ["ci/cd", "guardrails", "rbac", "mcp", "kubernetes", "docker"] },
   // experience entries (anchors on /experience)
   { label: "Coforge · Senior Engineer, GenAI & Agentic AI", href: "/experience#coforge", group: "experience", keywords: ["coforge", "qe platform", "2024"] },

@@ -52,3 +52,5 @@ next-env.d.ts
 # local screenshots / mcp output
 /.playwright-mcp/
 /r2*.jpeg
+
+.vercel

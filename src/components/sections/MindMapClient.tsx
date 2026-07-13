@@ -21,16 +21,36 @@ const StarfieldBackdrop = dynamic(() => import("@/components/backgrounds/Starfie
  * engine. On desktop the brain scatters/fades into the graph; on mobile and
  * reduced-motion we skip the morph and load the graph after a brief loader
  * (pre-authorized path, logged in STATE.md §5/R5).
+ *
+ * NOW_FIXES UX: the brain intro plays only on the FIRST /map visit of the
+ * session, and never when arriving through a ?node= deep link (tag chips,
+ * search) — the visitor's intent there is a specific node, not a cinematic.
  */
+const BRAIN_SEEN_KEY = "brain-intro-seen";
+
+function shouldSkipBrain(): boolean {
+  try {
+    if (new URLSearchParams(window.location.search).has("node")) return true;
+    return sessionStorage.getItem(BRAIN_SEEN_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
 export function MindMapClient() {
   const reduced = useReducedMotion();
   const isMobile = useIsMobile();
   const [phase, setPhase] = useState<"brain" | "graph">("brain");
 
   useEffect(() => {
-    if (isMobile) {
-      const t = setTimeout(() => setPhase("graph"), 700);
+    if (isMobile || shouldSkipBrain()) {
+      const t = setTimeout(() => setPhase("graph"), isMobile ? 700 : 0);
       return () => clearTimeout(t);
+    }
+    try {
+      sessionStorage.setItem(BRAIN_SEEN_KEY, "1");
+    } catch {
+      // storage unavailable: the intro just replays, which is harmless
     }
   }, [isMobile]);
 

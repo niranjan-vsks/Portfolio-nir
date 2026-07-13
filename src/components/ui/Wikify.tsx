@@ -13,7 +13,7 @@ const LINKS: { pattern: RegExp; href: string; caption: string }[] = [
   { pattern: /Saarthi/, href: "/projects/saarthi", caption: "Click to explore this project in detail" },
   { pattern: /conversational (?:system|RAG)/i, href: "/projects/hpe-rag-chatbot", caption: "Click to explore this project in detail" },
   { pattern: /GraphRAG/, href: "/map?node=skill_graphrag", caption: "See GraphRAG in the Mind Map" },
-  { pattern: /system design/i, href: "/system-design", caption: "See how I would build it" },
+  { pattern: /system design/i, href: "/system-design", caption: "Architectures, requirements, and tradeoffs" },
 ];
 
 export function Wikify({ text }: { text: string }) {

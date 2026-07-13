@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ReactFlow,
   Background,
@@ -35,15 +35,32 @@ export function FlowDiagram({
   nodes,
   edges,
   height = 460,
+  title,
 }: {
   nodes: Node<FlowNodeData>[];
   edges: Edge[];
   height?: number;
+  title?: string;
 }) {
   const [active, setActive] = useState<Set<Plane>>(
     new Set<Plane>(["data", "control", "observability"]),
   );
   const [hover, setHover] = useState<FlowNodeData | null>(null);
+  // Click the diagram (or the expand button) to maximize it fullscreen.
+  const [expanded, setExpanded] = useState(false);
+
+  useEffect(() => {
+    if (!expanded) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setExpanded(false);
+    };
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [expanded]);
 
   const styledNodes = useMemo<Node<FlowNodeData>[]>(
     () =>
@@ -88,8 +105,30 @@ export function FlowDiagram({
     });
   }
 
-  return (
-    <div className="relative rounded-lg border border-border bg-bg" style={{ height }}>
+  const frame = (
+    <div
+      className={
+        expanded
+          ? "fixed inset-0 z-[120] bg-bg"
+          : "relative rounded-lg border border-border bg-bg"
+      }
+      style={expanded ? undefined : { height }}
+      title={expanded ? undefined : "click to expand fullscreen"}
+    >
+      <div className="absolute right-3 top-3 z-10 flex gap-2">
+        <button
+          onClick={() => setExpanded((v) => !v)}
+          aria-label={expanded ? "close fullscreen diagram" : "expand diagram fullscreen"}
+          className="rounded border border-green/40 bg-bg/90 px-2 py-1 font-mono text-[11px] text-green transition-colors hover:bg-green hover:text-bg"
+        >
+          {expanded ? "✕ close (esc)" : "⛶ fullscreen"}
+        </button>
+      </div>
+      {expanded && title && (
+        <div className="absolute left-1/2 top-3 z-10 -translate-x-1/2 font-mono text-[13px] text-text-dim">
+          {title}
+        </div>
+      )}
       <div className="absolute left-3 top-3 z-10 flex flex-wrap gap-2">
         {PLANES.map((p) => (
           <button
@@ -118,6 +157,7 @@ export function FlowDiagram({
       )}
 
       <ReactFlow
+        key={expanded ? "fullscreen" : "inline"}
         nodes={styledNodes}
         edges={styledEdges}
         fitView
@@ -126,12 +166,17 @@ export function FlowDiagram({
         nodesConnectable={false}
         onNodeMouseEnter={(_, n) => setHover(n.data as FlowNodeData)}
         onNodeMouseLeave={() => setHover(null)}
+        onPaneClick={() => {
+          if (!expanded) setExpanded(true);
+        }}
         minZoom={0.4}
-        maxZoom={1.5}
+        maxZoom={expanded ? 2 : 1.5}
       >
         <Background color="#1f2937" gap={20} />
         <Controls showInteractive={false} className="!bg-surface" />
       </ReactFlow>
     </div>
   );
+
+  return frame;
 }

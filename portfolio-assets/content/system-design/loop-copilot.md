@@ -1,30 +1,17 @@
----
-title: Loop Copilot
-public_name: Loop Copilot · AI CRM Copilot
-slug: loop-copilot
-status: live
-demo: https://loopcopilot.cc
-tagline: D365 automation for enterprise sales
-stack: [React 19, async FastAPI, MongoDB Atlas, Groq/Llama 3.1, Entra ID via MSAL, Microsoft Graph, Telegram Bot API, Railway CI/CD]
-metric: "CRM logging 4-6 min -> ~45 sec (~85% reduction)"
-signature_visual: macbook-scroll
-order: 1
----
+# Architecture · Loop Copilot (production scale)
 
-## The problem
-Enterprise sales reps spend 4 to 6 minutes per CRM activity logging in Dynamics 365. Across hundreds of activities per rep per month, that is hours lost to data entry. Worse, the friction means activities do not get logged, so pipeline visibility degrades and opportunity tracking breaks down.
+The production-scale architecture Loop Copilot grows into past its Fortune 500 pilot, as walked on /system-design. Azure-native because the product lives inside Microsoft tenants; sized for ~1,000 concurrent users at launch.
 
-## My role
-Sole architect and engineer. I owned the system from customer discovery through V2 production deployment, and built the entire stack solo, including the integration architecture that respected the customer's IT OAuth policy constraints.
+## Shape
+Web (React 19) and Telegram clients enter through Azure Front Door + WAF into autoscaled async FastAPI containers. Entra ID (MSAL) keeps auth inside the customer's tenant trust model; Azure Key Vault resolves all secrets at runtime via managed identity.
 
-## The outcome
-CRM activity logging dropped from 4 to 6 minutes to about 45 seconds, an ~85% reduction. It is live with an active beta user inside a Fortune 500 sales org. V2 shipped in a single sprint covering Microsoft Graph calendar integration, bulk activity upload with AI summarization, Telegram alerts, admin monitoring, and a multi-CRM expansion shell.
+## Memory: event sourcing over vector RAG
+An append-only event store (Cosmos DB, Mongo API) records workflow events; a context assembler injects live events, account portfolio, and recent history per request as structured JSON. More tokens per request, hallucinated memory eliminated. The LLM (Groq/Llama today) sits behind an abstraction so tenant-compliant Azure OpenAI can swap in per customer.
 
-## Key decisions
-1. **Three-tier integration within the customer's tenant trust model.** Power Automate flows authenticated by internal tenant identity (primary), direct Dataverse REST via MSAL (secondary, broader-permission environments), Playwright session paths (fallback). The customer's IT policy blocked standard external OAuth grants, so I designed within their tenant trust boundary, not against it. Tradeoff: a more complex three-path strategy, but cross-environment portable from day one.
-2. **Event sourcing over vector RAG for chat context.** Live workflow events, account portfolio, and recent chat history are injected per request as structured JSON. Chat needs to know what just happened in the workflow, not what the history embeds to. Tradeoff: more tokens per request, but hallucinated memory eliminated entirely. Choosing not to use RAG when it is the wrong tool is itself the point.
-3. **MVP scope: appointment-logging only in V1, over six planned workflow types.** Validate the end-to-end production flow in weeks, not months. The beta user requested expansion within two weeks of V1.
-4. **Async throughout (FastAPI + Motor).** Sub-second response was non-negotiable for rep adoption. Tradeoff: harder to debug than synchronous patterns.
+## Scale plumbing
+- Service Bus queues isolate bulk uploads and voice-call transcription from the interactive path (sub-second p95 target).
+- Redis holds session context and per-user rate limits.
+- App Insights + Telegram alerts give admins live adoption visibility.
 
-## What I would do differently
-Add automated test coverage from V1 rather than retrofitting it in V2. Architect the multi-CRM abstraction from day one instead of building D365-specific then refactoring. Ship the admin dashboard sooner; manager visibility into adoption was the second-highest request.
+## CRM integration: three tiers in the tenant trust model
+Power Automate flows (primary, tenant-native identity), direct Dataverse REST via MSAL (secondary), browser session fallback (tertiary), landing in D365 behind a multi-CRM shell (Salesforce, HubSpot, Zoho slots architected). Complexity traded for cross-environment portability from day one.

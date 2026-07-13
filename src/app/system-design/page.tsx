@@ -5,18 +5,20 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "System Design",
   description:
-    "Reference architectures: how I would build systems like these. Pattern-level diagrams using industry-standard primitives.",
+    "Architectures I have shipped, with the requirements, capacity math, and tradeoffs behind them. One reference pattern, the rest as deployed.",
 };
 
 export default function SystemDesignPage() {
   return (
-    <PageShell eyebrow="system_design" title="Reference Architectures">
-      <p className="mb-12 max-w-3xl text-text-dim">
-        How I would build systems like these. Pattern-level diagrams using
-        industry-standard primitives (Docker, message queues, vector stores,
-        graph databases, secrets managers). No proprietary names. These are
-        reference patterns reachable from each project, framed as how I would
-        build, not internal disclosures of any deployed system.
+    <PageShell eyebrow="system_design" title="Architectures">
+      <p className="mb-12 max-w-3xl text-[15px] leading-relaxed text-text-dim">
+        The systems I have built, as I would walk them in a design review:
+        interactive architecture diagrams plus the functional requirements,
+        non-functional bars, capacity assumptions, and tradeoffs behind each
+        one. Every diagram expands fullscreen on click. One section, the
+        agentic QE platform, is shown as a genericized reference pattern
+        (how I would build it, no client names); everything else is the
+        architecture as deployed.
       </p>
       <SystemDesignClient />
     </PageShell>

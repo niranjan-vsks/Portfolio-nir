@@ -1,16 +1,21 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "@/lib/hooks/useReducedMotion";
 
 /**
- * Collapsible avatar (landing). Right_Now fixes 2026-07-11: expanding the
- * bubble now pops up the Starman template — the looping video integrated AS
- * IS (no resolution/color changes, only sized to its slot) — with a
- * comic-style dialog box that typewrites the summary. Collapsed state stays
- * the small photo bubble.
+ * Collapsible avatar (landing). NOW_FIXES 2026-07-13: no card frame. Opening
+ * the bubble makes the Starman float in mid-air as an avatar (video blended
+ * over the page, no box), a comic dialog box above his head speaks the
+ * summary, and an ask_niranjan button floats under his legs.
+ *
+ * First visit per session: opens by itself, the dialog disappears after 5s,
+ * the whole avatar collapses after 10s. Clicking anywhere outside dismisses
+ * the dialog.
  */
+const AUTO_KEY = "starman-auto-shown";
+
 function AvatarMedia({ size }: { size: number }) {
   const [ok, setOk] = useState(true);
   return (
@@ -57,12 +62,12 @@ function ComicDialog({ text }: { text: string }) {
 
   return (
     <div className="relative rounded-2xl border-2 border-white/80 bg-white px-4 py-3 text-[13.5px] font-medium leading-relaxed text-neutral-900 shadow-[4px_4px_0_rgba(74,222,128,0.55)]">
-      {/* comic speech-bubble tail pointing at the starman */}
-      <span className="absolute -top-3 left-10 block h-0 w-0 border-x-8 border-b-[14px] border-x-transparent border-b-white" />
       {typed}
       {typed.length < text.length && (
         <span className="ml-0.5 inline-block h-3.5 w-1.5 translate-y-0.5 bg-neutral-900" />
       )}
+      {/* speech-bubble tail pointing down at the starman's head */}
+      <span className="absolute -bottom-3 left-1/2 block h-0 w-0 -translate-x-1/2 border-x-8 border-t-[14px] border-x-transparent border-t-white" />
     </div>
   );
 }
@@ -79,13 +84,62 @@ export function CollapsibleAvatar({
   onAsk: () => void;
 }) {
   const [open, setOpen] = useState(false);
+  const [showDialog, setShowDialog] = useState(true);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  const clearTimers = useCallback(() => {
+    timers.current.forEach(clearTimeout);
+    timers.current = [];
+  }, []);
+
+  // First visit this session: the starman introduces himself unprompted.
+  // Dialog hides after 5s, the avatar collapses back after 10s.
+  useEffect(() => {
+    try {
+      if (sessionStorage.getItem(AUTO_KEY)) return;
+      sessionStorage.setItem(AUTO_KEY, "1");
+    } catch {
+      return;
+    }
+    // deferred so the auto-open never sets state synchronously in the effect
+    timers.current.push(
+      setTimeout(() => {
+        setOpen(true);
+        setShowDialog(true);
+      }, 0),
+    );
+    timers.current.push(setTimeout(() => setShowDialog(false), 5000));
+    timers.current.push(setTimeout(() => setOpen(false), 10000));
+    return clearTimers;
+  }, [clearTimers]);
+
+  // Clicking anywhere outside the dialog dismisses the dialog.
+  useEffect(() => {
+    if (!open || !showDialog) return;
+    const onDoc = (e: MouseEvent) => {
+      const dialog = rootRef.current?.querySelector("[data-dialog]");
+      if (dialog && dialog.contains(e.target as globalThis.Node)) return;
+      setShowDialog(false);
+    };
+    document.addEventListener("click", onDoc);
+    return () => document.removeEventListener("click", onDoc);
+  }, [open, showDialog]);
 
   return (
-    <div className="fixed bottom-6 left-6 z-40">
+    <div ref={rootRef} className="fixed bottom-6 left-6 z-40">
       {open ? (
-        <div className="w-[340px] overflow-hidden rounded-2xl border border-white/10 bg-black/95 shadow-2xl backdrop-blur-xl">
-          {/* Starman, integrated as-is: looping, muted, its own colors */}
-          <div className="relative">
+        <div className="flex w-[300px] flex-col items-center">
+          {showDialog && (
+            <div data-dialog className="mb-4 w-full">
+              <ComicDialog text={summary} />
+            </div>
+          )}
+
+          {/* The starman floats in mid-air: no frame, no card. The video's
+              black background blends into the page (screen blend), so only
+              the glowing figure remains, like an avatar standing there. */}
+          <div className="relative w-[260px]">
             <video
               src="/starman/star-man.mp4"
               poster="/starman/star-man.jpg"
@@ -93,37 +147,38 @@ export function CollapsibleAvatar({
               loop
               muted
               playsInline
-              className="block aspect-square w-full object-cover"
+              aria-label={`${name} avatar`}
+              className="block w-full mix-blend-screen [mask-image:radial-gradient(ellipse_70%_62%_at_50%_45%,black_58%,transparent_100%)]"
             />
             <button
-              onClick={() => setOpen(false)}
-              aria-label="Collapse"
-              className="absolute right-3 top-3 grid h-7 w-7 place-items-center rounded-full bg-black/60 text-white backdrop-blur transition-colors hover:text-green"
+              onClick={() => {
+                clearTimers();
+                setOpen(false);
+              }}
+              aria-label="Collapse avatar"
+              className="absolute -right-1 top-0 grid h-7 w-7 place-items-center rounded-full bg-white/10 text-white backdrop-blur transition-colors hover:text-green"
             >
               ✕
             </button>
           </div>
 
-          <div className="space-y-3 p-4">
-            <div className="flex items-center gap-3">
-              <AvatarMedia size={40} />
-              <div className="min-w-0">
-                <p className="truncate font-semibold text-white">{name}</p>
-                <p className="text-[12px] text-green">{title}</p>
-              </div>
-            </div>
-            <ComicDialog text={summary} />
-            <button
-              onClick={onAsk}
-              className="w-full rounded-lg bg-green py-2 text-[13.5px] font-medium text-bg transition-transform hover:scale-[1.02] active:scale-95"
-            >
-              ask_niranjan
-            </button>
-          </div>
+          {/* floating identity + CTA under his legs */}
+          <p className="font-mono text-[12px] text-green">{title}</p>
+          <button
+            onClick={onAsk}
+            className="mt-2 rounded-full bg-green px-6 py-2 text-[13.5px] font-medium text-bg shadow-[0_0_24px_rgba(74,222,128,0.45)] transition-transform hover:scale-[1.04] active:scale-95"
+          >
+            ask_niranjan
+          </button>
         </div>
       ) : (
         <button
-          onClick={() => setOpen(true)}
+          onClick={(e) => {
+            e.stopPropagation();
+            clearTimers();
+            setOpen(true);
+            setShowDialog(true);
+          }}
           aria-label="Open profile"
           className="group relative grid place-items-center rounded-full ring-2 ring-green/50 transition-transform hover:scale-105"
         >

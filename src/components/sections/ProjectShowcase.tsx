@@ -30,7 +30,7 @@ export function ProjectShowcase({
             <div key={c.title}>
               <h2 className="mb-3 font-mono text-xl text-green">{`> ${title.toLowerCase()}`}</h2>
               <div
-                className="prose-nir text-[16px] leading-relaxed [&_li]:text-[15.5px] [&_p]:text-[16px]"
+                className="prose-nir text-[17px] leading-[1.75] [&_li]:text-[16.5px] [&_li]:text-neutral-300 [&_p]:text-[17px] [&_p]:text-neutral-300"
                 dangerouslySetInnerHTML={{ __html: c.html }}
               />
             </div>

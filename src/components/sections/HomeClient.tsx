@@ -18,7 +18,7 @@ const ITEMS: OrbitItem[] = [
   { label: "Work Experience", caption: "Coforge, HPE, Mphasis", path: "experience.sh", href: "/experience" },
   { label: "Forward Deployed", caption: "how I ship into enterprises", path: "fde.sh", href: "/forward-deployed" },
   { label: "Mind Map", caption: "the whole system, one graph", path: "mindmap.sh", href: "/map" },
-  { label: "System Design", caption: "how I would build it", path: "architecture.sh", href: "/system-design" },
+  { label: "System Design", caption: "architectures, requirements, tradeoffs", path: "architecture.sh", href: "/system-design" },
   { label: "Dashboard", caption: "the signal at a glance", path: "dashboard.sh", href: "/dashboard" },
   { label: "About", caption: "seven years, one arc", path: "about.sh", href: "/about" },
   { label: "Contact", caption: "start a conversation", path: "contact.sh", href: "/contact" },

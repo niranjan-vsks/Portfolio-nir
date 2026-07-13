@@ -36,7 +36,14 @@ export async function generateMetadata({
 // Section titles that are internal authoring notes, never rendered (PRD 1.1).
 const INTERNAL_SECTION = /nda framing|must hold|^framing\b/i;
 
-const SYSTEM_DESIGN_SLUGS = new Set(["loop-copilot", "qe-platform"]);
+const SYSTEM_DESIGN_SLUGS = new Set([
+  "loop-copilot",
+  "qe-platform",
+  "hpe-rag-chatbot",
+  "global-census-chatbot",
+  "saarthi",
+  "wealthos",
+]);
 
 // Confidentiality gate (PRD rule 3): screenshots only render for slugs whose
 // images are confirmed scrubbed of client data. Empty until Niranjan confirms;
@@ -110,29 +117,20 @@ export default async function ProjectPage({
           </div>
         </header>
 
-        {/* View · Slider Spectra coverflow on every project except Saarthi
-            (Saarthi keeps its dedicated mobile/web view, PRD 13.4). Real
-            screenshots only when scrubbed; until then, honest labelled
-            gradient placeholders per section. */}
+        {/* View · Slider Spectra coverflow, real screenshots ONLY. No boxed
+            text placeholders (NOW_FIXES 2026-07-13): when a project has no
+            cleared screenshots the narrative reads directly on the page below,
+            not inside placeholder cards. Saarthi keeps its dedicated
+            mobile/web view (PRD 13.4). */}
         {slug === "saarthi" && <SaarthiView />}
-        {slug !== "saarthi" && (
+        {slug !== "saarthi" && images.length > 0 && (
           <section className="mb-4">
             <h2 className="mb-1 font-mono text-lg text-green">{"> view"}</h2>
-            {images.length === 0 && (
-              <p className="font-mono text-[12px] text-text-dim">
-                placeholder frames · screenshots land here once cleared for
-                publication
-              </p>
-            )}
             <SliderSpectra
-              slides={
-                images.length > 0
-                  ? images.map((img, i) => ({ name: `${name} · screen ${i + 1}`, img }))
-                  : cards.map((c) => ({
-                      name: c.title.split(" · ").slice(-1)[0],
-                      caption: c.title,
-                    }))
-              }
+              slides={images.map((img, i) => ({
+                name: `${name} · screen ${i + 1}`,
+                img,
+              }))}
             />
           </section>
         )}

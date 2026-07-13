@@ -22,6 +22,7 @@ export const ROUTES = [
   "/forward-deployed/token-optimization",
   "/forward-deployed/cost-optimization",
   "/forward-deployed/finetuning-rlhf-lora",
+  "/forward-deployed/guardrails-ai-safety",
   "/forward-deployed/llmops",
   "/skills",
   "/certifications",
