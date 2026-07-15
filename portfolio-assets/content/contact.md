@@ -1,7 +1,7 @@
 ---
 section: contact
 email: niranjan.vsks@gmail.com
-phone: ""
+phone: "+91 78933 12735"
 linkedin: https://www.linkedin.com/in/niranjanvsks
 github: https://github.com/niranjan-vsks
 site: https://niranjanvsks.xyz
