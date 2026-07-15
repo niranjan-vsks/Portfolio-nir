@@ -245,10 +245,10 @@ const saarthiEdges: Edge[] = [
 // ---------------------------------------------------------------------------
 const cisNodes: N[] = [
   { id: "code", position: { x: 0, y: 60 }, data: { label: "cold codebase", plane: "data", rationale: "A codebase never seen before, treated as a cold forward-deployed engagement: no brief, no prior context." } },
-  { id: "ua", position: { x: 210, y: 60 }, data: { label: "Understand Anything (OSS)", plane: "data", primitive: "reused parser", rationale: "Reused open-source plugin for parsing and dependency-graph construction. Rebuilding a solved layer shows no judgment; the reuse is disclosed openly." } },
+  { id: "ua", position: { x: 210, y: 60 }, data: { label: "Graph engine (integrated)", plane: "data", primitive: "parsing + graph", rationale: "Integrated a proven engine for parsing and dependency-graph construction, so the build goes where the value is: the audit, synthesis, and delivery." } },
   { id: "cgraph", position: { x: 210, y: 200 }, data: { label: "dependency graph", plane: "data", primitive: "code graph", rationale: "Files, functions, classes, and imports as a graph, so relationship queries have real structure to traverse." } },
   { id: "retr", position: { x: 440, y: 130 }, data: { label: "adaptive hybrid retrieval", plane: "data", primitive: "dense + BM25 + graph", rationale: "Query classified first, then routed: dense for concepts, BM25 for exact identifiers code is full of, graph for blast radius. Reranked before it reaches an agent." } },
-  { id: "orch", position: { x: 690, y: 130 }, data: { label: "Fable 5 orchestrator", plane: "control", primitive: "planner", rationale: "Plans the audit, spawns the fleet, and reconciles their outputs. The model proposes; deterministic code and a human gate decide." } },
+  { id: "orch", position: { x: 690, y: 130 }, data: { label: "Audit orchestrator", plane: "control", primitive: "planner", rationale: "Plans the audit, spawns the fleet, and reconciles their outputs. Deterministic code and a human approval gate decide what is acted on." } },
   { id: "mapper", position: { x: 690, y: 0 }, data: { label: "dependency mapper", plane: "control", rationale: "Runs first: maps imports, packages, and internal calls so the later agents reason over real structure." } },
   { id: "sec", position: { x: 920, y: 20 }, data: { label: "security scanner", plane: "control", rationale: "Hardcoded secrets, vulnerable dependencies, injection risks, and auth gaps. Runs in parallel with the architecture reviewer." } },
   { id: "arch", position: { x: 920, y: 160 }, data: { label: "architecture reviewer", plane: "control", rationale: "Coupling, missing abstractions, and scaling bottlenecks." } },
@@ -526,7 +526,7 @@ export const SD_SECTIONS: SDSection[] = [
     title: "Autonomous Codebase Intelligence System",
     badge: "interactive · production architecture",
     intro:
-      "A Fable 5 orchestrator runs a fleet of specialist agents over a codebase it has never seen, reconciles their findings, and routes the approved ones into the customer's own Jira. The graph layer is a disclosed open-source reuse; the audit, synthesis, and delivery layer is the built value. The model proposes, deterministic code decides, and a human approves before anything is written.",
+      "An orchestration layer I built runs a fleet of specialist agents across a codebase it has never seen, reconciles their findings into one prioritized picture, and files the approved ones into the customer's own Jira. I integrated a proven graph engine for parsing and built the audit, synthesis, and delivery layer on top, which is where the value sits. Nothing writes to the customer's tracker without a human approval.",
     tags: ["multi-agent", "agentic rag", "hybrid search", "mcp", "system design"],
     kind: "flow",
     nodes: cisNodes,
@@ -555,7 +555,7 @@ export const SD_SECTIONS: SDSection[] = [
         "Audit domains run with a defined order and parallelism: mapping first, security and architecture in parallel, dead-code last, then synthesis",
       ],
       tradeoffs: [
-        "Reuse Understand Anything for the graph rather than rebuilding a solved layer: the value is in the audit and delivery, and the reuse is disclosed",
+        "Integrated a proven graph engine rather than rebuilding a solved layer, so the build goes into the audit and delivery, which is where the value sits",
         "Adaptive hybrid retrieval over a single strategy, because code is full of exact identifiers that dense retrieval alone misses",
         "Jira via MCP for agent-facing tool calls, with the direct REST API only where MCP does not expose a needed field",
         "A human approval gate costs a step, but it is the trust boundary that makes writing to a customer's production tracker acceptable",

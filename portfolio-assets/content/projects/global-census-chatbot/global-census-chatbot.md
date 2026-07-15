@@ -15,7 +15,7 @@ A civic-scale conversational assistant supporting India's census operations, bui
 
 ## My role
 
-Working against a government program's compliance and audit requirements, I designed the conversational architecture and the split that makes it safe: generative answering for open questions, and deterministic transactional flows for anything that writes a civic record. I owned the guardrail and audit posture so the assistant never speculates on policy and every registration step is traceable.
+I worked against a government program's compliance and audit requirements. I designed the conversational architecture around one split that keeps it safe: generative answering handles open questions, and deterministic transactional flows handle anything that writes a civic record. I owned the guardrail and audit posture, so the assistant never speculates on policy and every registration step stays traceable.
 
 ## Key decisions
 
@@ -25,4 +25,4 @@ Working against a government program's compliance and audit requirements, I desi
 
 ## Why it mattered
 
-At civic scale, a single wrong answer about enrolment or a mishandled birth or death record is a real-world failure, not a bad chat turn. The architecture keeps the parts that touch records boring and deterministic, and the parts that talk to citizens helpful but bounded.
+At civic scale, one wrong answer about enrolment or a mishandled birth or death record is a real-world failure. The architecture keeps the parts that touch records boring and deterministic. The parts that talk to citizens stay helpful, inside firm bounds.

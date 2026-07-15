@@ -16,6 +16,53 @@ const MindMap3D = dynamic(() => import("@/components/3d/mindmap/MindMap3D"), {
 });
 const StarfieldBackdrop = dynamic(() => import("@/components/backgrounds/StarfieldBackdrop"), { ssr: false });
 
+const GUIDE_STEPS = [
+  "Every node is a project, employer, skill or capability. Its color marks which of those it is.",
+  "Click a node to open it: projects and capability pages route straight to their page.",
+  "Hover a node to light up its neighbourhood, the parent it belongs to and the children it connects.",
+  "Drag to orbit the graph, scroll to zoom, and use the on-screen controls to recenter.",
+  "Arriving from a project tag or search drops you straight onto that exact node, already in focus.",
+];
+
+/**
+ * Persistent heading + usage guide for the mind map (FINAL: the one section
+ * that had no heading). Same visual language as the node description card,
+ * a touch larger, pinned left, with a collapsible how-to.
+ */
+function MindMapGuide() {
+  const [openHow, setOpenHow] = useState(false);
+  return (
+    <div className="pointer-events-none absolute left-4 top-16 z-20 w-[300px] max-w-[82vw] sm:left-6 sm:top-20">
+      <div className="pointer-events-auto rounded-xl border border-green/30 bg-bg/85 p-4 shadow-[0_20px_50px_-25px_rgba(0,0,0,0.9)] backdrop-blur-md">
+        <h1 className="font-mono text-[16px] font-semibold text-green">Visual Knowledge Mind Map</h1>
+        <p className="mt-1.5 text-[13px] leading-relaxed text-neutral-300">
+          Seven years of work as one connected graph: projects, skills, employers, and the capabilities that link them.
+        </p>
+        <p className="mt-2 font-mono text-[11.5px] text-cyan">zoom in for the best experience</p>
+
+        <button
+          onClick={() => setOpenHow((v) => !v)}
+          aria-expanded={openHow}
+          className="mt-3 flex w-full items-center justify-between rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 font-mono text-[12px] text-text-dim transition-colors hover:border-green/50 hover:text-green"
+        >
+          <span>how to use</span>
+          <span className={`transition-transform ${openHow ? "rotate-90" : ""}`}>›</span>
+        </button>
+        {openHow && (
+          <ol className="mt-2 space-y-2">
+            {GUIDE_STEPS.map((s, i) => (
+              <li key={i} className="flex gap-2 text-[12.5px] leading-relaxed text-neutral-300">
+                <span className="mt-px font-mono text-green">{i + 1}.</span>
+                <span>{s}</span>
+              </li>
+            ))}
+          </ol>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /**
  * Mind Map (PRD 6.2). Brain particle intro hands off to the react-force-graph
  * engine. On desktop the brain scatters/fades into the graph; on mobile and
@@ -94,6 +141,7 @@ export function MindMapClient({ graph }: { graph?: unknown } = {}) {
           <div className="relative z-10 h-full w-full">
             <MindMap3D data={graph as never} />
           </div>
+          <MindMapGuide />
         </div>
       )}
     </main>

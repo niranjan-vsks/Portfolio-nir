@@ -45,7 +45,7 @@ The web version runs on AWS. The React front end is served from S3 behind CloudF
 
 The voice loop is held to explicit latency budgets so the conversation stays natural on the budget Android devices the users carry: speech-to-text under roughly 700 ms, model reasoning under about 1.5 s on the common path, and text-to-speech synthesis under roughly 500 ms, with the three stages pipelined rather than run strictly in sequence. The design target is a spoken turn that comes back inside a few seconds end to end.
 
-Cost is engineered, not hoped for. The dominant drivers are STT and TTS per-minute charges and LLM tokens per turn, so the architecture caps each: hot answers from the curated knowledge base are cached instead of regenerated, low-complexity turns route to a lighter model, prompt payloads are compressed to the context each sub-agent actually needs, and TTS is only invoked on responses the user will actually hear. The result is a per-active-user cost that stays bounded as usage grows rather than scaling linearly with every interaction.
+Cost gets engineered up front. The dominant drivers are STT and TTS per-minute charges and LLM tokens per turn, so the architecture caps each one: hot answers from the curated knowledge base are cached instead of regenerated, low-complexity turns route to a lighter model, prompt payloads are compressed to the context each sub-agent actually needs, and TTS fires only on responses the user will hear. Per-active-user cost stays bounded as usage grows instead of climbing linearly with every interaction.
 
 ## What I would do differently
 Start with a WhatsApp bot rather than a standalone app to cut install friction.

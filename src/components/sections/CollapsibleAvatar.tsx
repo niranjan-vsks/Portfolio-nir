@@ -14,7 +14,6 @@ import { useReducedMotion } from "@/lib/hooks/useReducedMotion";
  * the whole avatar collapses after 10s. Clicking anywhere outside dismisses
  * the dialog.
  */
-const AUTO_KEY = "starman-auto-shown";
 
 function AvatarMedia({ size }: { size: number }) {
   const [ok, setOk] = useState(true);
@@ -93,24 +92,16 @@ export function CollapsibleAvatar({
     timers.current = [];
   }, []);
 
-  // First visit this session: the starman introduces himself unprompted.
-  // Dialog hides after 5s, the avatar collapses back after 10s.
+  // On every landing load the starman expands on his own, then collapses back
+  // after 6s (deferred so the auto-open never sets state synchronously).
   useEffect(() => {
-    try {
-      if (sessionStorage.getItem(AUTO_KEY)) return;
-      sessionStorage.setItem(AUTO_KEY, "1");
-    } catch {
-      return;
-    }
-    // deferred so the auto-open never sets state synchronously in the effect
     timers.current.push(
       setTimeout(() => {
         setOpen(true);
         setShowDialog(true);
       }, 0),
     );
-    timers.current.push(setTimeout(() => setShowDialog(false), 5000));
-    timers.current.push(setTimeout(() => setOpen(false), 10000));
+    timers.current.push(setTimeout(() => setOpen(false), 6000));
     return clearTimers;
   }, [clearTimers]);
 
@@ -129,7 +120,7 @@ export function CollapsibleAvatar({
   return (
     <div ref={rootRef} className="fixed bottom-6 left-6 z-40">
       {open ? (
-        <div className="flex w-[340px] flex-col items-center">
+        <div className="flex w-[380px] flex-col items-center">
           {showDialog && (
             <div data-dialog className="mb-4 w-full">
               <ComicDialog text={summary} />
@@ -139,7 +130,7 @@ export function CollapsibleAvatar({
           {/* The starman floats in mid-air: no frame, no card. The video's
               black background blends into the page (screen blend), so only
               the glowing figure remains, like an avatar standing there. */}
-          <div className="relative w-[300px]">
+          <div className="relative w-[344px]">
             <video
               src="/starman/star-man.mp4"
               poster="/starman/star-man.jpg"

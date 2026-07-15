@@ -5,6 +5,7 @@ import { SiteNav } from "@/components/sections/SiteNav";
 import { Footer } from "@/components/sections/Footer";
 import { ClientErrorLogger } from "@/components/ClientErrorLogger";
 import { SoundProvider } from "@/components/providers/SoundProvider";
+import { PostHogProvider } from "@/components/providers/PostHogProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -58,12 +59,14 @@ export default function RootLayout({
       className={`${geistSans.variable} ${jetbrainsMono.variable} h-full`}
     >
       <body className="min-h-full bg-bg text-text">
-        <SoundProvider>
-          <ClientErrorLogger />
-          <SiteNav />
-          {children}
-          <Footer />
-        </SoundProvider>
+        <PostHogProvider>
+          <SoundProvider>
+            <ClientErrorLogger />
+            <SiteNav />
+            {children}
+            <Footer />
+          </SoundProvider>
+        </PostHogProvider>
       </body>
     </html>
   );

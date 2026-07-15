@@ -1,0 +1,67 @@
+LAST AND FINAL NOW
+Autonomous Codebase intelligence :
+The framing of this is the shittiest, most defensive, very underconfident, and very lazy framing
+ever.
+"A Fable 5 orchestrator runs a fleet of specialist agents over a codebase it has never seen,
+reconciles their findings, and routes the approved ones into the customer's own Jira. The graph
+layer is a disclosed open-source reuse; the audit, synthesis, and delivery layer is the built value.
+The model proposes, deterministic code decides, and a human approves before anything is
+written."
+Did you even look at yourself while writing this? Do you have some fucking shame? Are you
+fucking serious? Do we actually mention stuff like Claude Code, Fable 5, and all that?
+That was something the project document asked me to use because they asked me to use
+Fable 5. . That was in the FDE community so they mentioned asking us to use it. We don't
+mention all that on a fucking portfolio. Saying Fable 5 is orchestrator , Saying Claude Code built
+this is gonna kill our job search right away That is we should make it look like we have built it
+end-to-end. Yes we would Use AI to Build that everyone knows that but it shouldnt be
+addressed .... I would also learn while building it anyway. I would be able to defend that in an
+interview because I have that knowledge and that is what we want to do.
+I told you to adjust the framing as per how a panelist of an FDE recruiter would approve it. What
+the fuck is "disclosed" open source reuse? What the fuck is "disclosed"? The word "disclosed"
+itself seems very defensive and very underconfident. It should look like it was a smart decision
+to reuse that and we don't say "reuse". Make use a good professional word, "integrated" or
+something like that.
+I want you to do an Entire Audit of all the Data , in all the Project pages , Now that you have all
+the Data in Niranjan_Todo.md .
+Audit that as if a Senior Panel of Recruitment for a FDE Engineer role is auditing that and
+parallely Fix the review points of that audit points in the data in that Surgically. , Also invoke the
+/humanizer skill in the skills and use that skill to generate a Humanized version throughout , But
+Without compromising on ATS worthy Keywords , Quality ,and my FDE positioning.
+Another Thing is
+I already asked that this Starman avatar must first automatically expand and then after 6
+seconds collapse back . But it is not opening up by itself on landing page load.
+Also I asked you to increase the size slightly right , Increase it and make sure the Earth and
+Cards exist in the background as they are , like even if a Card Intercepts the place where the
+avatar is standing in the page , it must revolve in the background without disturbing the Avatar .
+But little bit taller is fine dont make it too taller , just slightly bigger than what is there now thats it
+.
+Also in Independent Projects Card in landing page , Add the Agentic Autonomous Codebase
+Intellligence .
+ALSO One thing I Noticed is that Every Section has a Heading about what it is Except the
+mindmap . So when the Mindmap loads there is no heading no guidance to user , while That is
+the most complicated and our best work. So What I want you to do is that Just like the same
+Styling of the Box we see as the Node Dscription , Same Styling , But instead Increase size a
+little and keep it persistent and at the left .
+Title - "Portfolio Mind Map " or "Visual Knowledge Mind Map" (Add any better Title that hits if
+you can but Mind Map word needs to be there in the Title.)
+Add that , and add a One liner Caption about it , Also Add a line , Zoom In for Best Experience
+and we have a How to use collapsible Icon If user wants to use .
+We mention Some User Manual (of MindMap) type stuff . Its just 5 Consolidated bullets. on
+How to use the Mindmap , We mention about how You can Click on the nodes and Redirect and
+also Check the parent and child nodes . and stuff , The writing should be very professional.
+Usage guide for other sections is not necessary as of now.
+And Coming to the Deployment :
+This is what I am getting when I hit niranjanvsks.xyz
+:
+I click on Deploy now i am getting this :
+These are the 4 keys I have in My .env.local should I add all 4 ? as Vercel env variables by
+clicking on Add more ?
+GROQ_API_KEY=
+NEXT_PUBLIC_SUPABASE_URL=https://dodfhncrzdisqhjgaxil.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
+SUPABASE_SERVICE_ROLE_KEY
+Any More Configurations I should do ? Also I want to be integrating Posthog or something
+where I want analytics on how many people actually visited , what they clicked on . Surgically
+integrate that end to end .
+I did add it and Didnt click Deploy Yet , But have it on the button so tell me can I go ahead.
+And After this we can be Ready to Deploy Live , If you dont disappoint me.

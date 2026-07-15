@@ -11,13 +11,13 @@ order: 5
 ---
 
 ## Overview
-Led development of an enterprise conversational AI assistant serving support engineers across HPE. The system retrieves grounded answers from roughly 1,700 internal process documents sourced from a Squidex content management system and Confluence, cutting repeat escalations by ~40%. It evolved from rule-based FAQ retrieval to an LLM-assisted, retrieval-augmented architecture during the project lifecycle, and shipped as a dockerized deployment behind a load balancer, designed for a 20,000-concurrent-user target.
+I led an enterprise conversational AI assistant for support engineers across HPE. It retrieves grounded answers from roughly 1,700 internal process documents sourced from a Squidex content management system and Confluence, and cut repeat escalations by ~40%. Over the project it moved from rule-based FAQ retrieval to an LLM-assisted, retrieval-augmented architecture, and shipped as a dockerized deployment behind a load balancer, sized for a 20,000-concurrent-user target.
 
 ## The problem
-Support engineers were losing time hunting process documentation, and the rule-based FAQ system failed on anything outside its predefined set. Escalations repeated because answers were hard to find, not because they did not exist.
+Support engineers burned time hunting for process documentation, and the rule-based FAQ system fell over on anything outside its predefined set. Escalations repeated because the answers were hard to find, not because they were missing.
 
 ## My role
-Built the case for the redesign from customer usage analysis, architected the migration from rule-based FAQ to LLM-assisted RAG, designed the retrieval pipeline end to end, and owned the rollout.
+I built the case for the redesign off customer usage analysis, architected the migration from rule-based FAQ to LLM-assisted RAG, designed the retrieval pipeline end to end, and owned the rollout.
 
 ## Key decisions
 1. **Hybrid search over pure vector retrieval.** Enterprise-jargon queries break cosine similarity; combining semantic and keyword signals with metadata filtering rescued them.

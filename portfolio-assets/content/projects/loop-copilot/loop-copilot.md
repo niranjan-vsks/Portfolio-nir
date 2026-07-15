@@ -22,7 +22,7 @@ CRM activity logging dropped from 4 to 6 minutes to about 45 seconds, an ~85% re
 
 ## Key decisions
 1. **Three-tier integration within the customer's tenant trust model.** Power Automate flows authenticated by internal tenant identity (primary), direct Dataverse REST via MSAL (secondary, broader-permission environments), Playwright session paths (fallback). The customer's IT policy blocked standard external OAuth grants, so I designed within their tenant trust boundary, not against it. Tradeoff: a more complex three-path strategy, but cross-environment portable from day one.
-2. **Event sourcing over vector RAG for chat context.** Live workflow events, account portfolio, and recent chat history are injected per request as structured JSON. Chat needs to know what just happened in the workflow, not what the history embeds to. Tradeoff: more tokens per request, but hallucinated memory eliminated entirely. Choosing not to use RAG when it is the wrong tool is itself the point.
+2. **Event sourcing over vector RAG for chat context.** Live workflow events, account portfolio, and recent chat history get injected per request as structured JSON. Chat has to know what just happened in the workflow, which is a different question from what the history embeds to. Tradeoff: more tokens per request, but hallucinated memory drops to zero. Passing on RAG when it was the wrong tool was the whole point.
 3. **MVP scope: appointment-logging only in V1, over six planned workflow types.** Validate the end-to-end production flow in weeks, not months. The pilot drove an expansion request within two weeks of V1.
 4. **Async throughout (FastAPI + Motor).** Sub-second response was non-negotiable for rep adoption. Tradeoff: harder to debug than synchronous patterns.
 
