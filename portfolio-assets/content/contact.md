@@ -1,6 +1,7 @@
 ---
 section: contact
 email: niranjan.vsks@gmail.com
+phone: ""
 linkedin: https://www.linkedin.com/in/niranjanvsks
 github: https://github.com/niranjan-vsks
 site: https://niranjanvsks.xyz

@@ -45,7 +45,11 @@ function ChannelCard({
         <div className="mt-2.5 break-all text-[17.5px] font-semibold text-white">{value}</div>
         <div className="mt-1.5 text-[14.5px] text-[#4aa8ff]">{sub}</div>
         <div className="mt-5 font-mono text-[13px] text-text-dim transition-colors group-hover:text-green">
-          {external ? "opens in a new tab ↗" : "opens your mail client →"}
+          {href.startsWith("tel:")
+            ? "taps to call →"
+            : href.startsWith("mailto:")
+              ? "opens your mail client →"
+              : "opens in a new tab ↗"}
         </div>
       </div>
     </a>
@@ -75,13 +79,19 @@ export default function ContactPage() {
       sub: "the code behind the claims",
       href: fm.github,
     },
+    fm.phone && {
+      label: "phone",
+      value: fm.phone,
+      sub: "call or text, fastest for something urgent",
+      href: `tel:${fm.phone.replace(/[^\d+]/g, "")}`,
+    },
   ].filter(Boolean) as { label: string; value: string; sub: string; href: string }[];
 
   return (
     <>
       <StarfieldBackdrop fixed />
       <PageShell eyebrow="contact" title="Get in touch">
-        <div className="grid gap-10 lg:grid-cols-[1fr_360px]">
+        <div className="grid gap-10 lg:grid-cols-[1fr_460px]">
           <div>
             <div className="text-[16.5px] leading-relaxed text-neutral-200">
               {contact && (

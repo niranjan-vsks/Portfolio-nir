@@ -1,6 +1,6 @@
 ---
-title: Autonomous Codebase Intelligence System
-public_name: Autonomous Codebase Intelligence System
+title: Agentic Codebase Intelligence System
+public_name: Agentic Codebase Intelligence System
 slug: codebase-intelligence-system
 status: live
 group: independent

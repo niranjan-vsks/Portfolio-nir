@@ -239,7 +239,7 @@ const saarthiEdges: Edge[] = [
 ];
 
 // ---------------------------------------------------------------------------
-// 07 · Autonomous Codebase Intelligence System — ACTUAL.
+// 07 · Agentic Codebase Intelligence System — ACTUAL.
 // Fable 5 orchestrator over an audit fleet; OSS reuse for the graph; adaptive
 // hybrid retrieval; OKF persistence; Jira delivery behind a human approval gate.
 // ---------------------------------------------------------------------------
@@ -523,7 +523,7 @@ export const SD_SECTIONS: SDSection[] = [
   {
     id: "codebase-intelligence-system",
     image: "/architecture/codebase-intelligence-system.png",
-    title: "Autonomous Codebase Intelligence System",
+    title: "Agentic Codebase Intelligence System",
     badge: "interactive · production architecture",
     intro:
       "An orchestration layer I built runs a fleet of specialist agents across a codebase it has never seen, reconciles their findings into one prioritized picture, and files the approved ones into the customer's own Jira. I integrated a proven graph engine for parsing and built the audit, synthesis, and delivery layer on top, which is where the value sits. Nothing writes to the customer's tracker without a human approval.",

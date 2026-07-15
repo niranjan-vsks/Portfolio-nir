@@ -14,7 +14,7 @@ import { useIsMobile } from "@/lib/hooks/useIsMobile";
 const GlobeStage = dynamic(() => import("@/components/3d/globe/GlobeStage"), { ssr: false });
 
 const ITEMS: OrbitItem[] = [
-  { label: "Independent Projects", caption: "Loop Copilot, Saarthi, WealthOS, Codebase Intelligence", path: "projects.sh", href: "/projects" },
+  { label: "Independent Projects", caption: "Loop Copilot, Saarthi, WealthOS, Agentic Codebase Intelligence", path: "projects.sh", href: "/projects" },
   { label: "Work Experience", caption: "Coforge, HPE, Mphasis", path: "experience.sh", href: "/experience" },
   { label: "Forward Deployed", caption: "how I ship into enterprises", path: "fde.sh", href: "/forward-deployed" },
   { label: "Mind Map", caption: "the whole system, one graph", path: "mindmap.sh", href: "/map?intro=landing" },
