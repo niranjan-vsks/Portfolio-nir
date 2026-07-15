@@ -58,7 +58,7 @@ export function HomeClient({
       <div className="pointer-events-none relative z-20 mx-auto max-w-[1200px] px-6 pt-28 sm:pt-32">
         <LayoutTextFlip
           prefix="I ship"
-          words={["production RAG pipelines", "into real customer environments"]}
+          words={["agentic systems","production RAG pipelines", "into real customer environments"]}
           className="text-4xl font-semibold leading-tight text-white sm:text-5xl [text-shadow:0_2px_30px_rgba(0,0,0,0.85)]"
           wordClassName="text-green"
         />

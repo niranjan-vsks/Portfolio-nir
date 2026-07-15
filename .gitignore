@@ -54,3 +54,6 @@ next-env.d.ts
 /r2*.jpeg
 
 .vercel
+
+# private, never commit
+NIRANJAN_PRIVATE_NOTES.md

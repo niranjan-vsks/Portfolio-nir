@@ -55,6 +55,7 @@ const SYSTEM_DESIGN_SLUGS = new Set([
   "global-census-chatbot",
   "saarthi",
   "wealthos",
+  "codebase-intelligence-system",
 ]);
 
 // Confidentiality gate (PRD rule 3): screenshots only render for slugs whose
@@ -154,6 +155,52 @@ export default async function ProjectPage({
           demo={fm.demo}
           cards={cards}
         />
+
+        {/* Designed results-pending block: an intentional slot, not an empty
+            hole. Upgrades to real numbers with zero rework once they land. */}
+        {fm.results_pending && (
+          <section className="mt-16 max-w-3xl">
+            <h2 className="mb-4 font-mono text-xl text-green">{"> audit results"}</h2>
+            <div className="relative overflow-hidden rounded-xl border border-green/25 bg-surface/60 p-8 backdrop-blur-sm">
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-green/10 blur-3xl"
+              />
+              <div className="flex items-center gap-2.5">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green/70" />
+                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green" />
+                </span>
+                <span className="font-mono text-[13px] uppercase tracking-wider text-green">
+                  audit results publishing shortly
+                </span>
+              </div>
+              <p className="mt-4 max-w-xl text-[16px] leading-relaxed text-neutral-300">
+                The system is live. A full audit run against a real open-source
+                codebase is being finalized: the security, architecture, and
+                dead-code findings, the reconciled priority list, the one
+                non-obvious inference the team cannot see from inside, and the
+                tickets filed into Jira behind the approval gate. Every number
+                here will be a measured result from that run, not an estimate.
+              </p>
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                {[
+                  "Findings by severity: critical / high / medium / low",
+                  "The unasked question: the highest-leverage non-obvious risk",
+                  "Tickets proposed, approved at the gate, and filed",
+                  "Re-run reconciliation: updated, closed, zero duplicates",
+                ].map((label) => (
+                  <div
+                    key={label}
+                    className="rounded-lg border border-border/70 bg-bg/40 px-4 py-3 font-mono text-[12.5px] text-text-dim"
+                  >
+                    {label}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Product-thinking cards: Saarthi, Loop Copilot, QE platform only */}
         <ProductSection slug={slug} />

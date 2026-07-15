@@ -33,6 +33,7 @@ export interface ProjectFrontmatter {
   signature_visual?: string;
   group?: string;
   order?: number;
+  results_pending?: boolean; // renders the designed "results publishing shortly" block
 }
 
 export interface ExperienceFrontmatter {

@@ -163,19 +163,19 @@ const censusEdges: Edge[] = [
 
 // ---------------------------------------------------------------------------
 // 04 · Loop Copilot — ACTUAL production-scale architecture (Azure ecosystem,
-// ~1,000 concurrent users to start). Microsoft-native because the product
+// 150 concurrent users today, horizontal scale planned). Microsoft-native because the product
 // lives inside D365 tenants.
 // ---------------------------------------------------------------------------
 const loopNodes: N[] = [
   { id: "web", position: { x: 0, y: 90 }, data: { label: "web client (React 19)", plane: "control", rationale: "Rep-facing SPA; sub-second interactive paths were non-negotiable for adoption." } },
   { id: "tg", position: { x: 0, y: 210 }, data: { label: "Telegram bot", plane: "control", primitive: "Telegram Bot API", rationale: "Alerts and conversational logging where reps already live; same API surface as web." } },
   { id: "fd", position: { x: 230, y: 150 }, data: { label: "Azure Front Door + WAF", plane: "control", primitive: "edge + WAF", rationale: "TLS, WAF, and global entry for the scaled deployment; static assets cached at the edge." } },
-  { id: "api2", position: { x: 460, y: 150 }, data: { label: "async FastAPI (container apps)", plane: "control", primitive: "autoscaled containers", rationale: "Async FastAPI + Motor, packaged as containers with autoscale rules load-modeled for ~1,000 concurrent users." } },
+  { id: "api2", position: { x: 460, y: 150 }, data: { label: "async FastAPI (container apps)", plane: "control", primitive: "autoscaled containers", rationale: "Async FastAPI + Motor, packaged as containers with autoscale rules sized for 150 concurrent users today, horizontal scale planned." } },
   { id: "entra", position: { x: 460, y: 20 }, data: { label: "Entra ID (MSAL)", plane: "control", primitive: "identity", rationale: "Auth stays inside the customer's tenant trust model; tokens scoped per user, no external OAuth grants." } },
   { id: "kv2", position: { x: 230, y: 20 }, data: { label: "Azure Key Vault", plane: "observability", primitive: "secrets manager", rationale: "CRM credentials, bot tokens, and LLM keys resolved at runtime via managed identity; nothing in env files." } },
   { id: "events2", position: { x: 690, y: 40 }, data: { label: "event store (Cosmos DB for Mongo)", plane: "data", primitive: "append-only event log", rationale: "Event sourcing over vector RAG: live workflow events, portfolio, and recent history injected per request as structured JSON. Hallucinated memory eliminated." } },
   { id: "queue", position: { x: 690, y: 170 }, data: { label: "Service Bus queue", plane: "data", primitive: "message queue", rationale: "Bulk activity uploads and voice-call document processing run async; the interactive path never blocks on batch work." } },
-  { id: "redis", position: { x: 690, y: 300 }, data: { label: "Redis cache", plane: "data", primitive: "session + rate cache", rationale: "Session context and per-user rate limits at 1k concurrent; keeps p95 sub-second under load." } },
+  { id: "redis", position: { x: 690, y: 300 }, data: { label: "Redis cache", plane: "data", primitive: "session + rate cache", rationale: "Session context and per-user rate limits; keeps p95 sub-second under load." } },
   { id: "ctx2", position: { x: 920, y: 40 }, data: { label: "context assembler", plane: "control", rationale: "Builds the per-request structured JSON context from events; chat needs what just happened, not what history embeds to." } },
   { id: "llm3", position: { x: 920, y: 170 }, data: { label: "LLM (Groq / Azure OpenAI)", plane: "control", primitive: "model behind an abstraction", rationale: "Groq/Llama for speed today; the model sits behind an abstraction so tenant-compliant Azure OpenAI can swap in per customer." } },
   { id: "t1", position: { x: 230, y: 430 }, data: { label: "tier 1: Power Automate flows", plane: "data", primitive: "tenant-native automation", rationale: "Primary path, authenticated by internal tenant identity. Designed within the customer's IT policy, not against it." } },
@@ -236,6 +236,46 @@ const saarthiEdges: Edge[] = [
   { id: "s11", source: "offer", target: "guard3" },
   { id: "s12", source: "guard3", target: "tts" },
   { id: "s13", source: "tts", target: "mob" },
+];
+
+// ---------------------------------------------------------------------------
+// 07 · Autonomous Codebase Intelligence System — ACTUAL.
+// Fable 5 orchestrator over an audit fleet; OSS reuse for the graph; adaptive
+// hybrid retrieval; OKF persistence; Jira delivery behind a human approval gate.
+// ---------------------------------------------------------------------------
+const cisNodes: N[] = [
+  { id: "code", position: { x: 0, y: 60 }, data: { label: "cold codebase", plane: "data", rationale: "A codebase never seen before, treated as a cold forward-deployed engagement: no brief, no prior context." } },
+  { id: "ua", position: { x: 210, y: 60 }, data: { label: "Understand Anything (OSS)", plane: "data", primitive: "reused parser", rationale: "Reused open-source plugin for parsing and dependency-graph construction. Rebuilding a solved layer shows no judgment; the reuse is disclosed openly." } },
+  { id: "cgraph", position: { x: 210, y: 200 }, data: { label: "dependency graph", plane: "data", primitive: "code graph", rationale: "Files, functions, classes, and imports as a graph, so relationship queries have real structure to traverse." } },
+  { id: "retr", position: { x: 440, y: 130 }, data: { label: "adaptive hybrid retrieval", plane: "data", primitive: "dense + BM25 + graph", rationale: "Query classified first, then routed: dense for concepts, BM25 for exact identifiers code is full of, graph for blast radius. Reranked before it reaches an agent." } },
+  { id: "orch", position: { x: 690, y: 130 }, data: { label: "Fable 5 orchestrator", plane: "control", primitive: "planner", rationale: "Plans the audit, spawns the fleet, and reconciles their outputs. The model proposes; deterministic code and a human gate decide." } },
+  { id: "mapper", position: { x: 690, y: 0 }, data: { label: "dependency mapper", plane: "control", rationale: "Runs first: maps imports, packages, and internal calls so the later agents reason over real structure." } },
+  { id: "sec", position: { x: 920, y: 20 }, data: { label: "security scanner", plane: "control", rationale: "Hardcoded secrets, vulnerable dependencies, injection risks, and auth gaps. Runs in parallel with the architecture reviewer." } },
+  { id: "arch", position: { x: 920, y: 160 }, data: { label: "architecture reviewer", plane: "control", rationale: "Coupling, missing abstractions, and scaling bottlenecks." } },
+  { id: "dead", position: { x: 920, y: 300 }, data: { label: "dead-code detector", plane: "control", rationale: "Runs last: unused functions, deprecated routes, orphaned files." } },
+  { id: "synth", position: { x: 1160, y: 130 }, data: { label: "synthesis agent", plane: "control", primitive: "reconciler", rationale: "Reconciles conflicting findings with a stated judgment, prioritizes into critical/high/medium/low, and answers the unasked question: the most non-obvious risk." } },
+  { id: "okf", position: { x: 1160, y: 300 }, data: { label: "OKF bundle", plane: "data", primitive: "persistence", rationale: "Findings and decisions persist as an Open Knowledge Format bundle so a re-run updates a living picture instead of starting cold. Kept swappable behind an interface." } },
+  { id: "deliver", position: { x: 1400, y: 60 }, data: { label: "delivery agent", plane: "control", rationale: "Maps findings to tickets with severity-to-priority mapping and stable fingerprints, so a re-run updates or closes instead of duplicating." } },
+  { id: "gate", position: { x: 1400, y: 200 }, data: { label: "human approval gate", plane: "observability", primitive: "trust boundary", rationale: "No agent writes to a production tracker unreviewed. It proposes a ticket set; a human approves, edits, or rejects; only approved items are created." } },
+  { id: "cjira", position: { x: 1620, y: 130 }, data: { label: "customer Jira", plane: "data", primitive: "Jira via MCP", rationale: "Agent-facing calls go through the Jira MCP, direct REST only where MCP lacks a field. Least-privilege auth scoped to the needed projects." } },
+];
+const cisEdges: Edge[] = [
+  { id: "c1", source: "code", target: "ua" },
+  { id: "c2", source: "ua", target: "cgraph" },
+  { id: "c3", source: "cgraph", target: "retr", animated: true },
+  { id: "c4", source: "retr", target: "orch", animated: true, label: "context" },
+  { id: "c5", source: "orch", target: "mapper" },
+  { id: "c6", source: "orch", target: "sec" },
+  { id: "c7", source: "orch", target: "arch" },
+  { id: "c8", source: "orch", target: "dead" },
+  { id: "c9", source: "sec", target: "synth" },
+  { id: "c10", source: "arch", target: "synth" },
+  { id: "c11", source: "mapper", target: "synth" },
+  { id: "c12", source: "dead", target: "synth" },
+  { id: "c13", source: "synth", target: "okf", label: "persist" },
+  { id: "c14", source: "synth", target: "deliver", label: "findings" },
+  { id: "c15", source: "deliver", target: "gate", label: "propose" },
+  { id: "c16", source: "gate", target: "cjira", label: "approved" },
 ];
 
 // ---------------------------------------------------------------------------
@@ -371,7 +411,7 @@ export const SD_SECTIONS: SDSection[] = [
     title: "Loop Copilot",
     badge: "interactive · production architecture",
     intro:
-      "The production-scale architecture Loop Copilot grows into as it scales past its Fortune 500 pilot: Azure-native because the product lives inside Microsoft tenants, load-modeled for ~1,000 concurrent users. Event sourcing over vector RAG for chat context, and the three-tier D365 integration shell that lives within the customer's tenant trust model.",
+      "The production-scale architecture Loop Copilot grows into as it scales past its Fortune 500 pilot: Azure-native because the product lives inside Microsoft tenants, sized for 150 concurrent users today with horizontal scale designed in for later releases. Event sourcing over vector RAG for chat context, and the three-tier D365 integration shell that lives within the customer's tenant trust model.",
     tags: ["event sourcing", "tenant trust model", "async API", "multi-CRM shell", "Azure"],
     kind: "flow",
     nodes: loopNodes,
@@ -388,7 +428,7 @@ export const SD_SECTIONS: SDSection[] = [
         "Multi-CRM expansion shell: D365 today, Salesforce/HubSpot/Zoho slots architected",
       ],
       nonFunctional: [
-        "load-modeled for ~1,000 concurrent users with sub-second p95 on interactive paths",
+        "150 concurrent users today with sub-second p95 on interactive paths; designed to scale horizontally",
         "All auth inside the customer's tenant trust model (Entra ID / MSAL); no external OAuth grants",
         "Secrets resolved at runtime from Key Vault via managed identity; zero credentials at rest in config",
         "Batch work (bulk uploads, transcription) isolated on queues so it never blocks interactive latency",
@@ -477,6 +517,48 @@ export const SD_SECTIONS: SDSection[] = [
       tradeoffs: [
         "Agent council costs tokens and latency versus a single model call, traded for calibrated, auditable proposals",
         "Frozen statistical gates slow strategy iteration, but rule out silent strategy drift",
+      ],
+    },
+  },
+  {
+    id: "codebase-intelligence-system",
+    image: "/architecture/codebase-intelligence-system.png",
+    title: "Autonomous Codebase Intelligence System",
+    badge: "interactive · production architecture",
+    intro:
+      "A Fable 5 orchestrator runs a fleet of specialist agents over a codebase it has never seen, reconciles their findings, and routes the approved ones into the customer's own Jira. The graph layer is a disclosed open-source reuse; the audit, synthesis, and delivery layer is the built value. The model proposes, deterministic code decides, and a human approves before anything is written.",
+    tags: ["multi-agent", "agentic rag", "hybrid search", "mcp", "system design"],
+    kind: "flow",
+    nodes: cisNodes,
+    edges: cisEdges,
+    height: 560,
+    caption:
+      "Toggle between the presentation architecture render and an interactive explorer where you can hover any node for the design rationale. Click either to maximize.",
+    projectHref: "/projects/codebase-intelligence-system",
+    interview: {
+      functional: [
+        "Plan a full technical audit of an unseen codebase and spawn specialist agents per domain",
+        "Four audit agents: dependency mapping, security, architecture review, and dead-code detection",
+        "Synthesis reconciles conflicting findings, prioritizes them, and surfaces the highest-leverage non-obvious risk",
+        "Route approved findings into the customer's Jira as prioritized tickets with evidence and a recommended fix",
+        "Re-run reconciliation against a persistent knowledge bundle: update, close, or create only new tickets",
+      ],
+      nonFunctional: [
+        "A human approval gate before any write to the customer's tracker: nothing lands unreviewed",
+        "Idempotency through stable finding fingerprints, so a re-run never duplicates tickets",
+        "Least-privilege auth scoped only to the projects the delivery agent needs, no admin",
+        "Open-source reuse disclosed openly; the persistence format kept swappable behind an interface",
+      ],
+      capacity: [
+        "The codebase does not fit in context, so adaptive hybrid retrieval feeds the agents rather than a single prompt",
+        "Incremental dependency graph and an OKF bundle read first on re-run, so repeated audits update a living picture instead of starting cold",
+        "Audit domains run with a defined order and parallelism: mapping first, security and architecture in parallel, dead-code last, then synthesis",
+      ],
+      tradeoffs: [
+        "Reuse Understand Anything for the graph rather than rebuilding a solved layer: the value is in the audit and delivery, and the reuse is disclosed",
+        "Adaptive hybrid retrieval over a single strategy, because code is full of exact identifiers that dense retrieval alone misses",
+        "Jira via MCP for agent-facing tool calls, with the direct REST API only where MCP does not expose a needed field",
+        "A human approval gate costs a step, but it is the trust boundary that makes writing to a customer's production tracker acceptable",
       ],
     },
   },

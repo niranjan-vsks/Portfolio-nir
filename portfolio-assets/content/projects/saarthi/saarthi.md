@@ -5,7 +5,7 @@ slug: saarthi
 status: piloting
 demo: "pilot"
 tagline: Voice intelligence for India's gig workforce
-stack: [Voice STT, Master AI Orchestrator, Gemini, Supabase + pgvector, Google Cloud TTS, Multi-language, Mobile + Web]
+stack: [Voice STT, Master AI Orchestrator, Gemini, Supabase + pgvector, Google Cloud TTS, Custom Voice Agents, Multi-language, Mobile + Web, AWS]
 metric: "~55% first-week repeat usage against a >40% target (V1 pilot, ~15 users over 2 weeks)"
 signature_visual: phone-mockup
 order: 2
@@ -21,7 +21,7 @@ India's gig workers face structural financial precarity: irregular daily income,
 
 ## My role
 
-I led the build end to end within my BITSoM program team: customer discovery, product strategy, the agentic architecture, AI orchestration, and full-stack delivery across mobile and web. I owned the technical calls, including the trust-first reframe below, and shipped the platform from spec to pilot.
+I own this product end to end, solo: solutions architect, AI engineer, and product manager in one. Customer discovery, product strategy, the agentic architecture, AI orchestration, and full-stack delivery across mobile and web are all mine. I made every technical call, including the trust-first reframe below, and shipped the platform from a blank page to a working pilot.
 
 ## Why it mattered
 
@@ -32,12 +32,20 @@ Voice-first agentic system: voice is the interaction layer atop a modular AI orc
 
 ## Key decisions (V1, verified in pilot)
 1. **Vernacular voice over chat.** Low literacy means voice wins. Tradeoff: STT/TTS infra cost and dialect accuracy.
-2. **Google Cloud TTS for production voice,** selected for reliability and cost efficiency on the budget Android devices the target users carry.
+2. **Google Cloud TTS plus custom voice agents for production voice,** selected for reliability and cost efficiency on the budget Android devices the target users carry. The voice layer is built so it can grow into fully custom voice agents and, later, an AI avatar without reworking the orchestration underneath.
 3. **Supabase with pgvector over a standalone vector DB,** to keep RAG infrastructure simple at MVP scale and reduce operational surface.
 4. **Gemini for conversational intelligence,** for cost-efficient depth in vernacular languages.
 
 ## The outcome (V1 pilot, real numbers)
 Pilot of about 15 users over two weeks: ~55% repeat usage within the first week against a >40% target; most users engaged with vernacular voice; half acted on at least one AI suggestion. It validated that voice-first works for low-literacy users and that non-prescriptive guidance is trusted more than directive advice.
+
+## Web deployment (AWS)
+
+The web version runs on AWS. The React front end is served from S3 behind CloudFront; API Gateway fronts the application tier; the master orchestrator and its sub-agents run as containers on ECS Fargate that scale on request volume, with the heavier voice work isolated so a slow synthesis call never blocks the chat path. Session context and per-user rate limits sit in ElastiCache, structured state in a managed Postgres with pgvector for retrieval, and audio blobs in S3. Secrets live in AWS Secrets Manager, never in images or environment files.
+
+The voice loop is held to explicit latency budgets so the conversation stays natural on the budget Android devices the users carry: speech-to-text under roughly 700 ms, model reasoning under about 1.5 s on the common path, and text-to-speech synthesis under roughly 500 ms, with the three stages pipelined rather than run strictly in sequence. The design target is a spoken turn that comes back inside a few seconds end to end.
+
+Cost is engineered, not hoped for. The dominant drivers are STT and TTS per-minute charges and LLM tokens per turn, so the architecture caps each: hot answers from the curated knowledge base are cached instead of regenerated, low-complexity turns route to a lighter model, prompt payloads are compressed to the context each sub-agent actually needs, and TTS is only invoked on responses the user will actually hear. The result is a per-active-user cost that stays bounded as usage grows rather than scaling linearly with every interaction.
 
 ## What I would do differently
 Start with a WhatsApp bot rather than a standalone app to cut install friction.

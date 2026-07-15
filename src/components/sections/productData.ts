@@ -169,7 +169,7 @@ export const PRODUCT_SECTIONS: Record<string, ProductSpec> = {
           },
           {
             label: "Scale target",
-            body: "Designed and load-modeled for 1,000 concurrent users on Azure with Key Vault, Entra ID, Service Bus, and Redis in the serving path.",
+            body: "Live in production for 20+ users, built to handle 150 concurrent today on Azure with Key Vault, Entra ID, Service Bus, and Redis in the serving path, and designed to scale horizontally.",
           },
         ],
       },

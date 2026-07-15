@@ -24,4 +24,4 @@ Demo RAG is a weekend; production RAG is a discipline. I have built the full ret
 
 ## Where it shows up
 
-The AI-Infused QE Platform (hallucination from ~15% to under 5%) and the enterprise conversational RAG migration. WealthOS deliberately inverts the pattern: event-sourced memory where retrieval would hallucinate.
+The AI-Infused QE Platform (GraphRAG on Neo4j for relationship-heavy QA docs) and the enterprise conversational RAG migration (hybrid search over ~1,700 documents behind a load balancer). WealthOS deliberately inverts the pattern: event-sourced memory where retrieval would hallucinate.

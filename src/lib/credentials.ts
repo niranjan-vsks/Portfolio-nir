@@ -25,7 +25,7 @@ export const CERTIFICATIONS: Credential[] = [
       "Six-month executive program on taking GenAI and agentic AI products from opportunity framing to shipped, measurable applications.",
     paragraphs: [
       "A six-month executive program at BITS School of Management focused on the full product lifecycle for GenAI and agentic AI: market and user discovery, problem framing, PRDs and road-mapping, prioritization, pricing and go-to-market, and post-launch measurement. The coursework treats AI products as systems, covering model selection tradeoffs, evaluation, safety and guardrails, and the economics of inference alongside classical product craft.",
-      "The program is build-heavy. Every framework was applied to a real product that had to ship: my team designed, validated, and delivered a voice-first financial copilot (Saarthi) end to end, taking it well past prototype into a pilot-ready production application. That build discipline is what I carry into forward deployed work: sitting between the customer's business problem and the engineering, writing the spec, defending the tradeoffs, and shipping the thing.",
+      "The program is build-heavy. Every framework was applied to a real product that had to ship: I designed, built, and delivered a voice-first financial copilot (Saarthi) end to end, as its solutions architect, AI engineer, and product manager, taking it well past prototype into a pilot-ready production application. That end-to-end ownership is what I carry into forward deployed work: sitting between the customer's business problem and the engineering, writing the spec, defending the tradeoffs, and shipping the thing.",
       "What it adds on top of my engineering track record is structured product judgment: JTBD-driven discovery, MoSCoW and RICE prioritization, success-metric trees tied to activation and retention rather than vanity counts, and SWOT-grounded positioning. It is the difference between building what was asked and building what moves the customer's metric.",
     ],
     highlights: [
@@ -52,28 +52,34 @@ export const CERTIFICATIONS: Credential[] = [
       { label: "System Design", href: "/system-design" },
     ],
   },
-  {
-    slug: "claude-architect",
-    title: "Claude Certified Architect",
-    org: "Anthropic",
-    status: "registered · exam scheduled",
-    description:
-      "Registered for Anthropic's Claude Certified Architect examination; the credential will be published here on completion.",
-    paragraphs: [
-      "I am registered for the Anthropic Claude Certified Architect examination, which assesses the design of production Claude systems: agentic workflows, tool use, context and memory management, evaluation, and deployment architecture. Once the certification is complete, the credential will be uploaded here.",
-    ],
-    related: [
-      { label: "Independent Projects", href: "/projects" },
-      { label: "Mind Map", href: "/map" },
-    ],
-  },
 ];
 
 export const EDUCATION: Credential[] = [
   {
     slug: "iiitb-ml-ai",
-    title: "PG Diploma in Machine Learning and AI",
-    org: "IIIT Bangalore",
+    title: "Post Graduate Diploma in Machine Learning and Artificial Intelligence",
+    org: "International Institute of Information Technology, Bangalore (IIIT-B)",
+    status: "completed · 30 Nov 2020 to 13 Dec 2021",
+    description:
+      "A rigorous applied ML and AI diploma from IIIT Bangalore: the mathematical and engineering foundation under the agentic and RAG systems I ship today.",
+    paragraphs: [
+      "A post graduate diploma from IIIT Bangalore covering the applied machine learning and AI stack end to end: statistics and inference, supervised and unsupervised learning, tree-based ensembles, feature engineering, deep learning, and natural language processing, each taught through hands-on projects rather than theory alone.",
+      "This is the foundation under everything else in the portfolio. The retrieval, evaluation, and calibration work in my RAG and agentic systems, from measuring hallucination against a held-out set to accuracy-weighting an agent council, rests on the modeling and statistical grounding this program built. It is why I reach for the right technique and can defend the tradeoff, rather than treating models as black boxes.",
+    ],
+    highlights: [
+      {
+        title: "Applied, not theoretical",
+        body: "Statistics, supervised and unsupervised learning, tree ensembles, feature engineering, deep learning, and NLP, taught through real projects.",
+      },
+      {
+        title: "The foundation under the agentic work",
+        body: "The modeling and evaluation grounding behind the GraphRAG, calibration, and retrieval decisions across these projects.",
+      },
+    ],
+    image: {
+      src: "/certifications/iiitb-ml-ai.png",
+      alt: "IIIT Bangalore Post Graduate Diploma in Machine Learning and Artificial Intelligence, awarded to Niranjan Vsks",
+    },
     related: [
       { label: "WealthOS", href: "/projects/wealthos" },
       { label: "QE Platform", href: "/projects/qe-platform" },

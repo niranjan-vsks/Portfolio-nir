@@ -25,6 +25,5 @@ Agentic AI on real customer data, with real consequences, is where the next deca
 
 ## Credentials
 - Advanced Certification in Product Management for GenAI/Agentic AI, BITSoM
-- PG Diploma in Machine Learning and AI, IIIT Bangalore
+- Post Graduate Diploma in Machine Learning and Artificial Intelligence, IIIT Bangalore
 - B.Tech, Computer Science and Engineering
-- Claude Certified Architect, Anthropic (registered, exam scheduled)
