@@ -127,7 +127,7 @@ export function HomeClient({
 
       {/* heading — overlaid, non-blocking so the orbit cards stay clickable */}
       <div
-        className={`pointer-events-none relative z-20 mx-auto max-w-[1200px] px-6 pt-28 transition-opacity duration-700 sm:pt-32 ${
+        className={`pointer-events-none relative z-20 mx-auto max-w-[1200px] px-6 pt-24 transition-all duration-500 sm:pt-28 [html[data-nav=collapsed]_&]:pt-16 ${
           revealed ? "opacity-100" : "opacity-0"
         }`}
       >

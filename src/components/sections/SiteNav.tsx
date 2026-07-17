@@ -2,21 +2,80 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowLeft, Home } from "lucide-react";
 import { SoundToggle } from "@/components/ui/SoundToggle";
 import { GooeySearch } from "@/components/ui/GooeySearch";
 import { HoverBorderGradient } from "@/components/ui/HoverBorderGradient";
+import { useIsMobile } from "@/lib/hooks/useIsMobile";
+import { useReducedMotion } from "@/lib/hooks/useReducedMotion";
 
 /**
  * Top nav (PRD 8.1) — "Navbar Dark Shadow": dark, elevated, soft layered
- * shadow, fully legible (Geist, not mono). Logo · centered Search · GitHub ·
- * Contact · Résumé (the one button). Persistent on every route incl. mobile.
+ * shadow, fully legible. Logo · centered Search · GitHub · Contact · Résumé.
+ *
+ * Collapsible (ULTIMATE): shown for the first 6s on load, then it slides up out
+ * of the way once the cursor is elsewhere; hovering the top edge (or the nav)
+ * brings it back. It writes `data-nav="open|collapsed"` on <html> so any page
+ * can shift its heading up when the nav tucks away. Pinned open on mobile and
+ * under reduced-motion (no hover to bring it back).
  */
+const AUTO_OPEN_MS = 6000;
+const COLLAPSE_DELAY_MS = 500;
+
 export function SiteNav() {
   const router = useRouter();
+  const isMobile = useIsMobile();
+  const reduced = useReducedMotion();
+  const pinned = isMobile || reduced;
+  const [expanded, setExpanded] = useState(true);
+  const shown = pinned ? true : expanded; // pinned is always visible, no state write
+  const collapseTimer = useRef<number | null>(null);
+  const autoTimer = useRef<number | null>(null);
+
+  const expand = useCallback(() => {
+    if (collapseTimer.current) {
+      window.clearTimeout(collapseTimer.current);
+      collapseTimer.current = null;
+    }
+    setExpanded(true);
+  }, []);
+
+  const scheduleCollapse = useCallback(() => {
+    if (pinned) return;
+    if (collapseTimer.current) window.clearTimeout(collapseTimer.current);
+    collapseTimer.current = window.setTimeout(() => setExpanded(false), COLLAPSE_DELAY_MS);
+  }, [pinned]);
+
+  // First load: hold open, then collapse once (unless pinned or being hovered).
+  useEffect(() => {
+    if (pinned) return;
+    autoTimer.current = window.setTimeout(() => setExpanded(false), AUTO_OPEN_MS);
+    return () => {
+      if (autoTimer.current) window.clearTimeout(autoTimer.current);
+    };
+  }, [pinned]);
+
+  // Expose the collapsed state to the rest of the page.
+  useEffect(() => {
+    const el = document.documentElement;
+    el.dataset.nav = shown ? "open" : "collapsed";
+    return () => {
+      delete el.dataset.nav;
+    };
+  }, [shown]);
+
   return (
-    <header className="fixed inset-x-0 top-0 z-50">
-      <div className="mx-auto mt-3 flex h-16 max-w-[1200px] items-center justify-between gap-4 rounded-2xl border border-white/10 bg-[#0c0f0d]/85 px-4 shadow-[0_8px_30px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-xl sm:px-5">
+    <header
+      className="fixed inset-x-0 top-0 z-50"
+      onMouseEnter={expand}
+      onMouseLeave={scheduleCollapse}
+    >
+      <div
+        className={`mx-auto mt-3 flex h-16 max-w-[1200px] items-center justify-between gap-4 rounded-2xl border border-white/10 bg-[#0c0f0d]/85 px-4 shadow-[0_8px_30px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-xl transition-all duration-500 ease-out sm:px-5 ${
+          shown ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-[130%] opacity-0"
+        }`}
+      >
         {/* left cluster: back + home */}
         <div className="flex shrink-0 items-center gap-2">
           <button
@@ -65,6 +124,17 @@ export function SiteNav() {
           </HoverBorderGradient>
         </nav>
       </div>
+
+      {/* When collapsed, a slim top strip brings the nav back on hover / tap. */}
+      {!pinned && !shown && (
+        <button
+          type="button"
+          aria-label="Show navigation"
+          onMouseEnter={expand}
+          onClick={expand}
+          className="absolute inset-x-0 top-0 h-4 w-full"
+        />
+      )}
     </header>
   );
 }
