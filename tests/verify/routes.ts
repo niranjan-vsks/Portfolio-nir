@@ -10,6 +10,7 @@ export const ROUTES = [
   "/projects/qe-platform",
   "/projects/hpe-rag-chatbot",
   "/projects/global-census-chatbot",
+  "/projects/mphasis-ml-risk",
   "/projects/codebase-intelligence-system",
   "/system-design",
   "/dashboard",

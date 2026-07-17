@@ -99,7 +99,20 @@ export default function ContactPage() {
               )}
             </div>
 
-            <div className="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+            {/* Mobile-only static Starman — the animated aside is desktop-only */}
+            <div className="mt-8 overflow-hidden rounded-2xl border border-white/10 bg-black/80 shadow-2xl lg:hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/starman/star-man.jpg"
+                alt="Starman, Niranjan's avatar"
+                className="mx-auto block aspect-square w-full max-w-[320px] object-cover"
+              />
+              <p className="border-t border-white/5 px-4 py-3 text-center font-mono text-[12.5px] text-text-dim">
+                {"> signal me. I read every message."}
+              </p>
+            </div>
+
+            <div className="mt-10 grid gap-6 sm:grid-cols-2">
               {channels.map((c) => (
                 <ChannelCard key={c.label} {...c} />
               ))}

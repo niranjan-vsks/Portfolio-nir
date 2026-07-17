@@ -11,3 +11,5 @@ Architected the migration of an enterprise conversational system from rule-based
 Designed the retrieval pipeline end to end: chunking with overlap calibration, hybrid search combining semantic and keyword signals, and metadata filtering tuned for enterprise-jargon queries, with evaluation loops measuring retrieval precision against a held-out set and improving response relevance 30-40% in pilot.
 
 Built the case for the retrieval-augmented redesign through customer usage analysis showing the rule-based system failing outside its predefined set, and owned the rollout end to end.
+
+At HPE I also delivered the National Census Digital Assistant on Azure, a civic-scale conversational assistant that grounds guideline and FAQ answers with RAG while running enrolment and birth and death reporting as deterministic, audited state-machine flows.

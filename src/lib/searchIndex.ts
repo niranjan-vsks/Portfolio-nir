@@ -33,6 +33,7 @@ export const SEARCH_INDEX: SearchEntry[] = [
   { label: "QE Platform", href: "/projects/qe-platform", group: "project", keywords: ["quality engineering", "graphrag", "testing", "playwright", "agentic qa"] },
   { label: "Enterprise Knowledge Assistant (HPE RAG)", href: "/projects/hpe-rag-chatbot", group: "project", keywords: ["hpe", "rag", "chatbot", "escalations", "knowledge assistant", "squidex", "confluence"] },
   { label: "National Census Digital Assistant (HPE)", href: "/projects/global-census-chatbot", group: "project", keywords: ["hpe", "census", "chatbot", "npr", "government"] },
+  { label: "Financial Risk & Fraud Intelligence (Mphasis)", href: "/projects/mphasis-ml-risk", group: "project", keywords: ["mphasis", "fraud detection", "risk scoring", "xgboost", "lightgbm", "machine learning", "financial services"] },
 ];
 
 // FDE capability pages (R10: everything findable)

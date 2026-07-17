@@ -9,3 +9,5 @@ slug: mphasis
 Built fraud-detection and risk-scoring models for financial-services clients using tree-based ensembles (XGBoost, LightGBM, Random Forest) with engineered feature pipelines, improving precision ~15% over legacy rule-based systems and cutting manual review volume.
 
 Developed predictive-analytics models and live streaming dashboards on investment data, enabling portfolio teams to act on signals without batch-reporting delays.
+
+This early-career work is written up as Financial Risk & Fraud Intelligence, with the modeling decisions and the move off rule-based systems.

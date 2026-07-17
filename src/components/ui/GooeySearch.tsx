@@ -44,6 +44,7 @@ export function GooeySearch() {
     };
     const onKey = (e: KeyboardEvent) => {
       // `/` opens; Cmd+K / Ctrl+K toggles (PRD 8.2)
+      if (!e.key) return; // dead/IME/media keys can fire with no `key`
       if (e.key === "/" && !open && document.activeElement?.tagName !== "INPUT") {
         e.preventDefault();
         setOpen(true);

@@ -360,7 +360,15 @@ function CardFace({ item, active, typed }: { item: OrbitItem; active: boolean; t
   );
 }
 
-function Orbit({ items, radius = 3.1 }: { items: OrbitItem[]; radius?: number }) {
+function Orbit({
+  items,
+  radius = 3.25,
+  onNavigate,
+}: {
+  items: OrbitItem[];
+  radius?: number;
+  onNavigate?: (item: OrbitItem) => void;
+}) {
   const router = useRouter();
   const reduced = useReducedMotion();
   const group = useRef<THREE.Group>(null!);
@@ -383,6 +391,50 @@ function Orbit({ items, radius = 3.1 }: { items: OrbitItem[]; radius?: number })
     const id = setInterval(() => setActive((a) => a + 1), 4200);
     return () => clearInterval(id);
   }, [reduced, paused]);
+
+  // sideways scroll / swipe to revolve the carousel (in addition to the arrows).
+  // Horizontal-intent only (deltaX-dominant or shift+wheel) so it never hijacks
+  // vertical scroll, and throttled so one gesture steps once.
+  useEffect(() => {
+    if (reduced) return;
+    let lock = 0;
+    const step = (dir: number) => {
+      const now = Date.now();
+      if (now - lock < 260) return;
+      lock = now;
+      setActive((a) => a + dir);
+    };
+    const onWheel = (e: WheelEvent) => {
+      const dx = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.shiftKey ? e.deltaY : 0;
+      if (dx > 6) step(1);
+      else if (dx < -6) step(-1);
+    };
+    let x0: number | null = null;
+    const onTouchStart = (e: TouchEvent) => {
+      x0 = e.touches[0]?.clientX ?? null;
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      if (x0 == null) return;
+      const dx = (e.touches[0]?.clientX ?? x0) - x0;
+      if (Math.abs(dx) > 42) {
+        step(dx < 0 ? 1 : -1);
+        x0 = e.touches[0]?.clientX ?? null;
+      }
+    };
+    const onTouchEnd = () => {
+      x0 = null;
+    };
+    window.addEventListener("wheel", onWheel, { passive: true });
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
+    window.addEventListener("touchend", onTouchEnd);
+    return () => {
+      window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", onTouchEnd);
+    };
+  }, [reduced]);
 
   // typewriter for the active caption
   useEffect(() => {
@@ -408,8 +460,14 @@ function Orbit({ items, radius = 3.1 }: { items: OrbitItem[]; radius?: number })
   // Click contract (Right_Now fixes): out-of-focus card -> revolve it to the
   // front (never navigate); in-focus card -> navigate immediately.
   const onCard = (i: number, isActive: boolean) => {
-    if (isActive) open(items[i]);
-    else setActive((a) => a + (((i - a) % n) + n) % n); // shortest forward revolution
+    if (!isActive) {
+      setActive((a) => a + (((i - a) % n) + n) % n); // shortest forward revolution
+      return;
+    }
+    const it = items[i];
+    if (it.onClick) it.onClick();
+    else if (onNavigate) onNavigate(it); // parent shows the loader flash, then routes
+    else open(it);
   };
 
   return (
@@ -433,18 +491,20 @@ function Orbit({ items, radius = 3.1 }: { items: OrbitItem[]; radius?: number })
               key={item.label}
               position={[Math.sin(a) * radius, 0, Math.cos(a) * radius]}
               center
-              distanceFactor={4.1}
+              distanceFactor={4.6}
               occlude={[globeRef]}
               zIndexRange={[20, 0]}
               style={{ pointerEvents: "auto", transition: "opacity 0.3s" }}
             >
               <button
                 onClick={() => onCard(i, isActive)}
+                onPointerEnter={() => setPaused(true)}
+                onPointerLeave={() => setPaused(false)}
                 aria-label={isActive ? `Open ${item.label}` : `Focus ${item.label}`}
                 className="block"
                 style={{
                   opacity: isActive ? 1 : 0.55,
-                  transform: `scale(${isActive ? 1.08 : 0.88})`,
+                  transform: `scale(${isActive ? 1.05 : 0.88})`,
                   transition: "opacity .3s, transform .3s",
                 }}
               >
@@ -466,10 +526,16 @@ function Orbit({ items, radius = 3.1 }: { items: OrbitItem[]; radius?: number })
   );
 }
 
-export default function GlobeStage({ items }: { items: OrbitItem[] }) {
+export default function GlobeStage({
+  items,
+  onNavigate,
+}: {
+  items: OrbitItem[];
+  onNavigate?: (item: OrbitItem) => void;
+}) {
   const reduced = useReducedMotion();
   return (
-    <Canvas camera={{ position: [0, 0.3, 6.2], fov: 42 }} dpr={[1, 1.8]} gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}>
+    <Canvas camera={{ position: [0, 0.3, 6.8], fov: 42 }} dpr={[1, 2]} gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}>
       <Suspense fallback={null}>
         {/* Ascend template lighting, verbatim */}
         <ambientLight intensity={1.8} />
@@ -481,7 +547,7 @@ export default function GlobeStage({ items }: { items: OrbitItem[] }) {
         <AtmosphereHalo />
         <group rotation={[0.16, 0, 0.06]}>
           <AscendPlanet reduced={reduced} />
-          <Orbit items={items} />
+          <Orbit items={items} onNavigate={onNavigate} />
         </group>
       </Suspense>
     </Canvas>

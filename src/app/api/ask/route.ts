@@ -10,7 +10,56 @@ interface Msg {
 }
 
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
-const MODEL = "llama-3.1-8b-instant";
+const GROQ_MODEL = "llama-3.1-8b-instant";
+const GATEWAY_URL = "https://ai-gateway.vercel.sh/v1/chat/completions";
+const GEMINI_OPENAI_URL =
+  "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
+
+interface Provider {
+  name: "gateway" | "gemini" | "groq";
+  url: string;
+  key: string;
+  model: string;
+}
+
+/**
+ * Choose the chat provider. Preference: Vercel AI Gateway (routing to Gemini by
+ * default) -> Gemini API directly -> Groq. All three speak the OpenAI-compatible
+ * streaming shape, so the SSE parser below is shared. Override the model with
+ * CHAT_MODEL (e.g. a specific Gemini 3 id on the gateway).
+ */
+function pickProvider(): Provider | null {
+  const gw = process.env.AI_GATEWAY_API_KEY_NIR ?? process.env.AI_GATEWAY_API_KEY;
+  if (gw)
+    return { name: "gateway", url: GATEWAY_URL, key: gw, model: process.env.CHAT_MODEL ?? "google/gemini-2.5-flash" };
+  const gemini = process.env.GEMINI_API_KEY;
+  if (gemini)
+    return { name: "gemini", url: GEMINI_OPENAI_URL, key: gemini, model: process.env.CHAT_MODEL ?? "gemini-2.5-flash" };
+  const groq = process.env.GROQ_API_KEY;
+  if (groq) return { name: "groq", url: GROQ_URL, key: groq, model: GROQ_MODEL };
+  return null;
+}
+
+function groqFallback(): Provider | null {
+  const groq = process.env.GROQ_API_KEY;
+  return groq ? { name: "groq", url: GROQ_URL, key: groq, model: GROQ_MODEL } : null;
+}
+
+function streamChat(provider: Provider, system: string, messages: Msg[]) {
+  return fetch(provider.url, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${provider.key}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: provider.model,
+      stream: true,
+      temperature: 0.4,
+      messages: [{ role: "system", content: system }, ...messages.slice(-6)],
+    }),
+  });
+}
 
 function sse(text: string): Uint8Array {
   return new TextEncoder().encode(text);
@@ -50,16 +99,16 @@ export async function POST(req: Request) {
   const context = retrieve(query, 5);
   const system = buildSystemPrompt(context);
 
-  const apiKey = process.env.GROQ_API_KEY;
+  const provider = pickProvider();
   logger.debug("api/ask", "query received", {
     query,
     chunks: context.length,
     sources: context.map((c) => c.source),
-    mode: apiKey ? "groq" : "mock",
+    mode: provider?.name ?? "mock",
   });
 
   // ---- Mock path: no key configured. Stream grounded snippets or fallback. ----
-  if (!apiKey) {
+  if (!provider) {
     const stream = new ReadableStream({
       async start(controller) {
         // TODO(niranjan): set GROQ_API_KEY in .env for the real Groq/Llama answer.
@@ -73,7 +122,7 @@ export async function POST(req: Request) {
               .slice(0, 2)
               .map((c) => c.text)
               .join("\n\n") +
-            "\n\n(Live answers use Groq/Llama once GROQ_API_KEY is set. Reach me at niranjan.vsks@gmail.com.)";
+            "\n\nWant to go deeper on any of this? Reach me at niranjan.vsks@gmail.com.";
         }
         for (const word of out.split(/(\s+)/)) {
           controller.enqueue(sse(word));
@@ -87,30 +136,28 @@ export async function POST(req: Request) {
     });
   }
 
-  // ---- Real path: Groq streaming, OpenAI-compatible. ----
-  const groqRes = await fetch(GROQ_URL, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: MODEL,
-      stream: true,
-      temperature: 0.4,
-      messages: [
-        { role: "system", content: system },
-        ...messages.slice(-6),
-      ],
-    }),
-  });
+  // ---- Real path: OpenAI-compatible streaming via the chosen provider
+  // (Vercel AI Gateway -> Gemini by default), with Groq as the fallback. ----
+  let active = provider;
+  let upstream = await streamChat(active, system, messages);
+  if ((!upstream.ok || !upstream.body) && active.name !== "groq") {
+    const fb = groqFallback();
+    if (fb) {
+      logger.warn("api/ask", "primary upstream failed, falling back to groq", {
+        provider: active.name,
+        status: upstream.status,
+      });
+      active = fb;
+      upstream = await streamChat(active, system, messages);
+    }
+  }
 
-  if (!groqRes.ok || !groqRes.body) {
-    logger.error("api/ask", "groq upstream error", { status: groqRes.status });
+  if (!upstream.ok || !upstream.body) {
+    logger.error("api/ask", "upstream error", { provider: active.name, status: upstream.status });
     return new Response("upstream error", { status: 502 });
   }
 
-  const reader = groqRes.body.getReader();
+  const reader = upstream.body.getReader();
   const decoder = new TextDecoder();
   const stream = new ReadableStream({
     async start(controller) {

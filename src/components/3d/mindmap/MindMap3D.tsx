@@ -102,6 +102,7 @@ export default function MindMap3D({
   const [pinnedNodeId, setPinnedNodeId] = useState<string | null>(null)
   const [collapsedDomains, setCollapsedDomains] = useState<Set<string>>(new Set())
   const [isBelowBreakpoint, setIsBelowBreakpoint] = useState(false)
+  const [hintDismissed, setHintDismissed] = useState(false)
 
   // the node whose neighbourhood is lit: hover wins, else the pinned/deep-linked one
   const activeId = hoverNodeId ?? pinnedNodeId
@@ -331,31 +332,28 @@ export default function MindMap3D({
     return group
   }, [isLit])
 
-  if (isBelowBreakpoint) {
-    return (
-      <div
-        ref={containerRef}
-        className="w-full h-full min-h-[400px] flex items-center justify-center p-8 text-center"
-        style={{ background: '#0A0A0A', color: '#9CA3AF', fontFamily: 'JetBrains Mono, monospace' }}
-      >
-        <div>
-          <p className="text-sm mb-3" style={{ color: '#4ADE80' }}>
-            &gt; MAP_MODE.unavailable_on_mobile
-          </p>
-          <p className="text-xs">
-            The 3D mind map is best experienced on desktop. Browse projects below, or open this page on a wider screen.
-          </p>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div
       ref={containerRef}
       className="relative w-full h-full"
       style={{ background: 'transparent', minHeight: 600 }}
     >
+      {/* On small screens the graph still loads (it is the headline feature);
+          a dismissible hint sets expectations instead of blocking it. */}
+      {isBelowBreakpoint && !hintDismissed && (
+        <div className="pointer-events-auto absolute inset-x-3 bottom-3 z-20 flex items-start gap-3 rounded-xl border border-green/30 bg-[#060a14]/95 px-4 py-3 backdrop-blur-md">
+          <p className="flex-1 font-mono text-[12px] leading-relaxed text-neutral-300">
+            <span className="text-green">&gt;</span> Best experienced on a wider screen. Pinch to zoom, drag to orbit.
+          </p>
+          <button
+            onClick={() => setHintDismissed(true)}
+            aria-label="Dismiss"
+            className="shrink-0 font-mono text-[13px] text-text-dim transition-colors hover:text-green"
+          >
+            ✕
+          </button>
+        </div>
+      )}
       <div className="absolute top-4 right-4 z-10 flex gap-2">
         <button
           onClick={() => setPaused((p) => !p)}

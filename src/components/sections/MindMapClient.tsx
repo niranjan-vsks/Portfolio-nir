@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useReducedMotion } from "@/lib/hooks/useReducedMotion";
 import { useIsMobile } from "@/lib/hooks/useIsMobile";
 import { TerminalLoader } from "@/components/ui/TerminalLoader";
+import { CubeLoaderScreen } from "@/components/ui/CubeLoaderScreen";
 
 const BrainScene = dynamic(() => import("@/components/3d/brain/BrainScene"), {
   ssr: false,
@@ -12,7 +13,7 @@ const BrainScene = dynamic(() => import("@/components/3d/brain/BrainScene"), {
 });
 const MindMap3D = dynamic(() => import("@/components/3d/mindmap/MindMap3D"), {
   ssr: false,
-  loading: () => <TerminalLoader label="loading_mind_map" />,
+  loading: () => <CubeLoaderScreen label="loading the mind map…" />,
 });
 const StarfieldBackdrop = dynamic(() => import("@/components/backgrounds/StarfieldBackdrop"), { ssr: false });
 
@@ -32,10 +33,10 @@ const GUIDE_STEPS = [
 function MindMapGuide() {
   const [openHow, setOpenHow] = useState(false);
   return (
-    <div className="pointer-events-none absolute left-4 top-16 z-20 w-[300px] max-w-[82vw] sm:left-6 sm:top-20">
-      <div className="pointer-events-auto rounded-xl border border-green/30 bg-bg/85 p-4 shadow-[0_20px_50px_-25px_rgba(0,0,0,0.9)] backdrop-blur-md">
-        <h1 className="font-mono text-[16px] font-semibold text-green">Visual Knowledge Mind Map</h1>
-        <p className="mt-1.5 text-[13px] leading-relaxed text-neutral-300">
+    <div className="pointer-events-none absolute left-4 top-16 z-20 w-[272px] max-w-[80vw] sm:left-6 sm:top-20">
+      <div className="pointer-events-auto rounded-xl border border-green/30 bg-bg/85 p-3.5 shadow-[0_20px_50px_-25px_rgba(0,0,0,0.9)] backdrop-blur-md">
+        <h1 className="font-mono text-[15px] font-semibold text-green">Visual Knowledge Mind Map</h1>
+        <p className="mt-1.5 text-[12.5px] leading-relaxed text-neutral-300">
           Seven years of work as one connected graph: projects, skills, employers, and the capabilities that link them.
         </p>
         <p className="mt-2 font-mono text-[11.5px] text-cyan">zoom in for the best experience</p>
@@ -76,23 +77,23 @@ function MindMapGuide() {
 const BRAIN_SEEN_KEY = "brain-intro-seen";
 
 /**
- * FINAL_SHOWDOWN intro contract:
- * - First-ever /map visit this session: brain intro, 4s auto-dissolve
- *   (whatever the entry point, including tag-chip / search deep links).
- * - Repeat visit FROM the landing Mind Map card (?intro=landing): brain
- *   intro again but fast (~1s auto-dissolve).
- * - Every other repeat navigation (keywords, nav, search): no intro.
+ * Intro contract (ULTIMATE):
+ * - First-ever /map visit this session: brain intro, 4.5s auto-dissolve.
+ * - Redirected in from the landing card (?intro=landing) or a keyword/skill
+ *   deep-link (?node=): a 2s brain intro so the jump reads as a transition.
+ * - Every other repeat navigation (nav, search): no intro.
  */
 function brainPlan(): { show: boolean; autoMs: number } {
   try {
     const seen = sessionStorage.getItem(BRAIN_SEEN_KEY) === "1";
-    const fromLanding =
-      new URLSearchParams(window.location.search).get("intro") === "landing";
-    if (!seen) return { show: true, autoMs: 4000 };
-    if (fromLanding) return { show: true, autoMs: 1000 };
+    const params = new URLSearchParams(window.location.search);
+    const fromLanding = params.get("intro") === "landing";
+    const fromKeyword = params.has("node");
+    if (!seen) return { show: true, autoMs: 4500 }; // first-ever visit: 4-5s
+    if (fromLanding || fromKeyword) return { show: true, autoMs: 2000 }; // redirected in: 2s
     return { show: false, autoMs: 0 };
   } catch {
-    return { show: true, autoMs: 4000 };
+    return { show: true, autoMs: 4500 };
   }
 }
 

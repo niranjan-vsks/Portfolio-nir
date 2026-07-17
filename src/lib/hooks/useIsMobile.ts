@@ -2,7 +2,13 @@
 
 import { useSyncExternalStore } from "react";
 
-const QUERY = "(max-width: 767px)";
+// Narrow screens, OR portrait touch devices up to 1024px wide. The second
+// clause catches phones forced into "Desktop site" mode (which report a wide
+// width) and small tablets held in portrait, so they get the clean card
+// fallback instead of the orbit breaking — and rotating to landscape brings
+// the full 3D scene back.
+const QUERY =
+  "(max-width: 767px), (max-width: 1024px) and (orientation: portrait) and (pointer: coarse)";
 
 function subscribe(cb: () => void) {
   if (typeof window === "undefined") return () => {};

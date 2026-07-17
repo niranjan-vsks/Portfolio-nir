@@ -1,0 +1,106 @@
+/*
+ * Cube loader — ported from the Uiverse "Cube_loader" template (textura_templates)
+ * and recolored to the portfolio's dark space palette: deep blue-black faces with
+ * a green->cyan glow (the 3D/depth lane). Auto-glow (one cube at a time) is driven
+ * by JS via the .glow class; hover/click remain as enhancements.
+ */
+.loader {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cube {
+  position: absolute;
+  width: 40px;
+  transform-style: preserve-3d;
+  transform: rotateX(-30deg) rotateY(45deg);
+  transition: 300ms ease;
+  cursor: pointer;
+  animation: rotateCube 10s infinite linear;
+}
+
+.cubeFront,
+.cubeBack {
+  transform: translateX(40px) translateZ(-20px);
+  animation: none;
+}
+.cubeTop,
+.cubeBottom {
+  transform: translateZ(20px);
+  animation: none;
+}
+.cubeLeft,
+.cubeRight {
+  transform: translateX(40px) translateZ(-20px);
+  animation: none;
+}
+
+.face {
+  position: absolute;
+  transform-style: preserve-3d;
+  width: 40px;
+  height: 40px;
+  background: radial-gradient(circle, rgba(12, 34, 58, 1) 0%, rgba(4, 8, 22, 1) 100%);
+}
+
+.front {
+  transform: rotateY(0deg) translateZ(20px);
+}
+.back {
+  transform: rotateY(180deg) translateZ(20px);
+}
+.left {
+  transform: rotateY(-90deg) translateZ(20px);
+}
+.right {
+  transform: rotateY(90deg) translateZ(20px);
+}
+.top {
+  transform: rotateX(90deg) translateZ(20px);
+}
+.bottom {
+  transform: rotateX(-90deg) translateZ(20px);
+}
+
+.middle {
+  background: transparent;
+}
+
+/* Active state: auto-glow (JS-driven, one at a time), plus hover/click. */
+.glow {
+  transform: translateX(0px) translateZ(-20px);
+}
+.glow .face,
+.cubeFront:hover .face,
+.cubeBack:hover .face,
+.cubeTop:hover .face,
+.cubeBottom:hover .face,
+.cubeLeft:hover .face,
+.cubeRight:hover .face,
+.cubeFront:active .face,
+.cubeBack:active .face,
+.cubeTop:active .face,
+.cubeBottom:active .face,
+.cubeLeft:active .face,
+.cubeRight:active .face {
+  background: radial-gradient(circle, #ffffff 55%, #4ade80 88%, #00e5ff 100%);
+  filter: drop-shadow(0px 0px 5px #e7fff2) drop-shadow(0px 0px 15px rgba(74, 222, 128, 0.85))
+    drop-shadow(0px 0px 30px rgba(0, 229, 255, 0.75));
+}
+
+@keyframes rotateCube {
+  0% {
+    transform: rotateX(-30deg) rotateY(45deg);
+  }
+  100% {
+    transform: rotateX(-30deg) rotateY(405deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cube {
+    animation: none;
+  }
+}

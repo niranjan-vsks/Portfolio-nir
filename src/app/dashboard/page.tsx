@@ -37,8 +37,8 @@ export default function DashboardPage() {
       <PageBackground variant="flow-wave" />
       <PageShell eyebrow="dashboard" title="The signal at a glance">
         <p className="mb-10 max-w-2xl text-text-dim">
-          Every number here traces to a real project or engagement. No client-tied
-          figures, no invented metrics. Every card routes somewhere real.
+          Every number here traces to a real project or engagement, and every
+          card routes somewhere real.
         </p>
         <DashboardMetrics />
         <DashboardExplorer skills={skills} projects={projects} />

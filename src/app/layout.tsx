@@ -59,6 +59,11 @@ export default function RootLayout({
       className={`${geistSans.variable} ${jetbrainsMono.variable} h-full`}
     >
       <body className="min-h-full bg-bg text-text">
+        {/* Warm the Contact-page Starman poster in the background (low priority)
+            so the avatar is ready the moment the contact route paints. The mp4
+            itself is left to load on the contact page to avoid an unused-preload
+            warning on every other route. */}
+        <link rel="prefetch" href="/starman/star-man.jpg" />
         <PostHogProvider>
           <SoundProvider>
             <ClientErrorLogger />

@@ -25,7 +25,20 @@ const FAQS = [
  * context; no session history persisted. Honest-but-thin until interview
  * content lands (by design, never fabricated).
  */
-export function ChatSurface({ embedded = false }: { embedded?: boolean }) {
+export function ChatSurface({
+  embedded = false,
+  onClose,
+  onMinimize,
+  onMaximize,
+  maximized = false,
+}: {
+  embedded?: boolean;
+  onClose?: () => void;
+  onMinimize?: () => void;
+  onMaximize?: () => void;
+  maximized?: boolean;
+}) {
+  const interactive = Boolean(onClose || onMinimize || onMaximize);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
@@ -103,11 +116,45 @@ export function ChatSurface({ embedded = false }: { embedded?: boolean }) {
     >
       {/* terminal chrome header */}
       <div className="flex items-center gap-3 border-b border-white/5 bg-neutral-900/80 px-4 py-3">
-        <div className="flex items-center gap-1.5">
-          <span className="h-3 w-3 rounded-full bg-red-500" />
-          <span className="h-3 w-3 rounded-full bg-yellow-500" />
-          <span className="h-3 w-3 rounded-full bg-green-500" />
-        </div>
+        {interactive ? (
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close"
+              title="Close"
+              className="group/tl grid h-3.5 w-3.5 place-items-center rounded-full bg-red-500 transition-transform hover:scale-110"
+            >
+              <span className="font-mono text-[9px] font-bold leading-none text-black/70 opacity-0 group-hover/tl:opacity-100">×</span>
+            </button>
+            <button
+              type="button"
+              onClick={onMinimize}
+              aria-label="Minimize"
+              title="Minimize"
+              className="group/tl grid h-3.5 w-3.5 place-items-center rounded-full bg-yellow-500 transition-transform hover:scale-110"
+            >
+              <span className="font-mono text-[10px] font-bold leading-none text-black/70 opacity-0 group-hover/tl:opacity-100">−</span>
+            </button>
+            <button
+              type="button"
+              onClick={onMaximize}
+              aria-label={maximized ? "Restore" : "Maximize"}
+              title={maximized ? "Restore" : "Maximize"}
+              className="group/tl grid h-3.5 w-3.5 place-items-center rounded-full bg-green-500 transition-transform hover:scale-110"
+            >
+              <span className="font-mono text-[9px] font-bold leading-none text-black/70 opacity-0 group-hover/tl:opacity-100">
+                {maximized ? "–" : "+"}
+              </span>
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-1.5">
+            <span className="h-3 w-3 rounded-full bg-red-500" />
+            <span className="h-3 w-3 rounded-full bg-yellow-500" />
+            <span className="h-3 w-3 rounded-full bg-green-500" />
+          </div>
+        )}
         <span className="font-mono text-[12px] text-neutral-400">~/ask_niranjan.sh</span>
         <div className="ml-auto flex items-center gap-2.5">
           <Avatar size={30} />

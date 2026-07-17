@@ -1,30 +1,53 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { HoverBorderGradient } from "@/components/ui/HoverBorderGradient";
 
 /**
- * "Work with me" (AGain Fixes 2026-07-12): a professional hire CTA that opens
- * an editable email popup — subject + body prefilled, user edits freely, then
- * sends via Gmail, Outlook, or their default mail app.
+ * "Work with me": a professional hire CTA that opens an editable email popup.
+ * The recruiter names their organization and picks the role from a dropdown;
+ * a tailored subject + body are drafted automatically (and stay in sync until
+ * the recruiter hand-edits either field), then sent via Gmail, Outlook, or
+ * their default mail app.
  */
 
 const TO = "niranjan.vsks@gmail.com";
-const DEFAULT_SUBJECT = "We would like to work with you";
-const DEFAULT_BODY = `Hi Niranjan,
 
-We came across your portfolio and would like to work with you.
+const ROLES = [
+  "Forward Deployed Engineer",
+  "Senior Agentic AI Engineer",
+  "Senior AI Architect",
+  "Senior GenAI / Agentic AI Engineer",
+] as const;
 
-We are looking for a forward deployed / agentic AI engineer, and your track record looks like a strong fit. Could we schedule an interview this week?
+function buildSubject(org: string, role: string) {
+  const o = org.trim();
+  return o ? `${role} opportunity at ${o}` : `${role} opportunity`;
+}
+
+function buildBody(org: string, role: string) {
+  const who = org.trim() ? `${org.trim()} is` : "We are";
+  return `Hi Niranjan,
+
+I came across your portfolio and was impressed by your track record shipping production agentic and RAG systems into enterprise environments, end to end.
+
+${who} hiring for a ${role}, and your experience looks like a strong fit for what we are building. Would you be open to a short conversation this week?
 
 Best regards,
 `;
+}
 
 export function WorkWithMe() {
   const [open, setOpen] = useState(false);
-  const [subject, setSubject] = useState(DEFAULT_SUBJECT);
-  const [body, setBody] = useState(DEFAULT_BODY);
+  const [org, setOrg] = useState("");
+  const [role, setRole] = useState<string>(ROLES[0]);
+  // null = still tracking org/role; a string = the recruiter hand-edited it.
+  const [subjectOverride, setSubjectOverride] = useState<string | null>(null);
+  const [bodyOverride, setBodyOverride] = useState<string | null>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
+
+  const subject = subjectOverride ?? buildSubject(org, role);
+  const body = bodyOverride ?? buildBody(org, role);
 
   useEffect(() => {
     if (!open) return;
@@ -36,19 +59,23 @@ export function WorkWithMe() {
   }, [open]);
 
   const enc = (s: string) => encodeURIComponent(s);
-  const links = {
-    gmail: `https://mail.google.com/mail/?view=cm&fs=1&to=${enc(TO)}&su=${enc(subject)}&body=${enc(body)}`,
-    outlook: `https://outlook.live.com/mail/0/deeplink/compose?to=${enc(TO)}&subject=${enc(subject)}&body=${enc(body)}`,
-    mailto: `mailto:${TO}?subject=${enc(subject)}&body=${enc(body)}`,
-  };
+  const links = useMemo(
+    () => ({
+      gmail: `https://mail.google.com/mail/?view=cm&fs=1&to=${enc(TO)}&su=${enc(subject)}&body=${enc(body)}`,
+      outlook: `https://outlook.live.com/mail/0/deeplink/compose?to=${enc(TO)}&subject=${enc(subject)}&body=${enc(body)}`,
+      mailto: `mailto:${TO}?subject=${enc(subject)}&body=${enc(body)}`,
+    }),
+    [subject, body],
+  );
 
   return (
     <section className="mt-12">
       <h2 className="mb-3 font-mono text-xl text-green">{"> work_with_me"}</h2>
       <p className="max-w-xl text-[15px] leading-relaxed text-neutral-300">
-        Hiring for forward deployed, agentic AI, or production RAG work? Start
-        the conversation in one click: the email is drafted, you just press
-        send.
+        Building a forward-deployed, agentic AI, or production RAG team? Let&apos;s
+        start the conversation. Tell me your organization and the role you&apos;re
+        hiring for, and a tailored introduction is drafted for you in one click.
+        Review it, then send with Gmail, Outlook, or your default mail app.
       </p>
       <div className="mt-5">
         <HoverBorderGradient onClick={() => setOpen(true)} className="text-[15px]">
@@ -90,17 +117,44 @@ export function WorkWithMe() {
                 <span className="text-green">{TO}</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="w-16 shrink-0 font-mono text-[13px] text-text-dim">subject:</span>
+                <label htmlFor="wwm-org" className="w-16 shrink-0 font-mono text-[13px] text-text-dim">org:</label>
                 <input
+                  id="wwm-org"
+                  value={org}
+                  onChange={(e) => setOrg(e.target.value)}
+                  placeholder="Your organization"
+                  className="w-full rounded-md border border-neutral-800 bg-neutral-900 px-3 py-1.5 text-[14px] text-white outline-none placeholder:text-neutral-600 focus:border-green/60"
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <label htmlFor="wwm-role" className="w-16 shrink-0 font-mono text-[13px] text-text-dim">role:</label>
+                <select
+                  id="wwm-role"
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                  className="w-full rounded-md border border-neutral-800 bg-neutral-900 px-3 py-1.5 text-[14px] text-white outline-none [color-scheme:dark] focus:border-green/60"
+                >
+                  {ROLES.map((r) => (
+                    <option key={r} value={r}>
+                      {r}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex items-center gap-2">
+                <label htmlFor="wwm-subject" className="w-16 shrink-0 font-mono text-[13px] text-text-dim">subject:</label>
+                <input
+                  id="wwm-subject"
                   value={subject}
-                  onChange={(e) => setSubject(e.target.value)}
+                  onChange={(e) => setSubjectOverride(e.target.value)}
                   className="w-full rounded-md border border-neutral-800 bg-neutral-900 px-3 py-1.5 text-[14px] text-white outline-none focus:border-green/60"
                 />
               </div>
               <textarea
                 value={body}
-                onChange={(e) => setBody(e.target.value)}
+                onChange={(e) => setBodyOverride(e.target.value)}
                 rows={9}
+                aria-label="Email body"
                 className="w-full resize-y rounded-md border border-neutral-800 bg-neutral-900 px-3 py-2 text-[14px] leading-relaxed text-neutral-200 outline-none focus:border-green/60"
               />
               <div className="flex flex-wrap items-center gap-2 pt-1">
