@@ -504,7 +504,7 @@ function Orbit({
                 className="block"
                 style={{
                   opacity: isActive ? 1 : 0.55,
-                  transform: `scale(${isActive ? 1.05 : 0.88})`,
+                  transform: `scale(${isActive ? 1 : 0.88})`,
                   transition: "opacity .3s, transform .3s",
                 }}
               >
