@@ -60,13 +60,13 @@ function ComicDialog({ text }: { text: string }) {
   }, [text, reduced]);
 
   return (
-    <div className="relative rounded-2xl border-2 border-white/80 bg-white px-4 py-3 text-[13.5px] font-medium leading-relaxed text-neutral-900 shadow-[4px_4px_0_rgba(74,222,128,0.55)]">
+    <div className="relative rounded-2xl border border-white/12 bg-[#0b0e0c]/65 px-4 py-3 text-[13.5px] font-medium leading-relaxed text-neutral-100 shadow-[0_12px_40px_-16px_rgba(0,0,0,0.85)] backdrop-blur-md">
       {typed}
       {typed.length < text.length && (
-        <span className="ml-0.5 inline-block h-3.5 w-1.5 translate-y-0.5 bg-neutral-900" />
+        <span className="ml-0.5 inline-block h-3.5 w-1.5 translate-y-0.5 bg-neutral-100" />
       )}
-      {/* speech-bubble tail pointing down at the starman's head */}
-      <span className="absolute -bottom-3 left-1/2 block h-0 w-0 -translate-x-1/2 border-x-8 border-t-[14px] border-x-transparent border-t-white" />
+      {/* speech-bubble tail pointing down at the starman's head, matched to the box */}
+      <span className="absolute -bottom-2.5 left-1/2 block h-0 w-0 -translate-x-1/2 border-x-8 border-t-[12px] border-x-transparent border-t-[#0b0e0c]/65" />
     </div>
   );
 }
@@ -139,7 +139,7 @@ export function CollapsibleAvatar({
               muted
               playsInline
               aria-label={`${name} avatar`}
-              className="block w-full mix-blend-screen [mask-image:radial-gradient(ellipse_70%_62%_at_50%_45%,black_58%,transparent_100%)]"
+              className="block w-full mix-blend-screen [mask-image:radial-gradient(ellipse_66%_60%_at_50%_45%,black_42%,transparent_90%)]"
             />
             <button
               onClick={() => {
