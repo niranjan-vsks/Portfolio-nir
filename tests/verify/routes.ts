@@ -34,6 +34,7 @@ export const ROUTES = [
   "/credential/btech-cse",
   "/chat",
   "/contact",
+  "/guide",
   "/work-with-me",
 ];
 

@@ -115,6 +115,9 @@ export function SiteNav() {
           >
             GitHub
           </a>
+          <Link href="/guide" className="hidden text-text-dim transition-colors hover:text-green md:inline">
+            Guide
+          </Link>
           <Link href="/contact" className="hidden text-text-dim transition-colors hover:text-green md:inline">
             Contact
           </Link>
