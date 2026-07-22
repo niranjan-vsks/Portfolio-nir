@@ -1,0 +1,219 @@
+@import "tailwindcss";
+
+/* ============================================================
+   portfolio-nir design system (authoritative: bullseye/01)
+   Dark only. Each palette color has ONE lane. Do not cross lanes.
+   ============================================================ */
+
+:root {
+  --bg: #0a0a0a;
+  --green: #4ade80; /* IDENTITY: terminal text, UI accents, active, CTAs, links */
+  --cyan: #00e5ff; /* 3D/particle scenes, depth highlights, secondary accents */
+  --blue-900: #1e3a8a; /* 3D scene depth */
+  --blue-500: #3b82f6;
+  --magenta: #ff006e; /* sparing emphasis only, never a fill */
+  --violet: #a78bfa; /* Map-mode employer nodes ONLY */
+  --copper: #4aa8ff; /* renovation: light copper-sulphate blue (Mind Map brain) */
+  --purple: #a855f7; /* renovation: particle sphere (Contact background) */
+  --blood-red-lo: #5c0a0a; /* atmospheric depth only, never UI */
+  --blood-red-hi: #7a0f0f;
+  --text: #e5e7eb;
+  --text-dim: #9ca3af;
+  --border: #1f2937;
+  --surface: #111317;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-green: var(--green);
+  --color-cyan: var(--cyan);
+  --color-blue-900: var(--blue-900);
+  --color-blue-500: var(--blue-500);
+  --color-magenta: var(--magenta);
+  --color-violet: var(--violet);
+  --color-copper: var(--copper);
+  --color-purple: var(--purple);
+  --color-blood-lo: var(--blood-red-lo);
+  --color-blood-hi: var(--blood-red-hi);
+  --color-text: var(--text);
+  --color-text-dim: var(--text-dim);
+  --color-border: var(--border);
+  --color-surface: var(--surface);
+
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 16px; /* legibility floor (PRD 6.1): body 15-16px, never smaller */
+  line-height: 1.6;
+  letter-spacing: -0.006em;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Display headings use the premium sans (Geist), not mono (PRD 6.1). */
+h1, h2, h3, h4 {
+  font-family: var(--font-sans);
+  letter-spacing: -0.02em;
+}
+
+/* Terminal aesthetic is opt-in, only on terminal surfaces (cards, chatbot,
+   code labels) — never the default body font. */
+.font-terminal {
+  font-family: var(--font-mono);
+}
+
+::selection {
+  background: var(--green);
+  color: var(--bg);
+}
+
+/* Focus visibility for keyboard nav (a11y, bullseye/frontend rules) */
+:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+/* Custom scrollbar in the terminal lane */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: #1f2937;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #374151;
+}
+
+.blink-cursor::after {
+  content: "_";
+  color: var(--green);
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Infinite Moving Cards marquee (PRD 6.10). Row is duplicated; shift by half. */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .blink-cursor::after {
+    animation: none;
+  }
+}
+
+/* Markdown prose styling within the dark/green lane */
+.prose-nir {
+  color: var(--text);
+  line-height: 1.6;
+}
+.prose-nir h1,
+.prose-nir h2,
+.prose-nir h3 {
+  font-family: var(--font-sans);
+  letter-spacing: -0.02em;
+  color: #fff;
+  margin-top: 1.6em;
+  margin-bottom: 0.6em;
+  line-height: 1.25;
+}
+.prose-nir h2 {
+  font-size: 1.25rem;
+  color: var(--green);
+}
+.prose-nir h3 {
+  font-size: 1.05rem;
+}
+.prose-nir p,
+.prose-nir li {
+  font-size: 1rem;
+  margin-bottom: 0.85em;
+}
+.prose-nir ul,
+.prose-nir ol {
+  padding-left: 1.4em;
+  margin-bottom: 1em;
+}
+.prose-nir ul {
+  list-style: none;
+}
+.prose-nir ul li::before {
+  content: "> ";
+  color: var(--green);
+  font-family: var(--font-mono);
+}
+.prose-nir ol {
+  list-style: decimal;
+}
+.prose-nir a {
+  color: var(--green);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.prose-nir strong {
+  color: #fff;
+}
+.prose-nir code {
+  font-family: var(--font-mono);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+  font-size: 0.9em;
+  color: var(--cyan);
+}
+.prose-nir pre {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1em;
+  overflow-x: auto;
+  margin-bottom: 1em;
+}
+.prose-nir pre code {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--green);
+}
