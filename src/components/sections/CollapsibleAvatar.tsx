@@ -10,9 +10,8 @@ import { useReducedMotion } from "@/lib/hooks/useReducedMotion";
  * over the page, no box), a comic dialog box above his head speaks the
  * summary, and an ask_niranjan button floats under his legs.
  *
- * First visit per session: opens by itself, the dialog disappears after 5s,
- * the whole avatar collapses after 10s. Clicking anywhere outside dismisses
- * the dialog.
+ * Every load: opens by itself, then the whole avatar collapses after 3s.
+ * Clicking anywhere outside dismisses the dialog early.
  */
 
 function AvatarMedia({ size }: { size: number }) {
@@ -82,7 +81,7 @@ export function CollapsibleAvatar({
   title: string;
   summary: string;
   onAsk: () => void;
-  /** auto-expand on mount (first-ever visit only); returning visitors stay collapsed */
+  /** auto-expand on mount, every load */
   autoOpen?: boolean;
 }) {
   const [open, setOpen] = useState(false);
@@ -95,8 +94,7 @@ export function CollapsibleAvatar({
     timers.current = [];
   }, []);
 
-  // First-ever visit only: the starman expands on his own, then collapses back
-  // after 6s. Returning visitors land collapsed and open him by choice.
+  // On every load the starman expands on his own, then collapses back after 3s.
   useEffect(() => {
     if (!autoOpen) return;
     timers.current.push(
@@ -105,7 +103,7 @@ export function CollapsibleAvatar({
         setShowDialog(true);
       }, 0),
     );
-    timers.current.push(setTimeout(() => setOpen(false), 6000));
+    timers.current.push(setTimeout(() => setOpen(false), 3000));
     return clearTimers;
   }, [autoOpen, clearTimers]);
 

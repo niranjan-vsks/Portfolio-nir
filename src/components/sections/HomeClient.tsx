@@ -88,30 +88,10 @@ export function HomeClient({
   const [askOpen, setAskOpen] = useState(false);
   const [revealed, setRevealed] = useState(false);
   const [navLabel, setNavLabel] = useState<string | null>(null);
-  // First-ever visit only: expand the intro heading and auto-open the avatar.
-  // localStorage is read AFTER mount (never during render) into a ref, so the
-  // server and first client render agree — no hydration mismatch. The ref is
-  // populated before the loader writes the flag, so first-visit detection holds.
-  // Both default true (matches the server render → no hydration mismatch). The
-  // real value is read from localStorage AFTER mount and applied on the next
-  // tick, before the loader reveals anything.
+  // Intro heading and avatar auto-open on every load (not gated to first-ever
+  // visit) and auto-collapse shortly after so they never sit in the way.
   const [headerOpen, setHeaderOpen] = useState(true);
-  const [introFirst, setIntroFirst] = useState(true);
   const onReveal = useCallback(() => setRevealed(true), []);
-
-  useEffect(() => {
-    let first = true;
-    try {
-      first = !localStorage.getItem(FIRST_VISIT_KEY);
-    } catch {
-      /* storage blocked: treat as first visit */
-    }
-    const t = setTimeout(() => {
-      setIntroFirst(first);
-      if (!first) setHeaderOpen(false); // returning visitor lands collapsed
-    }, 0);
-    return () => clearTimeout(t);
-  }, []);
 
   // Card click: flash the cube loader with a section-specific label so the user
   // sees their click registered, then route. Fixes the "no feedback, random
@@ -129,13 +109,13 @@ export function HomeClient({
     [router],
   );
 
-  // Intro heading appears on reveal, then auto-collapses so it stops covering
-  // the globe and orbit cards. Reduced-motion leaves it open.
+  // Intro heading appears on reveal, then auto-collapses after 6s so it stops
+  // covering the globe and orbit cards. Reduced-motion leaves it open.
   useEffect(() => {
-    if (!revealed || reduced || !introFirst) return;
-    const t = setTimeout(() => setHeaderOpen(false), 5000);
+    if (!revealed || reduced) return;
+    const t = setTimeout(() => setHeaderOpen(false), 6000);
     return () => clearTimeout(t);
-  }, [revealed, reduced, introFirst]);
+  }, [revealed, reduced]);
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[radial-gradient(ellipse_at_50%_40%,#060a16_0%,#03040a_60%,#000_100%)]">
@@ -210,7 +190,6 @@ export function HomeClient({
           title={title}
           summary={summary}
           onAsk={() => setAskOpen(true)}
-          autoOpen={introFirst}
         />
       )}
       <ChatPanel open={askOpen} onClose={() => setAskOpen(false)} />
