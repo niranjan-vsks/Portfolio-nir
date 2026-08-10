@@ -11,7 +11,6 @@ Support engineers hit a web chat surface. An AWS Application Load Balancer front
 - Cross-encoder re-ranking on top of hybrid recall: +30-40% response relevance in pilot, measured on a held-out evaluation set.
 
 ## Operations
-- Response/session cache keeps hot questions off the LLM.
 - Secrets in a managed secrets store; nothing in images or env files.
 - Latency, retrieval hit-rate, and escalation telemetry in CloudWatch-class monitoring; repeat escalations fell ~40%.
 

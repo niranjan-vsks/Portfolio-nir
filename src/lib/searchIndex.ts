@@ -31,6 +31,7 @@ export const SEARCH_INDEX: SearchEntry[] = [
   { label: "Saarthi", href: "/projects/saarthi", group: "project", keywords: ["voice", "financial", "gig workforce", "vernacular"] },
   { label: "WealthOS", href: "/projects/wealthos", group: "project", keywords: ["wealthos", "autonomous wealth", "portfolio", "trading", "multi-agent", "veto gate"] },
   { label: "Agentic Codebase Intelligence System", href: "/projects/codebase-intelligence-system", group: "project", keywords: ["codebase", "audit", "multi-agent", "jira", "mcp", "hybrid retrieval", "okf", "orchestrator", "fde"] },
+  { label: "Operator OS", href: "/projects/operator-os", group: "project", keywords: ["operator os", "multi-agent", "control plane", "durable queue", "postgres", "skip locked", "cost ledger", "provider failover", "llm cost", "drizzle", "neon"] },
   { label: "QE Platform", href: "/projects/qe-platform", group: "project", keywords: ["quality engineering", "graphrag", "testing", "playwright", "agentic qa"] },
   { label: "Enterprise Knowledge Assistant (HPE RAG)", href: "/projects/hpe-rag-chatbot", group: "project", keywords: ["hpe", "rag", "chatbot", "escalations", "knowledge assistant", "squidex", "confluence"] },
   { label: "National Census Digital Assistant (HPE)", href: "/projects/global-census-chatbot", group: "project", keywords: ["hpe", "census", "chatbot", "npr", "government"] },

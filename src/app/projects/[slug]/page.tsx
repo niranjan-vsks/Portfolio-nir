@@ -13,6 +13,7 @@ import { ProjectShowcase } from "@/components/sections/ProjectShowcase";
 import { SliderSpectra } from "@/components/ui/SliderSpectra";
 import { SaarthiView } from "@/components/sections/SaarthiView";
 import { ProductSection } from "@/components/sections/ProductSection";
+import { MacBookScroll } from "@/components/ui/MacBookScroll";
 import { TagChip } from "@/components/ui/TagChip";
 import { SKILL_NODE } from "@/components/sections/AboutStrips";
 import type { Metadata } from "next";
@@ -56,6 +57,7 @@ const SYSTEM_DESIGN_SLUGS = new Set([
   "saarthi",
   "wealthos",
   "codebase-intelligence-system",
+  "operator-os",
 ]);
 
 // Confidentiality gate : screenshots only render for slugs whose
@@ -129,6 +131,22 @@ export default async function ProjectPage({
             </ButtonLink>
           </div>
         </header>
+
+        {slug === "codebase-intelligence-system" && (
+          <section className="mb-4">
+            <h2 className="mb-1 font-mono text-lg text-green">{"> demo"}</h2>
+            <MacBookScroll>
+              <video
+                src="/videos/codebase-intelligence-demo.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="h-full w-full object-cover"
+              />
+            </MacBookScroll>
+          </section>
+        )}
 
         {/* View · Slider Spectra coverflow, real screenshots ONLY. No boxed
             text placeholders : when a project has no

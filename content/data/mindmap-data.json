@@ -1,15 +1,15 @@
 {
   "_meta": {
     "version": "v2",
-    "generatedFor": "Niranjan VSKS Portfolio \u2014 MAP mode",
+    "generatedFor": "Niranjan VSKS Portfolio — MAP mode",
     "changesFromV1": [
       "Added employer nodes: Coforge, HPE, Mphasis (not anonymized)",
       "Added System Design Showcase as a separate destination node, framed as 'how I would build something like this' (reference architecture, not deployed claim)",
-      "LIABILITY FIREWALL: NO direct edge from any employer node to System Design. Employer \u2192 Project \u2192 System Design only.",
+      "LIABILITY FIREWALL: NO direct edge from any employer node to System Design. Employer → Project → System Design only.",
       "Added LangGraph, LangChain skills (per resume v6 Agentic AI skills)",
       "Added Statistical Modeling, Risk Scoring (per resume v6 ML skills)",
       "Added explicit RAG technique leaves from Coforge bullet: Query Transformation, Context Compression, Query Rerouting",
-      "Added Multi-Cloud Customer Tenant Deploy skill \u2014 Coforge bullet now explicitly mentions deploying across AWS, Azure, GCP customer environments",
+      "Added Multi-Cloud Customer Tenant Deploy skill — Coforge bullet now explicitly mentions deploying across AWS, Azure, GCP customer environments",
       "Every node has 'href' field for click routing",
       "Added 'interactionContract' to _meta to drive build prompt for click/hover behavior"
     ],
@@ -54,7 +54,7 @@
       "type": "root",
       "val": 24,
       "color": "#4ADE80",
-      "description": "Senior agentic AI engineer who ships into enterprise environments end-to-end \u2014 cold-start discovery through production deployment. Seven years across data science, GenAI, and agentic AI.",
+      "description": "Senior agentic AI engineer who ships into enterprise environments end-to-end — cold-start discovery through production deployment. Seven years across data science, GenAI, and agentic AI.",
       "href": "/"
     },
     {
@@ -64,9 +64,9 @@
       "type": "employer",
       "val": 12,
       "color": "#A78BFA",
-      "description": "Senior Engineer \u2014 GenAI & Agentic AI. 03/2024 \u2013 Present. Hyderabad. Currently building agentic AI systems.",
+      "description": "Senior Engineer — GenAI & Agentic AI. 03/2024 – Present. Hyderabad. Currently building agentic AI systems.",
       "href": "/experience#coforge",
-      "tenure": "03/2024 \u2013 Present"
+      "tenure": "03/2024 – Present"
     },
     {
       "id": "emp_hpe",
@@ -75,9 +75,9 @@
       "type": "employer",
       "val": 10,
       "color": "#A78BFA",
-      "description": "Data Scientist \u2014 GenAI, ML & Conversational AI. 11/2022 \u2013 12/2023. Bangalore.",
+      "description": "Data Scientist — GenAI, ML & Conversational AI. 11/2022 – 12/2023. Bangalore.",
       "href": "/experience#hpe",
-      "tenure": "11/2022 \u2013 12/2023"
+      "tenure": "11/2022 – 12/2023"
     },
     {
       "id": "emp_mphasis",
@@ -86,9 +86,9 @@
       "type": "employer",
       "val": 9,
       "color": "#A78BFA",
-      "description": "Associate Data Scientist. 07/2019 \u2013 10/2022. Bangalore.",
+      "description": "Associate Data Scientist. 07/2019 – 10/2022. Bangalore.",
       "href": "/experience#mphasis",
-      "tenure": "07/2019 \u2013 10/2022"
+      "tenure": "07/2019 – 10/2022"
     },
     {
       "id": "domain_agentic",
@@ -137,7 +137,7 @@
       "type": "domain",
       "val": 12,
       "color": "#FF006E",
-      "description": "Tree-based ensembles, predictive modeling, feature engineering, statistical modeling, risk scoring \u2014 the foundation that informs the AI engineering work above.",
+      "description": "Tree-based ensembles, predictive modeling, feature engineering, statistical modeling, risk scoring — the foundation that informs the AI engineering work above.",
       "href": "/skills?domain=ml"
     },
     {
@@ -147,7 +147,7 @@
       "type": "project",
       "val": 12,
       "color": "#4ADE80",
-      "description": "Agentic QA platform \u2014 user story to deployed test. GraphRAG + Agentic RAG + LLM observability + tenant-aware RBAC. Deployed across 17 enterprise QA teams in customer-managed AWS, Azure, and GCP environments.",
+      "description": "Agentic QA platform — user story to deployed test. GraphRAG + Agentic RAG + LLM observability + tenant-aware RBAC. Deployed across 17 enterprise QA teams in customer-managed AWS, Azure, and GCP environments.",
       "href": "/projects/qe-platform",
       "status": "live"
     },
@@ -213,7 +213,7 @@
       "type": "system_design",
       "val": 13,
       "color": "#00E5FF",
-      "description": "Interactive reference architectures \u2014 how I would build systems like the projects shown here. Pattern-level diagrams using industry-standard primitives (Docker, AWS, Azure, secrets managers, etc.). Counterpart to the product-frameworks layer in the FDE portfolio narrative.",
+      "description": "Interactive reference architectures — how I would build systems like the projects shown here. Pattern-level diagrams using industry-standard primitives (Docker, AWS, Azure, secrets managers, etc.). Counterpart to the product-frameworks layer in the FDE portfolio narrative.",
       "href": "/system-design",
       "framing": "reference_architectures"
     },
@@ -483,7 +483,7 @@
     },
     {
       "id": "skill_multicloud",
-      "label": "Multi-Cloud (Azure \u00b7 GCP \u00b7 AWS)",
+      "label": "Multi-Cloud (Azure · GCP · AWS)",
       "group": "eng",
       "type": "skill",
       "val": 5,
@@ -523,7 +523,7 @@
     },
     {
       "id": "skill_tree_ensembles",
-      "label": "Tree-Based Ensembles\n(XGBoost \u00b7 LightGBM \u00b7 RF)",
+      "label": "Tree-Based Ensembles\n(XGBoost · LightGBM · RF)",
       "group": "ml",
       "type": "skill",
       "val": 5,
@@ -560,6 +560,17 @@
       "type": "skill",
       "val": 5,
       "color": "#E5E7EB"
+    },
+    {
+      "id": "proj_operator_os",
+      "label": "Operator OS",
+      "group": "projects",
+      "type": "project",
+      "val": 10,
+      "color": "#4ADE80",
+      "description": "Self-hosted multi-agent operations platform. Single-tenant control plane where every model call is accounted for including failures, dispatch is a durable Postgres queue that survives a crash, and the reporting graph is kept acyclic by the database inside the write transaction.",
+      "href": "/projects/operator-os",
+      "status": "in_development"
     }
   ],
   "links": [
@@ -1030,6 +1041,30 @@
     {
       "source": "proj_mphasis_ml",
       "target": "skill_statistical_modeling"
+    },
+    {
+      "source": "root",
+      "target": "proj_operator_os"
+    },
+    {
+      "source": "proj_operator_os",
+      "target": "domain_agentic"
+    },
+    {
+      "source": "proj_operator_os",
+      "target": "domain_eng"
+    },
+    {
+      "source": "proj_operator_os",
+      "target": "showcase_system_design"
+    },
+    {
+      "source": "proj_operator_os",
+      "target": "skill_multi_agent"
+    },
+    {
+      "source": "proj_operator_os",
+      "target": "skill_agentic_workflows"
     }
   ]
 }

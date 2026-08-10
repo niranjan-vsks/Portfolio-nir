@@ -5,7 +5,7 @@ slug: qe-platform
 status: production
 demo: none
 tagline: Agentic QA platform · from user story to deployed test
-stack: [GraphRAG, Neo4j, vector store, Agentic RAG, custom Playwright MCP, AWS Bedrock LLM, FastAPI, React, tenant-aware RBAC, LLM observability]
+stack: [GraphRAG, Neo4j, AWS Neptune, OpenSearch, Amazon S3, AWS SSO, Agentic RAG, custom Playwright MCP, AWS Bedrock LLM, FastAPI, React, tenant-aware RBAC, LLM observability]
 metric: "Manual effort on covered workflows cut ~85%; hallucination ~15% -> under 5%; deployed across 17 enterprise QA teams at peak adoption"
 signature_visual: static-architecture
 order: 4
@@ -22,7 +22,7 @@ Enterprise QA runs on thousands of test cases that someone has to author, mainta
 I owned the platform end to end as senior engineer, from feasibility framing through architecture, build, production rollout, and adoption across enterprise QA teams. I made the architectural calls, built the metrics framework, and drove the refinement loop off team-specific feedback.
 
 ## The outcome
-Manual effort on covered test-authoring and triage workflows dropped ~85%. Script authoring ran ~75% faster than writing Playwright or Cypress by hand. GraphRAG and entity normalization pulled hallucination from ~15% to under 5%. The platform deployed across 17 QA teams at peak adoption and held usage well past MVP, running on customer-managed AWS, Azure, and GCP.
+Manual effort on covered test-authoring and triage workflows dropped ~85%. Script authoring ran ~75% faster than writing Playwright or Cypress by hand. GraphRAG and entity normalization pulled hallucination from ~15% to under 5%. The platform deployed across 17 QA teams at peak adoption and held usage well past MVP, running on customer-managed AWS, Azure, and GCP, sustaining ~7,000 concurrent test executions per day.
 
 ## Key decisions
 1. **GraphRAG over vanilla RAG.** Enterprise QA docs have entity relationships (epics, stories, acceptance criteria, existing tests) that cosine similarity loses. GraphRAG plus entity normalization preserves them. Cost framing: ~30-40% higher token cost per query, offset by ~50% fewer regenerations, netting a lower cost per acceptable output.

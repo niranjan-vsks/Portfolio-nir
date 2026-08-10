@@ -12,6 +12,7 @@ export const ROUTES = [
   "/projects/global-census-chatbot",
   "/projects/mphasis-ml-risk",
   "/projects/codebase-intelligence-system",
+  "/projects/operator-os",
   "/system-design",
   "/dashboard",
   "/about",

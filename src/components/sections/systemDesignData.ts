@@ -55,8 +55,8 @@ const qeNodes: N[] = [
   { id: "rbac", position: { x: 0, y: 260 }, data: { label: "tenant-aware RBAC", plane: "control", primitive: "RBAC service", rationale: "Module-level CRUD-X permissions and role templates (QA Manager, Test Lead, QE Engineer) that onboard new tenants from their existing org charts." } },
   { id: "orch", position: { x: 230, y: 130 }, data: { label: "agent orchestrator", plane: "control", primitive: "agent runtime", rationale: "Agentic RAG: agents find the user story, fetch linked epics and acceptance criteria, and pull existing tests as in-context style examples." } },
   { id: "tickets", position: { x: 230, y: 280 }, data: { label: "issue tracker APIs", plane: "data", primitive: "Jira / ADO connectors", rationale: "Test generation is scoped against linked stories, epics, and acceptance criteria pulled live from the tracker." } },
-  { id: "graph", position: { x: 460, y: 40 }, data: { label: "knowledge graph (Neo4j)", plane: "data", primitive: "graph database", rationale: "GraphRAG with entity normalization. QA docs have entity relationships cosine similarity loses; the graph preserves them. Hallucination ~15% -> under 5%." } },
-  { id: "vec", position: { x: 460, y: 200 }, data: { label: "vector store + rerank", plane: "data", primitive: "hybrid retrieval", rationale: "Query transformation, re-ranking, context compression, metadata filtering. The retrieval half of the sub-5% hallucination number." } },
+  { id: "graph", position: { x: 460, y: 40 }, data: { label: "knowledge graph (Neo4j)", plane: "data", primitive: "graph database", rationale: "GraphRAG with entity normalization on Neo4j, with AWS Neptune as the managed alternative where a tenant prefers to stay inside their own AWS account. QA docs have entity relationships cosine similarity loses; the graph preserves them. Hallucination ~15% -> under 5%." } },
+  { id: "vec", position: { x: 460, y: 200 }, data: { label: "vector store + rerank", plane: "data", primitive: "hybrid retrieval", rationale: "OpenSearch as the vector store over the tenant's own S3 corpus, reached through their AWS SSO. Query transformation, re-ranking, context compression, metadata filtering. The retrieval half of the sub-5% hallucination number." } },
   { id: "gen", position: { x: 690, y: 130 }, data: { label: "test generation + MCP", plane: "control", primitive: "custom Playwright MCP", rationale: "Natural language to production-grade Playwright/Cypress scripts through a custom tool-server (MCP) integration. Authoring time down ~75%." } },
   { id: "ci", position: { x: 690, y: 20 }, data: { label: "CI-integrated execution", plane: "control", primitive: "CI runner", rationale: "Generated suites execute inside the customer's CI, not a side channel, so results land where engineering already looks." } },
   { id: "guard", position: { x: 690, y: 250 }, data: { label: "guardrails + eval", plane: "observability", primitive: "eval harness", rationale: "Three-dimensional quality: Acceptance-Criteria Coverage, Test-Design Coverage, RAGAS. An audit-defensible scoreboard for budget reviews." } },
@@ -100,7 +100,6 @@ const hpeNodes: N[] = [
   { id: "squidex", position: { x: 230, y: 430 }, data: { label: "Squidex CMS", plane: "data", primitive: "headless CMS source", rationale: "Primary managed content source; webhook-driven sync keeps the index fresh as process docs change." } },
   { id: "confluence", position: { x: 0, y: 430 }, data: { label: "Confluence", plane: "data", primitive: "wiki source", rationale: "Second corpus: team wikis and runbooks, pulled through the same ingestion path with source-level metadata." } },
   { id: "ingest", position: { x: 460, y: 430 }, data: { label: "ingestion pipeline", plane: "data", primitive: "chunking + embedding jobs", rationale: "~1,700 internal documents; chunking with overlap calibration, metadata tagging, embedding, and incremental re-indexing." } },
-  { id: "cache", position: { x: 460, y: 20 }, data: { label: "response + session cache", plane: "data", primitive: "in-memory cache", rationale: "Hot-question caching and session context; the cheapest token is the one never generated." } },
   { id: "eval", position: { x: 690, y: 20 }, data: { label: "evaluation loop", plane: "observability", primitive: "held-out retrieval eval", rationale: "Retrieval precision measured against a held-out set every pipeline change; the loop that justified each iteration." } },
   { id: "secrets", position: { x: 230, y: 20 }, data: { label: "secrets manager", plane: "observability", primitive: "AWS Secrets Manager", rationale: "API keys and source credentials never live in images or env files; rotated centrally." } },
   { id: "cw", position: { x: 920, y: 20 }, data: { label: "logs + metrics", plane: "observability", primitive: "CloudWatch class", rationale: "Latency, retrieval hit-rate, and escalation telemetry; repeat escalations fell ~40% and this is where that was measured." } },
@@ -117,7 +116,6 @@ const hpeEdges: Edge[] = [
   { id: "h8", source: "confluence", target: "ingest" },
   { id: "h9", source: "squidex", target: "ingest" },
   { id: "h10", source: "ingest", target: "retr", label: "index" },
-  { id: "h11", source: "api", target: "cache" },
   { id: "h12", source: "orch2", target: "eval" },
   { id: "h13", source: "api", target: "secrets" },
   { id: "h14", source: "llm2", target: "cw" },
@@ -281,6 +279,42 @@ const cisEdges: Edge[] = [
 // ---------------------------------------------------------------------------
 // Sections
 // ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// 08 · Operator OS — actual architecture. Only components that exist: the
+// single model-call function and its ledger, the provider cascade, the
+// Postgres-backed durable queue, the agent registry with its acyclic check,
+// and the acceptance-check harness. No load balancer, cache, or broker.
+// ---------------------------------------------------------------------------
+const opsNodes: N[] = [
+  { id: "op_ui", position: { x: 0, y: 150 }, data: { label: "control plane (Next.js)", plane: "control", primitive: "single-tenant UI", rationale: "One operator's control plane. Departments and their reporting graph render from the registry, so navigation follows the data rather than hardcoded routes." } },
+  { id: "op_registry", position: { x: 235, y: 40 }, data: { label: "agent registry", plane: "data", primitive: "departments + employees", rationale: "Departments and employees are rows. Adding a department takes a manifest file and a row, with no changes to routing or navigation code." } },
+  { id: "op_cte", position: { x: 470, y: 40 }, data: { label: "acyclic check (recursive CTE)", plane: "control", primitive: "write-transaction guard", rationale: "The reporting graph is kept acyclic by a recursive CTE inside the write transaction, so structure is enforced by the database rather than by asking an agent nicely." } },
+  { id: "op_queue", position: { x: 235, y: 175 }, data: { label: "durable job queue", plane: "data", primitive: "Postgres FOR UPDATE SKIP LOCKED", rationale: "Dispatch is a durable queue: leases with reclamation, exponential backoff with jitter, idempotency keys, and resumable checkpoints, so work survives a crash." } },
+  { id: "op_workers", position: { x: 470, y: 175 }, data: { label: "workers", plane: "control", primitive: "lease + claim", rationale: "Workers claim disjoint job sets under a lease. A lease that expires after a crash is reclaimed rather than lost." } },
+  { id: "op_dlq", position: { x: 470, y: 300 }, data: { label: "dead-letter queue", plane: "data", primitive: "terminal failure store", rationale: "Jobs that exhaust retries land in a dead-letter queue instead of disappearing or looping." } },
+  { id: "op_gateway", position: { x: 705, y: 175 }, data: { label: "model call gateway", plane: "control", primitive: "single call function", rationale: "Every model call routes through one function. That single choke point is what makes accounting, ceilings, and the kill switch possible at all." } },
+  { id: "op_guard", position: { x: 705, y: 40 }, data: { label: "kill switch + ceilings", plane: "control", primitive: "spend + price guard", rationale: "Kill switch, daily spend ceiling, and a per-model price ceiling that catches a vendor listing the same model at $0.28 and $75 per million tokens with capitalisation as the only difference." } },
+  { id: "op_ledger", position: { x: 705, y: 300 }, data: { label: "cost ledger", plane: "observability", primitive: "row per attempt", rationale: "A ledger row per attempt including the ones that fail, so a failed call is still accounted for rather than invisible." } },
+  { id: "op_cascade", position: { x: 940, y: 175 }, data: { label: "provider cascade (7)", plane: "control", primitive: "free-first failover", rationale: "Seven providers ordered free-first with automatic failover and a per-attempt deadline, because a hung provider otherwise blocks the whole chain." } },
+  { id: "op_probe", position: { x: 940, y: 40 }, data: { label: "live model probe", plane: "observability", primitive: "ID verification", rationale: "Model IDs verified by probing them live rather than trusting vendor docs. The probe found a model that hangs 194 seconds before dying and a free tier returning 403 while its dashboard still advertised it." } },
+  { id: "op_ci", position: { x: 0, y: 300 }, data: { label: "CI bypass check", plane: "observability", primitive: "build gate", rationale: "A CI check fails the build if any code calls a model without going through the gateway, so the accounting guarantee cannot quietly erode." } },
+  { id: "op_checks", position: { x: 235, y: 300 }, data: { label: "78 acceptance checks", plane: "observability", primitive: "live-Postgres harness", rationale: "78 checks run against a live Postgres instance rather than mocks: 100 concurrent ID issues with zero collisions, two workers claiming disjoint job sets, lease reclamation after a simulated crash, and a real cycle refused while a redundant acyclic edge is allowed." } },
+];
+const opsEdges: Edge[] = [
+  { id: "o1", source: "op_ui", target: "op_registry" },
+  { id: "o2", source: "op_registry", target: "op_cte" },
+  { id: "o3", source: "op_ui", target: "op_queue" },
+  { id: "o4", source: "op_queue", target: "op_workers", animated: true },
+  { id: "o5", source: "op_workers", target: "op_dlq" },
+  { id: "o6", source: "op_workers", target: "op_gateway", animated: true },
+  { id: "o7", source: "op_guard", target: "op_gateway" },
+  { id: "o8", source: "op_gateway", target: "op_ledger", animated: true },
+  { id: "o9", source: "op_gateway", target: "op_cascade", animated: true },
+  { id: "o10", source: "op_probe", target: "op_cascade" },
+  { id: "o11", source: "op_ci", target: "op_gateway" },
+  { id: "o12", source: "op_checks", target: "op_queue" },
+];
+
 export const SD_SECTIONS: SDSection[] = [
   {
     id: "qe-platform",
@@ -313,6 +347,7 @@ export const SD_SECTIONS: SDSection[] = [
       ],
       capacity: [
         "17 enterprise QA teams at peak adoption on shared infrastructure",
+        "~7,000 concurrent test executions per day sustained across tenants",
         "Per-tenant token budgets and context compression tuned to each tenant's query patterns",
         "Low-complexity queries rerouted to lighter models to cut per-tenant LLM spend",
       ],
@@ -559,6 +594,51 @@ export const SD_SECTIONS: SDSection[] = [
         "Adaptive hybrid retrieval over a single strategy, because code is full of exact identifiers that dense retrieval alone misses",
         "Jira via MCP for agent-facing tool calls, with the direct REST API only where MCP does not expose a needed field",
         "A human approval gate costs a step, but it is the trust boundary that makes writing to a customer's production tracker acceptable",
+      ],
+    },
+  },
+  {
+    id: "operator-os",
+    title: "Operator OS",
+    badge: "interactive · pre-deployment",
+    intro:
+      "A single-tenant control plane for running agents against real work. Every model call goes through one function so it can be accounted for and capped, dispatch is a durable Postgres queue so work survives a crash, and the reporting graph is kept acyclic by the database inside the write transaction rather than by convention.",
+    tags: ["multi-agent", "durable queue", "cost control", "provider failover", "postgres"],
+    kind: "flow",
+    nodes: opsNodes,
+    edges: opsEdges,
+    height: 520,
+    flowLabel: "Interactive explorer",
+    caption:
+      "Hover any node for the design rationale. Click to maximize.",
+    projectHref: "/projects/operator-os",
+    interview: {
+      functional: [
+        "Register departments and employees, with the reporting graph rendered from the registry",
+        "Dispatch agent work as durable jobs that survive a process crash",
+        "Route every model call through one function, across seven providers with automatic failover",
+        "Record a ledger row per model-call attempt, including attempts that fail",
+        "Enforce a kill switch, a daily spend ceiling, and a per-model price ceiling",
+      ],
+      nonFunctional: [
+        "Failed calls are still accounted for, so cost data has no silent gaps",
+        "Structure is enforced by the database: a recursive CTE inside the write transaction refuses a cycle in the reporting graph",
+        "A per-attempt deadline on every provider call, so one hung provider cannot block the chain",
+        "A CI check fails the build if any code bypasses the model-call gateway",
+        "Idempotency keys and resumable checkpoints, so a retry does not duplicate work",
+      ],
+      capacity: [
+        "Claiming uses FOR UPDATE SKIP LOCKED, so workers take disjoint job sets without blocking each other",
+        "Leases are reclaimed after a crash rather than leaving jobs stranded",
+        "Exponential backoff with jitter on retries, with terminal failures routed to a dead-letter queue",
+        "Verified at 100 concurrent ID issues with zero collisions",
+      ],
+      tradeoffs: [
+        "Postgres as the queue rather than a separate broker: one datastore to operate, and the queue shares transactions with the data it touches",
+        "One mandatory call function is a constraint on every caller, but it is the only way the accounting and the ceilings hold",
+        "Model IDs verified by live probing rather than vendor documentation, after probing found a model that hangs 194 seconds before dying and a free tier returning 403 while its dashboard still advertised it",
+        "Free-first provider ordering trades predictable latency for cost, which the per-attempt deadline bounds",
+        "78 acceptance checks run against a live Postgres instance rather than mocks: slower to run, but they exercise the concurrency and transaction behaviour the design depends on",
       ],
     },
   },

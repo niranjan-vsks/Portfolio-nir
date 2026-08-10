@@ -11,6 +11,7 @@ const LINKS: { pattern: RegExp; href: string; caption: string }[] = [
   { pattern: /WealthOS/, href: "/projects/wealthos", caption: "Click to explore this project in detail" },
   { pattern: /Loop Copilot/, href: "/projects/loop-copilot", caption: "Click to explore this project in detail" },
   { pattern: /Saarthi/, href: "/projects/saarthi", caption: "Click to explore this project in detail" },
+  { pattern: /Operator OS/, href: "/projects/operator-os", caption: "Click to explore this project in detail" },
   { pattern: /National Census Digital Assistant/, href: "/projects/global-census-chatbot", caption: "Click to explore this project in detail" },
   { pattern: /Financial Risk (?:&|and) Fraud Intelligence/, href: "/projects/mphasis-ml-risk", caption: "Click to explore this project in detail" },
   { pattern: /conversational (?:system|RAG)/i, href: "/projects/hpe-rag-chatbot", caption: "Click to explore this project in detail" },
