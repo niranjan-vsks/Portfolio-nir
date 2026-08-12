@@ -60,6 +60,12 @@ const SYSTEM_DESIGN_SLUGS = new Set([
   "operator-os",
 ]);
 
+/** Projects with a rendered demo reel, shown in the MacBook frame above the fold. */
+const DEMO_VIDEOS: Record<string, string> = {
+  "codebase-intelligence-system": "/videos/codebase-intelligence-demo.mp4",
+  "qe-platform": "/videos/qe-platform-demo.mp4",
+};
+
 // Confidentiality gate : screenshots only render for slugs whose
 // images are confirmed scrubbed of client data. Empty until Niranjan confirms;
 // Loop Copilot's dropped shots stay hidden (not scrubbed) until then.
@@ -132,12 +138,12 @@ export default async function ProjectPage({
           </div>
         </header>
 
-        {slug === "codebase-intelligence-system" && (
+        {DEMO_VIDEOS[slug] && (
           <section className="mb-4">
             <h2 className="mb-1 font-mono text-lg text-green">{"> demo"}</h2>
             <MacBookScroll>
               <video
-                src="/videos/codebase-intelligence-demo.mp4"
+                src={DEMO_VIDEOS[slug]}
                 autoPlay
                 loop
                 muted
