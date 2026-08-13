@@ -141,7 +141,7 @@ export default async function ProjectPage({
         {DEMO_VIDEOS[slug] && (
           <section className="mb-4">
             <h2 className="mb-1 font-mono text-lg text-green">{"> demo"}</h2>
-            <MacBookScroll>
+            <MacBookScroll videoSrc={DEMO_VIDEOS[slug]}>
               <video
                 src={DEMO_VIDEOS[slug]}
                 autoPlay

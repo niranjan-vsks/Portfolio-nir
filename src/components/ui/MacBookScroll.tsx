@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { useScroll, useTransform, motion } from "framer-motion";
 import { useReducedMotion } from "@/lib/hooks/useReducedMotion";
 
@@ -10,10 +11,36 @@ import { useReducedMotion } from "@/lib/hooks/useReducedMotion";
  * stylized keyboard deck beneath. Recolored to the dark + green terminal
  * palette so it blends with the rest of the site. Reduced motion shows the
  * lid fully open (end state), no animation.
+ *
+ * Pass `videoSrc` to make the screen clickable: it opens the same fullscreen
+ * treatment the architecture diagrams use (escape or the close button exits),
+ * but with a real video player so the reel can be scrubbed. The laptop screen
+ * is small and the reels are dark, so the inline view is a teaser and this is
+ * the readable one.
  */
-export function MacBookScroll({ children }: { children: ReactNode }) {
+export function MacBookScroll({
+  children,
+  videoSrc,
+}: {
+  children: ReactNode;
+  videoSrc?: string;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
+  const [expanded, setExpanded] = useState(false);
+
+  useEffect(() => {
+    if (!expanded) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setExpanded(false);
+    };
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [expanded]);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start 0.9", "start 0.35"],
@@ -41,6 +68,19 @@ export function MacBookScroll({ children }: { children: ReactNode }) {
             <motion.div style={{ opacity: screenOpacity }} className="h-full w-full">
               {children}
             </motion.div>
+            {videoSrc && (
+              <button
+                type="button"
+                onClick={() => setExpanded(true)}
+                aria-label="play the demo reel fullscreen"
+                title="click to expand"
+                className="group absolute inset-0 flex items-end justify-center pb-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-green"
+              >
+                <span className="rounded border border-green/40 bg-bg/85 px-2 py-1 font-mono text-[11px] text-green opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+                  ⛶ expand
+                </span>
+              </button>
+            )}
           </div>
         </motion.div>
 
@@ -52,6 +92,41 @@ export function MacBookScroll({ children }: { children: ReactNode }) {
           </div>
         </div>
       </div>
+
+      {/* Rendered through a portal: the laptop sits inside a `perspective`
+          container, which would otherwise anchor a fixed overlay to the
+          laptop instead of the viewport. */}
+      {videoSrc &&
+        expanded &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[120] flex items-center justify-center bg-bg/95 p-4 sm:p-8"
+            role="dialog"
+            aria-modal="true"
+            aria-label="demo reel"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setExpanded(false);
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => setExpanded(false)}
+              aria-label="close fullscreen demo"
+              className="absolute right-4 top-4 z-10 rounded border border-green/40 bg-bg/90 px-2 py-1 font-mono text-[11px] text-green transition-colors hover:bg-green hover:text-bg"
+            >
+              ✕ close (esc)
+            </button>
+            <video
+              src={videoSrc}
+              controls
+              autoPlay
+              loop
+              playsInline
+              className="max-h-full w-full max-w-6xl rounded-lg border border-green/20"
+            />
+          </div>,
+          document.body,
+        )}
     </div>
   );
 }
