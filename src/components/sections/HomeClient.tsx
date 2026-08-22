@@ -47,7 +47,7 @@ function FirstVisitLoader({ onReveal }: { onReveal: () => void }) {
     } catch {
       /* storage blocked: treat as returning, keep it short */
     }
-    const holdMs = reduced ? 300 : first ? 7500 : 800;
+    const holdMs = reduced ? 300 : first ? 9500 : 2200;
 
     const reveal = setTimeout(() => {
       try {
@@ -109,11 +109,15 @@ export function HomeClient({
     [router],
   );
 
-  // Intro heading appears on reveal, then auto-collapses after 6s so it stops
-  // covering the globe and orbit cards. Reduced-motion leaves it open.
+  // Intro heading appears on reveal and holds for 15s -- enough for the
+  // 3-word flip (2.2s/word) to run a full cycle, the encrypted-text subtitle
+  // to finish decrypting, and both to be read without feeling rushed -- then
+  // auto-collapses. The avatar (below) pops in partway through this window so
+  // the handoff overlaps instead of leaving a dead gap. Reduced-motion leaves
+  // it open.
   useEffect(() => {
     if (!revealed || reduced) return;
-    const t = setTimeout(() => setHeaderOpen(false), 6000);
+    const t = setTimeout(() => setHeaderOpen(false), 15000);
     return () => clearTimeout(t);
   }, [revealed, reduced]);
 

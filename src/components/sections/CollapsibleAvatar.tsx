@@ -94,18 +94,26 @@ export function CollapsibleAvatar({
     timers.current = [];
   }, []);
 
-  // On every load the starman expands on his own, then collapses back after 3s.
+  // On every load the starman pops in partway through the intro heading's
+  // 15s hold (not at the same instant the heading appears -- that pileup of
+  // simultaneous reveals is what read as chaotic) and stays up for 10s: the
+  // dialog types out the full summary at 18ms/char (~7.5s for the current
+  // text) and needs a few seconds left to actually be read once typed.
+  // Reduced motion skips the staged delay entirely.
+  const reducedMotion = useReducedMotion();
   useEffect(() => {
     if (!autoOpen) return;
+    const openDelay = reducedMotion ? 0 : 8000;
+    const holdMs = reducedMotion ? 3000 : 10000;
     timers.current.push(
       setTimeout(() => {
         setOpen(true);
         setShowDialog(true);
-      }, 0),
+      }, openDelay),
     );
-    timers.current.push(setTimeout(() => setOpen(false), 3000));
+    timers.current.push(setTimeout(() => setOpen(false), openDelay + holdMs));
     return clearTimers;
-  }, [autoOpen, clearTimers]);
+  }, [autoOpen, clearTimers, reducedMotion]);
 
   // Clicking anywhere outside the dialog dismisses the dialog.
   useEffect(() => {

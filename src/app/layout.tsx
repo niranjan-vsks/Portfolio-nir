@@ -18,10 +18,9 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
 });
 
-const SITE_TITLE =
-  "Niranjan VSKS · Senior Agentic AI Engineer (Forward Deployed)";
+const SITE_TITLE = "Niranjan VSKS · Senior Agentic AI Engineer";
 const SITE_DESC =
-  "Senior Agentic AI Engineer who ships production agentic and RAG systems into enterprise environments end to end: discovery, architecture, implementation, deployment.";
+  "Ships production RAG and agentic systems for enterprise clients, discovery through deployment. Forward Deployed: full-stack agentic engineering, from RAG platforms to multi-agent operations tooling.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://niranjanvsks.xyz"),

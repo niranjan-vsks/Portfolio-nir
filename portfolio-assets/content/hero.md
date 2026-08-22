@@ -13,7 +13,7 @@ tagline: "Forward Deployed Engineer who ships production agentic and RAG systems
 ```
 
 ## One-line positioning
-Cold-start discovery, architecture, implementation, deployment. I get into a customer's real environment, understand the problem fast, and ship production-grade systems that integrate seamlessly.
+Senior Agentic AI Engineer with 7 years of expertise. I build production agentic systems that run inside the customer's own cloud, under their identity, their constraints, and their data boundaries. I own the layer that keeps them reliable and efficient at scale: evaluation, latency, and token cost. Blank page to production. ML and statistics underneath. The engineer who architects, builds, and deploys from scratch.
 
 ## Entry labels ("what brings you here?")
 - `> agentic_ai_and_rag` -> routes to the agentic/RAG work (Coforge platform, Loop Copilot)
