@@ -55,6 +55,11 @@ const CFG = {
 
 const RADIUS = 1.12; // world radius of the earth in our scene
 
+/** Seconds a card holds the front before the carousel advances. */
+const DWELL_S = 4.2;
+/** Seconds after the cursor leaves before the carousel steps again. */
+const RESUME_S = 0.5;
+
 /* Simplex noise */
 const SNOISE = `
   vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
@@ -335,7 +340,7 @@ function AtmosphereHalo() {
 function CardFace({ item, active, typed }: { item: OrbitItem; active: boolean; typed: string }) {
   return (
     <div
-      className={`w-[220px] overflow-hidden rounded-xl border bg-neutral-900/95 shadow-2xl transition-all duration-300 ${
+      className={`w-[220px] select-none overflow-hidden rounded-xl border bg-neutral-900/95 shadow-2xl transition-all duration-300 ${
         active ? "border-green/50 shadow-[0_0_36px_-8px_rgba(74,222,128,0.55)]" : "border-neutral-800"
       }`}
     >
@@ -385,12 +390,30 @@ function Orbit({
     for (const it of items) if (it.href) router.prefetch(it.href);
   }, [items, router]);
 
-  // auto-advance
+  // Auto-advance is frame-accumulated rather than a setInterval, because an
+  // interval is destroyed on pause and a fresh one starts on resume: the
+  // carousel then sat still for up to a full dwell after the cursor left,
+  // which read as "the revolving stopped and never came back".
+  const dwell = useRef(0);
+  const wasPaused = useRef(false);
+
+  // Any change of card (auto, click, arrow, scroll, drag) earns a full dwell.
   useEffect(() => {
-    if (reduced || paused) return;
-    const id = setInterval(() => setActive((a) => a + 1), 4200);
-    return () => clearInterval(id);
-  }, [reduced, paused]);
+    dwell.current = 0;
+  }, [active]);
+
+  // On resume, don't make the visitor wait out a fresh dwell: the next step
+  // lands shortly after the cursor leaves, so the motion visibly picks back up.
+  useEffect(() => {
+    if (paused) {
+      wasPaused.current = true;
+      return;
+    }
+    if (wasPaused.current) {
+      wasPaused.current = false;
+      dwell.current = Math.max(dwell.current, DWELL_S - RESUME_S);
+    }
+  }, [paused]);
 
   // sideways scroll / swipe to revolve the carousel (in addition to the arrows).
   // Horizontal-intent only (deltaX-dominant or shift+wheel) so it never hijacks
@@ -424,15 +447,48 @@ function Orbit({
     const onTouchEnd = () => {
       x0 = null;
     };
+
+    // Mouse drag sideways. A click barely moves, so DRAG_PX keeps a card click
+    // from also stepping the carousel. Pointerdown doubles as the "click away
+    // clears a stuck text selection" fix: selecting terminal-card text and
+    // then clicking the scene left the highlight stranded.
+    let dragX: number | null = null;
+    const onPointerDown = (e: PointerEvent) => {
+      if (e.button !== 0) return; // leave right-click alone so copy still works
+      const sel = window.getSelection?.();
+      if (sel && !sel.isCollapsed) sel.removeAllRanges();
+      if (e.pointerType === "mouse") dragX = e.clientX;
+    };
+    const DRAG_PX = 70;
+    const onPointerMove = (e: PointerEvent) => {
+      if (dragX == null) return;
+      const dx = e.clientX - dragX;
+      if (Math.abs(dx) > DRAG_PX) {
+        step(dx < 0 ? 1 : -1);
+        dragX = e.clientX;
+      }
+    };
+    const onPointerUp = () => {
+      dragX = null;
+    };
+
     window.addEventListener("wheel", onWheel, { passive: true });
     window.addEventListener("touchstart", onTouchStart, { passive: true });
     window.addEventListener("touchmove", onTouchMove, { passive: true });
     window.addEventListener("touchend", onTouchEnd);
+    window.addEventListener("pointerdown", onPointerDown);
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
+    window.addEventListener("pointercancel", onPointerUp);
     return () => {
       window.removeEventListener("wheel", onWheel);
       window.removeEventListener("touchstart", onTouchStart);
       window.removeEventListener("touchmove", onTouchMove);
       window.removeEventListener("touchend", onTouchEnd);
+      window.removeEventListener("pointerdown", onPointerDown);
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
+      window.removeEventListener("pointercancel", onPointerUp);
     };
   }, [reduced]);
 
@@ -446,10 +502,20 @@ function Orbit({
     return () => clearInterval(id);
   }, [active, items, n, reduced]);
 
-  useFrame(() => {
+  useFrame((_, dt) => {
     target.current = -active * ((Math.PI * 2) / n);
     angle.current += (target.current - angle.current) * 0.08;
     if (group.current) group.current.rotation.y = angle.current;
+
+    if (reduced || paused) return;
+    dwell.current += dt;
+    if (dwell.current >= DWELL_S) {
+      // Reset here, not in the [active] effect alone: useFrame runs on rAF, so
+      // another frame can land before the re-render commits and would advance
+      // a second time, skipping a card.
+      dwell.current = 0;
+      setActive((a) => a + 1);
+    }
   });
 
   const open = (it: OrbitItem) => {
@@ -478,11 +544,11 @@ function Orbit({
         <sphereGeometry args={[RADIUS, 32, 32]} />
         <meshBasicMaterial colorWrite={false} depthWrite={false} />
       </mesh>
-      <group
-        ref={group}
-        onPointerOver={() => setPaused(true)}
-        onPointerOut={() => setPaused(false)}
-      >
+      {/* Pause is owned by the focused card's DOM handlers below. The group
+          carried R3F onPointerOver/Out too, but those need a raycastable mesh
+          and the cards are Html overlays, so they only added a second way for
+          the paused flag to get stuck. */}
+      <group ref={group}>
         {items.map((item, i) => {
           const a = (i / n) * Math.PI * 2;
           const isActive = ((i - active) % n + n) % n === 0;

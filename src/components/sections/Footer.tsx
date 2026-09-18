@@ -39,7 +39,7 @@ const STATIC_COLUMNS: { title: string; links: FooterLink[] }[] = [
     links: [
       { label: "ask_niranjan", href: "/chat" },
       { label: "Contact", href: "/contact" },
-      { label: "GitHub", href: "https://github.com/niranjan-vsks", external: true },
+      { label: "GitHub", href: "https://github.com/niranjan-vsks?tab=repositories", external: true },
       { label: "LinkedIn", href: "https://www.linkedin.com/in/niranjanvsks", external: true },
       { label: "Résumé (PDF)", href: "/Niranjan_VSKS_FDE_RN.pdf", external: true },
     ],
@@ -63,8 +63,8 @@ export function Footer() {
   ];
 
   return (
-    <footer className="relative z-10 mt-24 border-t border-white/10 bg-[#080a09]">
-      <div className="mx-auto max-w-[1200px] px-6 py-14">
+    <footer className="relative z-10 mt-10 border-t border-white/10 bg-[#080a09]">
+      <div className="mx-auto max-w-[1200px] px-6 py-10">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
           <div className="lg:col-span-1">
             <div className="flex items-center gap-2">
@@ -98,7 +98,7 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-12 flex flex-col items-start justify-between gap-3 border-t border-white/5 pt-6 text-[13px] text-text-dim sm:flex-row sm:items-center">
+        <div className="mt-8 flex flex-col items-start justify-between gap-3 border-t border-white/5 pt-5 text-[13px] text-text-dim sm:flex-row sm:items-center">
           <span>© {new Date().getFullYear()} Niranjan VSKS. Built end to end.</span>
           <span>Remote-first, available to work with teams globally.</span>
         </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { AvatarMark } from "@/components/ui/AvatarMark";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "@/lib/hooks/useReducedMotion";
 
@@ -13,31 +13,6 @@ import { useReducedMotion } from "@/lib/hooks/useReducedMotion";
  * Every load: opens by itself, then the whole avatar collapses after 3s.
  * Clicking anywhere outside dismisses the dialog early.
  */
-
-function AvatarMedia({ size }: { size: number }) {
-  const [ok, setOk] = useState(true);
-  return (
-    <div
-      className="relative overflow-hidden rounded-full border border-green/40 bg-neutral-900"
-      style={{ width: size, height: size }}
-    >
-      {ok ? (
-        <Image
-          src="/niranjan-photo.jpg"
-          alt="Niranjan VSKS"
-          fill
-          sizes={`${size}px`}
-          className="object-cover"
-          onError={() => setOk(false)}
-        />
-      ) : (
-        <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-green/15 to-cyan/15 font-mono text-2xl text-green/70">
-          N
-        </div>
-      )}
-    </div>
-  );
-}
 
 function ComicDialog({ text }: { text: string }) {
   const reduced = useReducedMotion();
@@ -183,7 +158,7 @@ export function CollapsibleAvatar({
           aria-label="Open profile"
           className="group relative grid place-items-center rounded-full ring-2 ring-green/50 transition-transform hover:scale-105"
         >
-          <AvatarMedia size={56} />
+          <AvatarMark size={56} />
           <span className="absolute -right-0.5 -top-0.5 grid h-4 w-4 place-items-center rounded-full bg-green text-[10px] font-bold text-bg">
             +
           </span>

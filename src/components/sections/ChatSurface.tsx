@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { AvatarMark } from "@/components/ui/AvatarMark";
 import { useEffect, useRef, useState } from "react";
 
 interface Message {
@@ -99,14 +99,7 @@ export function ChatSurface({
     }
   }
 
-  const Avatar = ({ size = 34 }: { size?: number }) => (
-    <div
-      className="relative shrink-0 overflow-hidden rounded-full border border-green/40"
-      style={{ width: size, height: size }}
-    >
-      <Image src="/niranjan-photo.jpg" alt="" fill sizes={`${size}px`} className="object-cover" />
-    </div>
-  );
+  const Avatar = ({ size = 34 }: { size?: number }) => <AvatarMark size={size} />;
 
   return (
     <div

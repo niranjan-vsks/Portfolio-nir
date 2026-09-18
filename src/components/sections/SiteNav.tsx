@@ -114,7 +114,7 @@ export function SiteNav() {
         {/* actions */}
         <nav className="flex shrink-0 items-center gap-4 text-[16px]">
           <a
-            href="https://github.com/niranjan-vsks"
+            href="https://github.com/niranjan-vsks?tab=repositories"
             target="_blank"
             rel="noopener noreferrer"
             className="hidden text-text-dim transition-colors hover:text-green md:inline"
