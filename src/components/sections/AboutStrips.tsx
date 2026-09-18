@@ -53,6 +53,8 @@ export const SKILL_NODE: Record<string, string> = {
   "Predictive Analytics": "skill_predictive_analytics",
   "Risk Scoring": "skill_risk_scoring",
   "Statistical Modeling": "skill_statistical_modeling",
+  "LLM Fine-Tuning (LoRA, QLoRA)": "skill_finetuning_lora",
+  "RLHF Alignment": "skill_rlhf",
 };
 
 export function AboutStrips({

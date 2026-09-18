@@ -3,7 +3,7 @@ section: skills
 ---
 
 ## Generative & Agentic AI
-LLMs · Prompt Engineering · Agentic Workflows · Multi-Agent Orchestration · LangGraph · LangChain · GraphRAG · Agentic RAG Pipelines · Neo4j · Hybrid Search · Reranking · MCP Servers · LLM Observability · Context Engineering · RAGAS · Guardrails · Responsible AI
+LLMs · LLM Fine-Tuning (LoRA, QLoRA) · RLHF Alignment · Prompt Engineering · Agentic Workflows · Multi-Agent Orchestration · LangGraph · LangChain · GraphRAG · Agentic RAG Pipelines · Neo4j · Hybrid Search · Reranking · MCP Servers · LLM Observability · Context Engineering · RAGAS · Guardrails · Responsible AI
 
 ## Engineering & Delivery
 Python · FastAPI · React 19 · MongoDB · PostgreSQL · Docker · CI/CD (Harness, GitHub Actions, Railway) · Cloud Platforms (Azure, GCP, AWS) · System Design · Data Pipelines · REST APIs · Webhook Architecture · Async Architecture · Microservices · Playwright · Cypress

@@ -137,7 +137,7 @@
       "type": "domain",
       "val": 12,
       "color": "#FF006E",
-      "description": "Tree-based ensembles, predictive modeling, feature engineering, statistical modeling, risk scoring — the foundation that informs the AI engineering work above.",
+      "description": "Tree-based ensembles, predictive modeling, feature engineering, statistical modeling, risk scoring, and LLM adaptation (LoRA, QLoRA, RLHF) — the foundation that informs the AI engineering work above.",
       "href": "/skills?domain=ml"
     },
     {
@@ -571,6 +571,22 @@
       "description": "Self-hosted multi-agent operations platform. Single-tenant control plane where every model call is accounted for including failures, dispatch is a durable Postgres queue that survives a crash, and the reporting graph is kept acyclic by the database inside the write transaction.",
       "href": "/projects/operator-os",
       "status": "in_development"
+    },
+    {
+      "id": "skill_finetuning_lora",
+      "label": "LLM Fine-Tuning\n(LoRA · QLoRA)",
+      "group": "ml",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB"
+    },
+    {
+      "id": "skill_rlhf",
+      "label": "RLHF Alignment",
+      "group": "ml",
+      "type": "skill",
+      "val": 5,
+      "color": "#E5E7EB"
     }
   ],
   "links": [
@@ -1065,6 +1081,22 @@
     {
       "source": "proj_operator_os",
       "target": "skill_agentic_workflows"
+    },
+    {
+      "source": "domain_ml",
+      "target": "skill_finetuning_lora"
+    },
+    {
+      "source": "domain_ml",
+      "target": "skill_rlhf"
+    },
+    {
+      "source": "proj_qe_platform",
+      "target": "skill_finetuning_lora"
+    },
+    {
+      "source": "proj_qe_platform",
+      "target": "skill_rlhf"
     }
   ]
 }

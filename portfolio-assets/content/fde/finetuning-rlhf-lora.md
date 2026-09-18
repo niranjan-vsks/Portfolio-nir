@@ -8,6 +8,8 @@ tags:
   - { label: "RAGAS", node: "skill_ragas" }
   - { label: "GraphRAG", node: "skill_graphrag" }
   - { label: "LLM Observability", node: "skill_llm_observability" }
+  - { label: "LoRA & QLoRA", node: "skill_finetuning_lora" }
+  - { label: "RLHF", node: "skill_rlhf" }
 ---
 
 The most expensive fine-tune is the one that should have been a retrieval fix. My first job on any "we need to fine-tune" conversation is deciding whether the problem is knowledge (retrieval), behavior (prompting and guardrails), or genuine capability and format gaps, which is where tuning earns its cost.
@@ -16,6 +18,7 @@ The most expensive fine-tune is the one that should have been a retrieval fix. M
 
 - Retrieval before tuning: in both enterprise RAG systems I shipped, the accuracy gap closed with GraphRAG, reranking, and evaluation loops, at a fraction of a tuning program's cost and risk. Facts belong in retrieval, where they can be updated without a training run.
 - LoRA for behavior, not knowledge: parameter-efficient adapters are the right tool when output format, domain style, or tool-calling behavior must be learned, and they keep the base model swappable, which matters in customer environments where the approved model list changes.
+- In practice: I fine-tuned LLaMA and Qwen models with LoRA and QLoRA and aligned them with RLHF. For a finance-sector client, I adapted their in-house LLM with LoRA so their own model generated test cases directly inside the platform, under the data-residency constraints that ruled out hosted providers.
 - RLHF-style preference signals, pragmatically: structured human feedback (accepted vs corrected outputs) collected from real usage is the highest-value tuning data an enterprise has. The QE platform's evaluation layer (coverage scores, RAGAS) is exactly the grading harness such a loop needs.
 - Evaluation gates before shipping: any tuned model must beat the incumbent on the same held-out evaluation before promotion, the same frozen-threshold discipline WealthOS applies to strategy changes.
 

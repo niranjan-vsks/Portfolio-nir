@@ -72,6 +72,8 @@ const SKILL_TERMS: [string, string][] = [
   ["Multi-Tenant RBAC", "skill_multi_tenant_rbac"],
   ["SSO & OAuth", "skill_sso_oauth"],
   ["Risk Scoring", "skill_risk_scoring"],
+  ["LLM Fine-Tuning (LoRA, QLoRA)", "skill_finetuning_lora"],
+  ["RLHF Alignment", "skill_rlhf"],
 ];
 for (const [label, node] of SKILL_TERMS) {
   SEARCH_INDEX.push({
