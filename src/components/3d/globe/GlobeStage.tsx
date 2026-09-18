@@ -2,7 +2,7 @@
 
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
 import { useGLTF, Stars, Html } from "@react-three/drei";
-import { Suspense, useMemo, useRef, useState, useEffect } from "react";
+import { Suspense, useMemo, useRef, useState, useEffect, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import * as THREE from "three";
 import { useReducedMotion } from "@/lib/hooks/useReducedMotion";
@@ -337,6 +337,112 @@ function AtmosphereHalo() {
   );
 }
 
+/**
+ * Slow parallax drift for the starfield. The stars are one point cloud each,
+ * so turning a parent group is a single matrix update per frame rather than
+ * per-star work: the sky reads as a live 3D volume at effectively no cost.
+ */
+function StarDrift({ reduced, children }: { reduced: boolean; children: ReactNode }) {
+  const g = useRef<THREE.Group>(null!);
+  useFrame((_, dt) => {
+    if (reduced || !g.current) return;
+    g.current.rotation.y += dt * 0.01;
+    g.current.rotation.x += dt * 0.0025;
+  });
+  return <group ref={g}>{children}</group>;
+}
+
+/**
+ * Shooting stars: a few thin additive streaks that cross the far field on
+ * random intervals. Deliberately sparse and parked well behind the globe, so
+ * they are atmosphere rather than a centrepiece (3d-performance rules). Cost
+ * is `count` small planes sharing one geometry, plus one uniform write each
+ * per frame, so this is far cheaper than a full-screen looping video and it
+ * keeps the parallax the flat video would have destroyed.
+ */
+function ShootingStars({ reduced, count = 3 }: { reduced: boolean; count?: number }) {
+  const { meteors, geo } = useMemo(() => {
+    const geo = new THREE.PlaneGeometry(1, 1);
+    const meteors = Array.from({ length: count }, () => {
+      const mat = new THREE.ShaderMaterial({
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        uniforms: {
+          uColor: { value: hexToVec3("#bfe9ff") }, // cool white, inside the 3D depth lane
+          uOpacity: { value: 0 },
+        },
+        vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
+        fragmentShader: `uniform vec3 uColor; uniform float uOpacity; varying vec2 vUv;
+          void main(){
+            float head = pow(vUv.x, 2.0);                    // bright head, fading tail
+            float across = 1.0 - abs(vUv.y - 0.5) * 2.0;     // soft along the thickness
+            float a = head * across * uOpacity;
+            gl_FragColor = vec4(uColor * a, a);
+          }`,
+      });
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.renderOrder = -2;
+      return { mesh, mat, dir: new THREE.Vector2(), speed: 0, life: 0, span: 1, delay: 0 };
+    });
+    return { meteors, geo };
+  }, [count]);
+
+  type Meteor = (typeof meteors)[number];
+  const respawn = (m: Meteor, first = false) => {
+    const angle = -Math.PI / 4 + (Math.random() - 0.5) * 0.5; // broadly down-and-right
+    m.dir.set(Math.cos(angle), Math.sin(angle));
+    m.speed = 8 + Math.random() * 5;
+    m.span = 1.1 + Math.random() * 0.6;
+    m.life = 0;
+    // stagger the first appearance so they never all streak together
+    m.delay = first ? Math.random() * 6 : 2.5 + Math.random() * 7;
+    m.mesh.rotation.z = angle;
+    m.mesh.scale.set(4 + Math.random() * 3, 0.16 + Math.random() * 0.08, 1);
+    // Spawn inside the frustum at this depth. At z=-26 the camera sees roughly
+    // x +/-26 and y +/-12.6, so starting higher than that wasted the streak's
+    // bright mid-life off-screen. Start upper-left, travel down and right.
+    m.mesh.position.set(-26 + Math.random() * 10, 6 + Math.random() * 6, -26);
+    m.mat.uniforms.uOpacity.value = 0;
+  };
+
+  useEffect(() => {
+    meteors.forEach((m) => respawn(m, true));
+    return () => {
+      geo.dispose();
+      meteors.forEach((m) => m.mat.dispose());
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [meteors, geo]);
+
+  useFrame((_, dt) => {
+    if (reduced) return;
+    for (const m of meteors) {
+      if (m.delay > 0) {
+        m.delay -= dt;
+        continue;
+      }
+      m.life += dt;
+      const t = m.life / m.span;
+      if (t >= 1) {
+        respawn(m);
+        continue;
+      }
+      m.mesh.position.x += m.dir.x * m.speed * dt;
+      m.mesh.position.y += m.dir.y * m.speed * dt;
+      m.mat.uniforms.uOpacity.value = Math.sin(Math.PI * t); // fade in, fade out
+    }
+  });
+
+  return (
+    <group>
+      {meteors.map((m, i) => (
+        <primitive key={i} object={m.mesh} />
+      ))}
+    </group>
+  );
+}
+
 function CardFace({ item, active, typed }: { item: OrbitItem; active: boolean; typed: string }) {
   return (
     <div
@@ -606,9 +712,13 @@ export default function GlobeStage({
         {/* a custom lighting */}
         <ambientLight intensity={1.8} />
         <directionalLight position={[0, 10, 2]} intensity={0.8} />
-        {/* dense, layered high-res starfield */}
-        <Stars radius={120} depth={60} count={7000} factor={3.5} saturation={0} fade speed={reduced ? 0 : 0.4} />
-        <Stars radius={80} depth={40} count={1600} factor={7} saturation={0} fade speed={reduced ? 0 : 0.25} />
+        {/* dense, layered high-res starfield, drifting so the sky is not a
+            static backdrop; meteors cross it now and then */}
+        <StarDrift reduced={reduced}>
+          <Stars radius={120} depth={60} count={7000} factor={3.5} saturation={0} fade speed={reduced ? 0 : 0.4} />
+          <Stars radius={80} depth={40} count={1600} factor={7} saturation={0} fade speed={reduced ? 0 : 0.25} />
+        </StarDrift>
+        <ShootingStars reduced={reduced} />
         {/* halo sits outside the tilted group so its camera billboard stays valid */}
         <AtmosphereHalo />
         <group rotation={[0.16, 0, 0.06]}>
